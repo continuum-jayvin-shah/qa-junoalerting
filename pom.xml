@@ -53,9 +53,9 @@
 		<dependency>
 			<groupId>org.continuum</groupId>
 			<artifactId>cucumber</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\cucumber-0.0.1-SNAPSHOT.jar</systemPath>
+			<systemPath>${project.basedir}\lib\cucumber-0.0.1.jar</systemPath>
 		</dependency>
 
 		<dependency>
