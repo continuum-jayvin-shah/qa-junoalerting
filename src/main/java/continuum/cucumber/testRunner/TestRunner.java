@@ -41,7 +41,7 @@ import cucumber.api.testng.TestNGCucumberRunner;
 @CucumberOptions(
 monochrome = true,
 features = "src//test//resources//features",
-glue="continuum.auvik.stepdefination",
+glue="continuum.juno.alerting.stepdefination",
 plugin = {
 "pretty",
 "html:test-report/cucumber",

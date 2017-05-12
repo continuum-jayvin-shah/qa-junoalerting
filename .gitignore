@@ -1,0 +1,6 @@
+*.project
+*.class
+*.classpath
+/target/
+
+/test-report/
