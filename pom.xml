@@ -3,30 +3,47 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.continuum</groupId>
-	<artifactId>AuvikAutomation</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<artifactId>JunoAlertingAutomation</artifactId>
+	<version>0.0.1</version>
 	<packaging>jar</packaging>
 
 	<name>JunoAuvikAutomation</name>
 	<url>http://maven.apache.org</url>
+	
+	<repositories>
+    	<repository>
+      		<id>artifactory</id>
+      		<url>http://artifact.corp.continuum.net:8081/artifactory/libs-release-local</url>
+    	</repository>
+  	</repositories>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jre.level>1.7</jre.level>
 		<jdk.level>1.7</jdk.level>
 	</properties>
+	
+	
 	<dependencies>
 		<dependency>
 			<groupId>commons-collections</groupId>
 			<artifactId>commons-collections</artifactId>
 			<version>3.2.1</version>
 		</dependency>
+		
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>5.1.39</version>
+		    <groupId>org.continuum</groupId>
+		    <artifactId>cucumber</artifactId>
+		    <version>0.0.1</version>
 		</dependency>
-
+		
+		<dependency>
+			<groupId>com.microsoft.sqlserver</groupId>
+			<artifactId>sqljdbc4-3.0</artifactId>
+			<version>4-3.0</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/sqljdbc4-3.0.jar</systemPath>
+		</dependency>
 		<dependency>
 			<groupId>com.jayway.restassured</groupId>
 			<artifactId>rest-assured</artifactId>
@@ -53,150 +70,20 @@
 			<artifactId>httpcore</artifactId>
 			<version>4.4.5</version>
 		</dependency>
-
 		<dependency>
-			<groupId>org.continuum</groupId>
-			<artifactId>cucumber</artifactId>
-			<version>0.0.1</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\cucumber-0.0.1.jar</systemPath>
+    			<groupId>org.json</groupId>
+    			<artifactId>json</artifactId>
+    			<version>20141113</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.microsoft.sqlserver</groupId>
-			<artifactId>sqljdbc4-3.0</artifactId>
-			<version>4-3.0</version>
-			<scope>system</scope>
-			<systemPath>${project.basedir}\lib\sqljdbc4-3.0.jar</systemPath>
-		</dependency>
-		<dependency>
-			<groupId>info.cukes</groupId>
-			<artifactId>cucumber-java</artifactId>
-			<version>1.2.4</version>
-		</dependency>
-		<dependency>
-			<groupId>info.cukes</groupId>
-			<artifactId>cucumber-testng</artifactId>
-			<version>1.2.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>info.cukes</groupId>
-			<artifactId>cucumber-junit</artifactId>
-			<version>1.2.4</version>
-		</dependency>
-		<dependency>
-			<groupId>info.cukes</groupId>
-			<artifactId>cucumber-html</artifactId>
-			<version>0.2.3</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			<version>2.53.0</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/net.masterthought/maven-cucumber-reporting -->
-		<dependency>
-			<groupId>net.masterthought</groupId>
-			<artifactId>maven-cucumber-reporting</artifactId>
-			<version>2.8.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.cedarsoftware</groupId>
-			<artifactId>json-io</artifactId>
-			<version>2.2.31</version>
-		</dependency>
-		<dependency>
-			<groupId>com.github.mkolisnyk</groupId>
-			<artifactId>cucumber-reports</artifactId>
-			<version>0.0.11</version>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-		</dependency>
-		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>1.2.17</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>3.9</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.11-beta3</version>
-		</dependency>
-		<dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
-			<version>2.0.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>xerces</groupId>
-			<artifactId>xercesImpl</artifactId>
-			<version>2.8.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.testng</groupId>
-			<artifactId>testng</artifactId>
-			<version>6.9.10</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.uncommons</groupId>
-			<artifactId> reportng</artifactId>
-			<version>1.1.4</version>
-		</dependency>
-
-		<dependency>
-			<groupId>com.google.inject</groupId>
-			<artifactId>guice</artifactId>
-			<version>4.1.0</version>
-		</dependency>
-
-		<dependency>
-			<groupId>xml-apis</groupId>
-			<artifactId>xml-apis</artifactId>
-			<version>1.4.01</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.mail</groupId>
-			<artifactId>javax.mail</artifactId>
-			<version>1.5.2</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi</artifactId>
-			<version>3.14</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-ooxml</artifactId>
-			<version>3.14</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
-		<dependency>
-			<groupId>com.googlecode.json-simple</groupId>
-			<artifactId>json-simple</artifactId>
-			<version>1.1.1</version>
-		</dependency>
-<!-- https://mvnrepository.com/artifact/org.json/json -->
-<!-- https://mvnrepository.com/artifact/org.json/json -->
-<dependency>
-    <groupId>org.json</groupId>
-    <artifactId>json</artifactId>
-    <version>20141113</version>
-</dependency>
 	</dependencies>
+	
+	<distributionManagement>
+		<repository>
+			<id>central</id>
+			<name>artifact.corp.continuum.net-releases</name>
+			<url>http://artifact.corp.continuum.net:8081/artifactory/libs-release-local</url>
+		</repository>
+	</distributionManagement>
 
 
 	<build>
@@ -268,10 +155,75 @@
 						</execution>
 					</executions>
 				</plugin>
+				
+				<plugin>
+        				<groupId>org.apache.maven.plugins</groupId>
+        				<artifactId>maven-jar-plugin</artifactId>
+        				<version>3.0.2</version>
+        				<executions>
+          					<execution>
+            						<goals>
+              							<goal>test-jar</goal>
+            						</goals>
+          					</execution>
+        				</executions>
+     			</plugin>
 
 
 			</plugins>
 		</pluginManagement>
+		
+		<plugins>
+		<plugin>
+	         <groupId>org.apache.maven.plugins</groupId>
+	         <artifactId>maven-dependency-plugin</artifactId>
+	         <version>3.0.1</version>
+	         <executions>
+	           <execution>
+	             <id>unpack-config</id>
+	             <phase>compile</phase>
+	             <goals>
+	               <goal>unpack</goal>
+	             </goals>
+	             <configuration>
+	               <artifactItems>
+	                 <artifactItem>
+	                   <groupId>org.continuum</groupId>
+	                   <artifactId>cucumber</artifactId>
+	                   <version>0.0.1</version>
+	                   <type>jar</type>
+	                   </artifactItem>
+	               </artifactItems>
+	               <includes>CommonConfig.properties</includes>
+	               <outputDirectory>${project.build.directory}/resources/config</outputDirectory>
+	               <overWriteReleases>false</overWriteReleases>
+	               <overWriteSnapshots>true</overWriteSnapshots>               
+	             </configuration>
+	           </execution>
+	           <execution>
+	             <id>unpack-webdriver</id>
+	             <phase>compile</phase>
+	             <goals>
+	               <goal>unpack</goal>
+	             </goals>
+	             <configuration>
+	               <artifactItems>
+	                 <artifactItem>
+	                   <groupId>org.continuum</groupId>
+	                   <artifactId>cucumber</artifactId>
+	                   <version>0.0.1</version>
+	                   <type>jar</type> 
+	                   </artifactItem>
+	               </artifactItems>
+	               <includes>*river*.exe,*s*.jar</includes>
+	               <outputDirectory>lib</outputDirectory>
+	               <overWriteReleases>true</overWriteReleases>
+	               <overWriteSnapshots>true</overWriteSnapshots>               
+	             </configuration>
+	           </execution>
+	         </executions>
+      	   </plugin>	
+	</plugins>
 
 		<testResources>
 			<testResource>
