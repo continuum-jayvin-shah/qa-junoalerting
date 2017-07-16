@@ -1,45 +1,34 @@
 Feature: Auto Process Functionalities
 
-Scenario Outline: AUVIKSC001 : Verify for a create alert api, a request is created in PAS_ReqQueue table.
+@BVT
+Scenario Outline: PALERTC001 : Verify for a create alert api, a request is created in PAS_ReqQueue table.
 
 Given "PlatformAlertingCreateAlert" : "<TestCase>" : I trigger create alert API
-And I verify alert details in JMGTJobManagement
-Given I naviagte to ITS portal
-When I login to ITS portal
-And I navigate to New ticket window
-And I serach ticket id on report page
-And I verify searched ticket details
-And I navigate to ticket detail page for ticket
-Then I verify ticket details on ticket details page of ITS portal
-When I naviagte to NOC portal
-And I login to Noc portal
-And I navigate to Quick Report page
-And I serach ticket id
-Then I Verify ticket availability with required details
-And I Navigate to Ticket Message Board Page
-Then I navigate to ticket update page
-Then I verify ticket details on Update page
-And I auto close ticket using API and I verify the response
-And I verify ticket is moved to history table
-Given I naviagte to ITS portal
-When I login to ITS portal
-And I navigate to New ticket window 
-And I serach ticket id on report page
-And I verify searched ticket details
-And I navigate to ticket detail page for ticket
-Then I verify Auto Close ticket details on ticket details page of ITS portal
-When I naviagte to NOC portal
-And I login to Noc portal
-And I navigate to Quick Report page
-And I serach ticket id
-And I Navigate to Ticket Message Board Page
-Then I navigate to ticket update page
-Then I verify Auto Close ticket details on ticket details page of Noc portal
+And I verify create alert api request in PAS_ReqQueue table
+And I verify create alert request is archived in PAS_ReqQueueArchive table
+And I verify an alert entry is created in pas_reqcons table on successful processing of an Alert request
+#And I trigger update alert API
+#And I verify create alert api request in PAS_ReqQueue table
+#And I verify create alert request is archived in PAS_ReqQueueArchive table
+#And I verify an alert entry is created in pas_reqcons table on successful processing of an Alert request
+And I trigger auto close alert API
+#And I verify create alert api request in PAS_ReqQueue table
+#And I verify create alert request is archived in PAS_ReqQueueArchive table
+#And I verify an archived alert entry is created in PAS_ReqConsArchive table on successfull processing of close alert request
+#And I verify create alert api request is deleted from PAS_ReqQueue table
 
+
+#Given I naviagte to ITS portal
+#When I login to ITS portal
+#And I navigate to New ticket window
+#And I search ticket id on report page
+#And I verify searched ticket details
+#And I navigate to ticket detail page for ticket
+#Then I verify ticket details on ticket details page of ITS portal
 
 Examples:
 |TestCase|
-|Platform001|
+|Platform002|
 
 
 #Scenario Outline: AUVIKSC001 : Verify for a create alert api, a request is created in PAS_ReqQueue table.

@@ -13,7 +13,7 @@ import com.continuum.utils.DataUtils;
 
 import continuum.cucumber.Locator;
 import continuum.cucumber.WebdriverWrapper;
-import edu.emory.mathcs.backport.java.util.Collections;
+//import edu.emory.mathcs.backport.java.util.Collections;
 
 public class NOCTicketMsgBoardPage {
 	WebdriverWrapper wd = new WebdriverWrapper();
@@ -83,7 +83,7 @@ public class NOCTicketMsgBoardPage {
 		wd.switchToFrame(frame);
 		List<WebElement> msgBoardLst = wd.getWebdriver()
 				.findElements(By.cssSelector(".borderedTable.buttonTopMargin > tbody > tr"));
-		Collections.reverse(msgBoardLst);
+		//Collections.reverse(msgBoardLst);
 
 		for (WebElement el : msgBoardLst) {
 			JunoAlertingUtils.scrollIntoView(wd.getWebdriver(), el);
@@ -195,7 +195,7 @@ public class NOCTicketMsgBoardPage {
 		wd.switchToFrame(frame);
 		List<WebElement> msgBoardLst = wd.getWebdriver()
 				.findElements(By.cssSelector(".borderedTable.buttonTopMargin > tbody > tr"));
-		Collections.reverse(msgBoardLst);
+	//	Collections.reverse(msgBoardLst);
 
 		for (WebElement el : msgBoardLst) {
 			JunoAlertingUtils.scrollIntoView(wd.getWebdriver(), el);

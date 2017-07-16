@@ -4,7 +4,6 @@ import java.util.Set;
 
 import org.testng.Reporter;
 
-import com.continuum.framework.utils.Log;
 
 import continuum.cucumber.Locator;
 import continuum.cucumber.Utilities;
@@ -25,7 +24,7 @@ public class NOCLoginPage {
 	 * @return object of NOCHomePage
 	 */
 	public NOCHomePage loginToNOC() {
-		Log.message("Enter login credentials  to NOC portal");
+		//Log.message("Enter login credentials  to NOC portal");
 		wd.waitForElementToBeClickable(emailId, 70000);
 		wd.clearandSendKeys(Utilities.getMavenProperties("NOCPortalUserName"), emailId);
 		wd.clearandSendKeys(Utilities.getMavenProperties("NOCPortalPassword"), password);
@@ -53,6 +52,6 @@ public class NOCLoginPage {
 			wd.getWebdriver().switchTo().window(ITSLoginPage.parentWIndow);
 		}
 		wd.openApplication(Utilities.getMavenProperties("NOCPortalUrl"));
-		Log.message("I naviagte to NOC portal");
+		//Log.message("I naviagte to NOC portal");
 	}
 }

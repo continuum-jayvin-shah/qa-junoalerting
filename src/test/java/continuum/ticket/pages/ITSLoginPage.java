@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.testng.Reporter;
 
-import com.continuum.framework.utils.Log;
+//import com.continuum.framework.utils.Log;
 import com.continuum.utils.JunoAlertingUtils;
 
 import continuum.cucumber.DriverFactory;
@@ -61,7 +61,7 @@ public class ITSLoginPage {
 		wd.clickElement(loginBtn);
 		//wd.waitFor(20000);
 		JunoAlertingUtils.waitForPageLoad(70, wd);
-		Log.message("Successfully logged in to ITS portal", DriverFactory.getDriver());
+		//Log.message("Successfully logged in to ITS portal", DriverFactory.getDriver());
 		return new ITSTicketHomePage();
 	}
 }

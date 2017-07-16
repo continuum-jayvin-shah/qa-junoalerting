@@ -9,7 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.continuum.framework.utils.Log;
+//import com.continuum.framework.utils.Log;
 import com.continuum.utils.DataUtils;
 
 import continuum.cucumber.DriverFactory;
@@ -135,7 +135,7 @@ public class NOCTicketUpdatePage {
 //		verification(nocTicketSubject,nocTktSubject);
 		//verification(testData.get("CreateTCKTDesc"),nocTktDescription);
 		//verification(testData.get("CloseTCKTDesc"),nocTktNocCompletedDescriptionNote);
-		Log.softAssertThat(testData.get("Family").equalsIgnoreCase(wd.getText(nocTktFamily)), 
+	/*	Log.softAssertThat(testData.get("Family").equalsIgnoreCase(wd.getText(nocTktFamily)), 
 				"Family verified succefully on Noc TicketUpdate Page", 
 				"Family not verified succefully on Noc TicketUpdate Page,Expected : " + testData.get("Family") + ", Actual" + wd.getText(nocTktFamily));
 		Log.softAssertThat(testData.get("MemberCode").equalsIgnoreCase(wd.getText(nocTktMember)), 
@@ -161,7 +161,7 @@ public class NOCTicketUpdatePage {
 		Log.softAssertThat(nocTicketSubject.trim().equalsIgnoreCase(wd.getText(nocTktSubject).trim()), 
 				"Subject verified succefully on Noc TicketUpdate Page", 
 				"Subject not verified succefully on Noc TicketUpdate Page,Expected : " + nocTicketSubject + ", Actual :" + wd.getText(nocTktSubject));
-		
+	*/	
 //		Log.softAssertThat(testData.get("CreateTCKTDesc").equalsIgnoreCase(wd.getText(nocTktDescription)), 
 //				"Subject verified succefully on Noc TicketUpdate Page", 
 //				"Subject verified succefully on Noc TicketUpdate Page,Expected : " + testData.get("CreateTCKTDesc") + ", Actual" + wd.getText(nocTktDescription));
@@ -255,7 +255,7 @@ public class NOCTicketUpdatePage {
 //		//verification(testData.get("CreateTCKTDesc"),nocTktDescription);
 //		verification(testData.get("CloseTCKTDesc"),nocTktNocCompletedDescriptionNote);
 		
-		Log.softAssertThat(testData.get("Family").equalsIgnoreCase(wd.getText(nocTktFamily)), 
+		/*Log.softAssertThat(testData.get("Family").equalsIgnoreCase(wd.getText(nocTktFamily)), 
 				"Family verified succefully on Noc TicketUpdate Page", 
 				"Family not verified succefully on Noc TicketUpdate Page,Expected : " + testData.get("Family") + ", Actual" + wd.getText(nocTktFamily));
 		Log.softAssertThat(testData.get("MemberCode").equalsIgnoreCase(wd.getText(nocTktMember)), 
@@ -279,7 +279,7 @@ public class NOCTicketUpdatePage {
 		Log.softAssertThat(nocTicketSubject.trim().equalsIgnoreCase(wd.getText(nocTktSubject).trim()), 
 				"Subject verified succefully on Noc TicketUpdate Page", 
 				"Subject not verified succefully on Noc TicketUpdate Page,Expected :" + nocTicketSubject + ", Actual :" + wd.getText(nocTktSubject).trim());
-		
+*/		
 //		Log.softAssertThat(testData.get("CreateTCKTDesc").equalsIgnoreCase(wd.getText(nocTktDescription)), 
 //				"Create ticket discription Create ticket discription succefully on Noc TicketUpdate Page", 
 //				"Create ticket discription not verified succefully on Noc TicketUpdate Page,Expected : " + testData.get("CreateTCKTDesc") + ", Actual" + wd.getText(nocTktDescription));

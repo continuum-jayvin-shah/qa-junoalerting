@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Auvik Report">
-	<listeners>
-		<listener class-name="org.uncommons.reportng.HTMLReporter" />
-		<listener class-name="continuum.cucumber.ListnerWebDriver"></listener>
-	</listeners>
-	<test name="Test case 1">
-		<classes>
-			<class name="continuum.cucumber.testRunner.TestRunner" />
-		</classes>
-		<!--<packages> <package name="continuum.cucumber.testRunner"/> </packages> -->
-	</test>
-</suite>
+<suite name="BDTSuite">
+
+  <test name="Cucumber-Test">
+    <packages>
+      <package name="continuum.cucumber.testRunner"/>
+    </packages>
+  </test> <!-- Test -->
+</suite> <!-- Suite -->

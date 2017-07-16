@@ -7,7 +7,7 @@ import java.util.Set;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import com.continuum.framework.utils.Log;
+//import com.continuum.framework.utils.Log;
 import com.continuum.utils.DataUtils;
 
 import continuum.cucumber.DriverFactory;
@@ -72,7 +72,7 @@ public class NOCTicketReportPage {
 	
 	
 	
-		Log.softAssertThat(testData.get("GenStatus").equalsIgnoreCase(getTicketStatus()), "Genaration Status successfully verified on Noc ticket report page", "Genaration Status not verified on Noc ticket report page,  Expected : " + testData.get("GenStatus")+ ",  Actual : " + getTicketStatus(), DriverFactory.getDriver());
+		/*Log.softAssertThat(testData.get("GenStatus").equalsIgnoreCase(getTicketStatus()), "Genaration Status successfully verified on Noc ticket report page", "Genaration Status not verified on Noc ticket report page,  Expected : " + testData.get("GenStatus")+ ",  Actual : " + getTicketStatus(), DriverFactory.getDriver());
 
 		Log.softAssertThat(siteName.equalsIgnoreCase(getTicketSite()), "SiteName successfully verified on Noc ticket report page", "SiteName is not correct on Noc ticket report page, Expected : " + siteName + ", Actual : "+ getTicketSite());
 		Log.softAssertThat(nocTicketSubject.equalsIgnoreCase(getTicketSubject()), "Ticket Subject successfully verified on Noc Ticket report page", "Ticket Subject is not correct on Noc ticket report page, Expected :" + nocTicketSubject + ", Actual : " + getTicketSubject());
@@ -80,7 +80,7 @@ public class NOCTicketReportPage {
 		Log.softAssertThat(testData.get("DeviceName (entity)").equalsIgnoreCase(getTicketResource()), "Resource name successfully verified on Noc ticket report page", "Resource name is not correct on Noc ticket report page, Expected :" + testData.get("DeviceName (entity)")+ ",Actual : " + getTicketResource());
 		Log.softAssertThat(testData.get("Priority").equalsIgnoreCase(getTicketPriority()), "Priority successfully verified on Noc ticket report page", "Priority is not correct on Noc ticket report page, Expected :" + testData.get("priority")+ ",Actual : " + getTicketPriority());
 		Log.softAssertThat(testData.get("TCKTAction").equalsIgnoreCase(getTicketAssignTo()), "AssignTo field successfully verified on Noc ticket report page", "AssignTo field is not correct on Noc ticket report page, Expected :" + testData.get("assignTo")+ ",Actual : " + getTicketAssignTo());
-		
+*/		
 	}
 	public NOCTicketReportPage() {
 		Set<String> windowHandles = wd.getWebdriver().getWindowHandles();
