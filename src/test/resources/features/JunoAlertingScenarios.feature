@@ -1,26 +1,25 @@
 Feature: Auto Process Functionalities
 
 @BVT
-Scenario Outline: PALERTC001 : Verify for a create alert api, a request is created in PAS_ReqQueue table.
+Scenario Outline: PALERTC001 : Verify for a create alert api, a request is created in PAS_ReqQueue table-T8234124
 
 Given "PlatformAlertingCreateAlert" : "<TestCase>" : I trigger create alert API
 And I verify create alert api request in PAS_ReqQueue table
 And I verify create alert request is archived in PAS_ReqQueueArchive table
 And I verify an alert entry is created in pas_reqcons table on successful processing of an Alert request
-#And I trigger update alert API
-#And I verify create alert api request in PAS_ReqQueue table
-#And I verify create alert request is archived in PAS_ReqQueueArchive table
-#And I verify an alert entry is created in pas_reqcons table on successful processing of an Alert request
+And I trigger update alert API
+And I verify create alert api request in PAS_ReqQueue table
+And I verify create alert request is archived in PAS_ReqQueueArchive table
+And I verify an alert entry is created in pas_reqcons table on successful processing of an Alert request
 And I trigger auto close alert API
-#And I verify create alert api request in PAS_ReqQueue table
-#And I verify create alert request is archived in PAS_ReqQueueArchive table
-#And I verify an archived alert entry is created in PAS_ReqConsArchive table on successfull processing of close alert request
-#And I verify create alert api request is deleted from PAS_ReqQueue table
-
+And I verify create alert api request in PAS_ReqQueue table
+And I verify create alert request is archived in PAS_ReqQueueArchive table
+And I verify an archived alert entry is created in PAS_ReqConsArchive table on successfull processing of close alert request
+And I verify create alert api request is deleted from PAS_ReqQueue table
 
 #Given I naviagte to ITS portal
 #When I login to ITS portal
-#And I navigate to New ticket window
+#And I navigate to New ticket windowds
 #And I search ticket id on report page
 #And I verify searched ticket details
 #And I navigate to ticket detail page for ticket
@@ -28,7 +27,38 @@ And I trigger auto close alert API
 
 Examples:
 |TestCase|
-|Platform002|
+#|Platform001|
+#|Platform002|
+#|Platform003|
+|Platform004|
+#|Platform005|
+#|Platform006|
+#|Platform007|
+#|Platform008|
+#|Platform009|
+#|Platform010|
+#|Platform011|
+#|Platform012|
+#|Platform013|
+#|Platform014|
+#|Platform015|
+#|Platform016|
+#|Platform017|
+#|Platform018|
+#|Platform019|
+#|Platform020|
+#|Platform021|
+#|Platform022|
+#|Platform023|
+#|Platform024|
+#|Platform025|
+#|Platform026|
+#|Platform027|
+#|Platform028|
+#|Platform029|
+#|Platform030|
+#|Platform031|
+#|Platform032|
 
 
 #Scenario Outline: AUVIKSC001 : Verify for a create alert api, a request is created in PAS_ReqQueue table.

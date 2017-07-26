@@ -36,6 +36,21 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	@Before
 	 public void readScenario(Scenario scenario) {
 		JunoAlertingStepsDefinations.scenario = scenario;
+		String environment = Utilities.getMavenProperties("Environment").trim();
+		setFileName("TestData_" + environment + ".xls");
+		if (environment.equals("QA")) {
+			setHostURL(Utilities.getMavenProperties("QAHostUrl"));
+			setDbHost(Utilities.getMavenProperties("QADBHost"));
+			setDbUserName(Utilities.getMavenProperties("QADBUserName"));
+			setDbPassword(Utilities.getMavenProperties("QADBPassword"));
+		} else if (environment.equals("DT")) {
+			setHostURL(Utilities.getMavenProperties("DTHostUrl"));
+			setDbHost(Utilities.getMavenProperties("DTDBHost"));
+			setDbUserName(Utilities.getMavenProperties("DTDBUserName"));
+			setDbPassword(Utilities.getMavenProperties("DTDBPassword"));
+		} else {
+			Assert.assertTrue(hostUrl != null ,"Host URL is not defined for environment : " + environment);
+		}
 	 }
 	
 	
@@ -59,6 +74,9 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private String databasePassword;
 	private String databaseHost;
 	private String URL;
+	private String fileName;
+	private String hostUrl;
+	private JsonObject alertDetailJson;
 	
 	private void setJsonData(JsonObject jObject){
 		jsonObject = jObject;
@@ -66,6 +84,14 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	
 	private JsonObject getJsonData(){
 		return jsonObject;
+	}
+	
+	private void setalertDetailJson(JsonObject jObject){
+		alertDetailJson = jObject;
+	}
+	
+	private JsonObject getalertDetailJson(){
+		return alertDetailJson;
 	}
 	
 	private void setAlertID(String inTransactionID){
@@ -76,12 +102,28 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		return transactionID;
 	}
 	
+	private String getFileName(){
+		return fileName;
+	}
+	
+	private void setFileName(String file){
+		fileName = file;
+	}
+	
 	private void setURL(String url){
 		URL = url;
 	}
 	
 	private String getURL(){
 		return URL;
+	}
+	
+	private void setHostURL(String hosturl){
+		hostUrl = hosturl;
+	}
+	
+	private String getHostURL(){
+		return hostUrl;
 	}
 	
 	private String getDbHost(){
@@ -110,32 +152,17 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API$")
 	public void i_trigger_create_alert_API(String arg1, String arg2) throws Throwable {		
-		String environment = Utilities.getMavenProperties("Environment").trim();	
-		String hostUrl = null;
-		String fileName = null;
-		fileName= "TestData_" + environment + ".xls";
-		if (environment.equals("QA")) {
-			hostUrl = Utilities.getMavenProperties("QAHostUrl");
-			setDbHost(Utilities.getMavenProperties("DTDBHost"));
-			setDbUserName(Utilities.getMavenProperties("DTDBUserName"));
-			setDbPassword(Utilities.getMavenProperties("DTDBPassword"));
-		} else if (environment.equals("DT")) {
-			hostUrl = Utilities.getMavenProperties("DTHostUrl");
-			setDbHost(Utilities.getMavenProperties("QADBHost"));
-			setDbUserName(Utilities.getMavenProperties("QADBUserName"));
-			setDbPassword(Utilities.getMavenProperties("QADBPassword"));
-		} else {
-			Assert.assertTrue(hostUrl != null ,"Host URL is not defined for environment : " + environment);
-		}
-		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + fileName;		
+			
+		
+		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + getFileName();		
 		DataUtils.setTestRow(excelFilePath, arg1, arg2);
 		HashMap<String, String> currentRow = new HashMap<>();
 		
 		currentRow.putAll(DataUtils.getTestRow());		
-		String createAlertUrl = Utilities.getMavenProperties("PlatformCreateAlertDtUrl")
+		String createAlertUrl = Utilities.getMavenProperties("PlatformAlertUrlSchema")
 				.replace("{partners}", currentRow.get("partners"))
 				.replace("{sites}", currentRow.get("sites"))
-				.replace("{HostUrl}", hostUrl);
+				.replace("{HostUrl}", getHostURL());
 								
 		JsonObject albums = new JsonObject();
 		albums.addProperty("resourceId", Integer.parseInt(currentRow.get("resourceId")));
@@ -159,15 +186,16 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 				dataset.addProperty(key, val);
 			}	
 		}		
+		setalertDetailJson(dataset);
 		albums.add("alertDetails", dataset);		
 		setJsonData(albums);
 		URL = createAlertUrl;
-		scenario.write(URL);
-		
+		setURL(URL);		
+		scenario.write(URL);		
 		System.out.println(albums);
 		System.out.println(URL);
 		
-		Response resp = RestAssured.given().contentType("application/json").body(albums.toString()).post(createAlertUrl).andReturn();
+		Response resp = RestAssured.given().contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 	    JsonObject  jobject = jelement.getAsJsonObject();
 	    System.out.println("Status =====================================================" + jobject.get("status"));
@@ -229,7 +257,12 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	@Given("^I verify create alert api request in PAS_ReqQueue table$")
 	public void i_verify_create_alert_api_request_in_PAS_ReqQueue_table() throws Exception {
 		String query = "select * from PAS_ReqQueue where CorrelationID like '" + getAlertID() + "'";
-		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://10.2.40.45:1433", "DB_Architect", "DBabc@1234", query);		
+		JsonParser parser = new JsonParser();
+		System.out.println(getDbHost());
+		System.out.println(getDbUserName());
+		System.out.println(getDbPassword());
+		
+		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost() , getDbUserName(), getDbPassword(), query);		
 		HashMap<String, String> currentRow = new HashMap<>();		
 		currentRow.putAll(DataUtils.getTestRow());				
 		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq = null, dOperation = null, dDcDtime = null, dUpDcDtime = null;
@@ -252,11 +285,13 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 				"Site ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("sites") + ", Actual :" + dSiteId);
 		Assert.assertTrue(currentRow.get("partners").trim().equalsIgnoreCase(dMemberId), 
 				"Partner ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("partners") + ", Actual :" + dMemberId);
-		
+		/*Assert.assertEquals(parser.parse(dInputReq).getAsJsonObject(), getalertDetailJson());
 		System.out.println("rs.getString(\"InputReq\").trim()" + dInputReq);
 		System.out.println("rs.getString(\"Operation\").trim()" + dOperation);
 		System.out.println("rs.getString(\"DcDtime\").trim()" + dDcDtime);
 		System.out.println("rs.getString(\"partners\").trim()" + dUpDcDtime);
+		getalertDetailJson().equals(dInputReq);*/
+		
 	}
 	
 	@Given("^I verify create alert api request is deleted from PAS_ReqQueue table$")
@@ -277,7 +312,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		String query = "select * from PAS_ReqQueueArchive where CorrelationID like '" + getAlertID() + "'";	
 		int count = 0 ;
 		while(count <= 0){			
-			ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://10.2.40.45:1433", "DB_Architect", "DBabc@1234", query);
+			ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(), query);
 			while (rs.next()) {
 					count++;
 			}		
@@ -324,7 +359,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		
 		
 		String query = "select * from PAS_ReqCons with(NOLOCK) where LastStatus = '" + getAlertID() + "'";
-		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://10.2.40.45:1433", "DB_Architect", "DBabc@1234", query);		
+		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(), query);		
 		int count = 0 ;
 		
 		HashMap<String, String> dbValues = new HashMap<String, String>(); 
@@ -427,7 +462,13 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	
 	@Given("^I trigger auto close alert API$")
 	public void i_trigger_auto_close_alert_API() {
-		Response resp = RestAssured.given().delete("http://10.2.40.136:8080/alerting/v1/partners/50016358/sites/50110019/alerts/" + getAlertID()).andReturn();
+		HashMap<String, String> currentRow = new HashMap<>();		
+		currentRow.putAll(DataUtils.getTestRow());
+		/*String createAlertUrl = Utilities.getMavenProperties("PlatformAlertUrlSchema")
+				.replace("{partners}", currentRow.get("partners"))
+				.replace("{sites}", currentRow.get("sites"))
+				.replace("{HostUrl}", getHostURL());*/
+		Response resp = RestAssured.given().delete(getURL() + "/" + getAlertID()).andReturn();
 		System.out.println("Send POST command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
 	}
@@ -435,25 +476,22 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	
 	
 	@Given("^I trigger update alert API$")
-	public void i_trigger_update_alert_API() {
-		JsonObject dataset = new JsonObject();		
-		dataset.addProperty("TotalPhysicalMemoryInMB", 1000);
-		dataset.addProperty("AverageMemoryInUseInMB", 200);
-		dataset.addProperty("AverageAvailableMemoryInMB", 100);
-		dataset.addProperty("ProcessConsumingHighestMemory", "css.exe");		
+	public void i_trigger_update_alert_API() {		
 		JsonObject jobj = getJsonData();
-		jobj.add("alertDetails", dataset);
+		jobj.add("alertDetails", getalertDetailJson());
 		System.out.println(jobj.toString());
 		
-		/*Response resp = RestAssured.given().contentType("application/json").body(jobj.toString()).put(URL + "/" + getAlertID()).andReturn();
+		Response resp = RestAssured.given().contentType("application/json").body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 		System.out.println("Send POST command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
 		System.out.println("Status Body \n" + resp.getBody().asString());
 		System.out.println("Time taken to get response is \n" + resp.getTime()+" milli second");
-		*/
-		/*JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
-	    JsonObject  jobject = jelement.getAsJsonObject();
-	    System.out.println("Status =====================================================" + resp.get("status"));*/
+		
+		//JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+	    //JsonObject  jobject = jelement.getAsJsonObject();
+		int apiStatusID = resp.getStatusCode();
+	    System.out.println("Status =====================================================" + resp.getStatusCode());
+	    Assert.assertEquals(apiStatusID, 204, "Update alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 204");
 	}
 	
 	public static ResultSet executeQuery(String databaseName, String sqlServerURL, String username, String password,
