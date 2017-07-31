@@ -1,7 +1,7 @@
 Feature: Auto Process Functionalities
 
 @BVT
-Scenario Outline: PALERTC001 : Verify for a create alert api, a request is created in PAS_ReqQueue table-C1915948
+Scenario Outline: Verify for a create alert api a request is created in PASReqQueue table-C1915948,C1915949,C1915950,C1915951
 
 Given "PlatformAlertingCreateAlert" : "<TestCase>" : I trigger create alert API
 And I verify create alert api request in PAS_ReqQueue table
