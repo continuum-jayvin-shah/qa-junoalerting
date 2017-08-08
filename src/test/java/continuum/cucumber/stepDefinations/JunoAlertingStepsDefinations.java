@@ -5,7 +5,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.TimeZone;
 
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -284,18 +288,19 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Assert.assertTrue(currentRow.get("sites").trim().equalsIgnoreCase(dSiteId), 
 				"Site ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("sites") + ", Actual :" + dSiteId);
 		Assert.assertTrue(currentRow.get("partners").trim().equalsIgnoreCase(dMemberId), 
-				"Partner ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("partners") + ", Actual :" + dMemberId);
-		/*Assert.assertEquals(parser.parse(dInputReq).getAsJsonObject(), getalertDetailJson());
-		System.out.println("rs.getString(\"InputReq\").trim()" + dInputReq);
-		System.out.println("rs.getString(\"Operation\").trim()" + dOperation);
-		System.out.println("rs.getString(\"DcDtime\").trim()" + dDcDtime);
-		System.out.println("rs.getString(\"partners\").trim()" + dUpDcDtime);
-		getalertDetailJson().equals(dInputReq);*/
+				"Partner ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("partners") + ", Actual :" + dMemberId);		
+		Assert.assertEquals(parser.parse(dInputReq).getAsJsonObject(), getalertDetailJson(),
+				"InputReq does not match in PAS_ReqQueue_table, Expected " + getalertDetailJson() + " ,Actual " + dInputReq);
+		Assert.assertTrue(dOperation.equals("1"), 
+				"Operation ID does not match in PAS_ReqQueue_table, Expected '1', Actual :" + dOperation);
+		
+		System.out.println("dUpDcDtime : " + dUpDcDtime);
+		//System.out.println("Time Lapse +++++++++++++++++++++++++++++++++++++++++++++  " + getDateDifference(getCurrentTime("America/Los_Angeles"),dDcDtime));
 		
 	}
 	
-	@Given("^I verify create alert api request is deleted from PAS_ReqQueue table$")
-	public void i_verify_create_alert_api_request_is_deleted_from_PAS_ReqQueue_table() throws Exception {
+	@Given("^I verify create alert api request is deleted from pas_reqcons table$")
+	public void i_verify_create_alert_api_request_is_deleted_from_pas_reqcons_table() throws Exception {
 		String query = "select * from PAS_ReqQueue where CorrelationID like '" + getAlertID() + "'";
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://10.2.40.45:1433", "DB_Architect", "DBabc@1234", query);		
 		int count = 0 ;
@@ -482,6 +487,9 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		System.out.println(jobj.toString());
 		
 		Response resp = RestAssured.given().contentType("application/json").body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
+		
+		Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
+		
 		System.out.println("Send POST command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
 		System.out.println("Status Body \n" + resp.getBody().asString());
@@ -509,6 +517,23 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 		}
 		return rs;
+	}
+	
+	public static String getCurrentTime(String timezone) throws ParseException, InterruptedException
+	{
+		TimeZone.setDefault(TimeZone.getTimeZone(timezone));
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy HH:mm:ss a");
+		String currentTime = sdf.format(new Date());
+		return currentTime;
+	}
+	
+	public static long getDateDifference(String endTime, String startTime) throws ParseException 
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy HH:mm:ss a");
+		Date d11 = sdf.parse(startTime);
+		Date d22 = sdf.parse(endTime);
+		long diff = d22.getTime() - d11.getTime();
+		return diff;
 	}
 	
 }

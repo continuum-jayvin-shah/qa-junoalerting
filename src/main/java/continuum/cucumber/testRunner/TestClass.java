@@ -1,5 +1,6 @@
 package continuum.cucumber.testRunner;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -9,7 +10,11 @@ import java.util.TimeZone;
 
 public class TestClass {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) throws ParseException, InterruptedException {
+		String startTime = getCurrentTime("America/Los_Angeles");
+		Thread.sleep(1000);
+		String endTime = getCurrentTime("America/Los_Angeles");
+		System.out.println(getDateDifference(endTime, startTime));
 		// TODO Auto-generated method stub
 		/*Calendar calendar = new GregorianCalendar();
 		TimeZone timeZone = TimeZone.getTimeZone("America/Los_Angeles");
@@ -23,7 +28,6 @@ public class TestClass {
 		int second = calendar.get(Calendar.SECOND);
 		int miliSecond = calendar.get(Calendar.MILLISECOND);
 
-		String time =  */
 				
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.DATE, 1);
@@ -34,7 +38,7 @@ public class TestClass {
 		final Date currentParsed = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse("2011-08-23 14:59:26.662");
 		final Date previousParsed = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").parse("2011-08-23 14:57:26.662");
 		long difference = currentParsed.getTime() - previousParsed.getTime();
-		System.out.println(difference);
+		System.out.println(difference);*/
 
 		/*String startTime = "2017-07-15";
 		String endTime = "2017-07-15";
@@ -53,4 +57,30 @@ public class TestClass {
 		System.out.println(laps1);*/
 	}
 
+	public static String getCurrentTime(String timezone) throws ParseException, InterruptedException
+	{
+		TimeZone.setDefault(TimeZone.getTimeZone(timezone));
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy HH:mm:ss a");
+		String currentTime = sdf.format(new Date());
+		return currentTime;
+	}
+	
+	public static long getDateDifference(String endTime, String startTime) throws ParseException 
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy HH:mm:ss a");
+		Date d11 = sdf.parse(startTime);
+		Date d22 = sdf.parse(endTime);
+		long diff = d22.getTime() - d11.getTime();
+		return diff;
+	}
+	
+	/*String startDate = sdf.format(new Date());
+	System.out.println("startDate : " + startDate);
+	
+	//Thread.sleep(1000);
+	
+	String endDate = sdf.format(new Date());
+	System.out.println("endDate : " + endDate);
+	*/
+	
 }

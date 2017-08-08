@@ -15,11 +15,11 @@ And I trigger auto close alert API
 And I verify create alert api request in PAS_ReqQueue table
 And I verify create alert request is archived in PAS_ReqQueueArchive table
 And I verify an archived alert entry is created in PAS_ReqConsArchive table on successfull processing of close alert request
-And I verify create alert api request is deleted from PAS_ReqQueue table
+And I verify create alert api request is deleted from pas_reqcons table
 
 #Given I naviagte to ITS portal
 #When I login to ITS portal
-#And I navigate to New ticket windowds
+#And I navigate to New ticket window
 #And I search ticket id on report page
 #And I verify searched ticket details
 #And I navigate to ticket detail page for ticket
