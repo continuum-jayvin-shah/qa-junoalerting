@@ -17,6 +17,7 @@ import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 
 import com.continuum.utils.DataUtils;
+import com.continuum.utils.JunoAlertingUtils;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -80,6 +81,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private String URL;
 	private String fileName;
 	private String hostUrl;
+	private String currentTime;
+	private String dUpDcDtime1 = null;
 	private JsonObject alertDetailJson;
 	
 	private void setJsonData(JsonObject jObject){
@@ -200,6 +203,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		System.out.println(URL);
 		
 		Response resp = RestAssured.given().contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
+		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 	    JsonObject  jobject = jelement.getAsJsonObject();
 	    System.out.println("Status =====================================================" + jobject.get("status"));
@@ -269,7 +273,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost() , getDbUserName(), getDbPassword(), query);		
 		HashMap<String, String> currentRow = new HashMap<>();		
 		currentRow.putAll(DataUtils.getTestRow());				
-		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq = null, dOperation = null, dDcDtime = null, dUpDcDtime = null;
+		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq = null, dOperation = null, dUpDcDtime = null;
 		while (rs.next()) {
 			dRegId = rs.getString("RegId").trim();
 			dConditionId = rs.getString("ConditionId").trim();
@@ -278,8 +282,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			
 			dInputReq = rs.getString("InputReq").trim();
 			dOperation = rs.getString("Operation").trim();
-			dDcDtime = rs.getString("DcDtime").trim();
-			dUpDcDtime = rs.getString("UpDcDtime").trim();
+			String dDcDtime = rs.getString("DcDtime").trim();
+			dUpDcDtime1 = rs.getString("UpDcDtime").trim();
 		}		
 		Assert.assertTrue(currentRow.get("resourceId").trim().equalsIgnoreCase(dRegId), 
 				"Resource ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("resourceId") + ", Actual :" + dRegId);
@@ -294,7 +298,16 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Assert.assertTrue(dOperation.equals("1"), 
 				"Operation ID does not match in PAS_ReqQueue_table, Expected '1', Actual :" + dOperation);
 		
-		System.out.println("dUpDcDtime : " + dUpDcDtime);
+		System.out.println("dUpDcDtime ReqQue : " + dUpDcDtime1);
+		dUpDcDtime1 = dUpDcDtime1.substring(0, 19);
+		
+		
+		long timeElapsed = JunoAlertingUtils.getDateDifference(currentTime, dUpDcDtime1);
+		
+		if(timeElapsed > 30000){
+			Assert.fail("Alert processing taken time more than expected value of 30 seconds.");
+		}else
+			System.out.println("***Processing done within time limits - " + timeElapsed + " milliseconds");
 		//System.out.println("Time Lapse +++++++++++++++++++++++++++++++++++++++++++++  " + getDateDifference(getCurrentTime("America/Los_Angeles"),dDcDtime));
 		
 	}
@@ -325,7 +338,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			Thread.sleep(500);
 		}		
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://10.2.40.45:1433", "DB_Architect", "DBabc@1234", query);	
-		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq, dOperation, dDcDtime, dUpDcDtime, dInsertedOn;
+		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq, dOperation, dDcDtime = null, dUpDcDtime=null, dInsertedOn=null;
 		while (rs.next()) {
 			dRegId = rs.getString("RegId");
 			dConditionId = rs.getString("ConditionId");
@@ -338,13 +351,24 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			dInsertedOn = rs.getString("InsertedOn");
 		}		
 		Assert.assertTrue(currentRow.get("resourceId").trim().equalsIgnoreCase(dRegId), 
-				"Resource ID does not match in PAS_ReqQueue_archived_table, Expected " + currentRow.get("resourceId") + ", Actual :" + dRegId);
+				"Resource ID does not match in PAS_ReqCons_table, Expected " + currentRow.get("resourceId") + ", Actual :" + dRegId);
 		Assert.assertTrue(currentRow.get("conditionId").trim().equalsIgnoreCase(dConditionId), 
-				"Condition ID does not match in PAS_ReqQueue_archived_table, Expected " + currentRow.get("conditionId") + ", Actual :" + dConditionId);
+				"Condition ID does not match in PAS_ReqCons_table, Expected " + currentRow.get("conditionId") + ", Actual :" + dConditionId);
 		Assert.assertTrue(currentRow.get("sites").trim().equalsIgnoreCase(dSiteId), 
-				"Site ID does not match in PAS_ReqQueue_archived_table, Expected " + currentRow.get("sites") + ", Actual :" + dSiteId);
+				"Site ID does not match in PAS_ReqCons_table, Expected " + currentRow.get("sites") + ", Actual :" + dSiteId);
 		Assert.assertTrue(currentRow.get("partners").trim().equalsIgnoreCase(dMemberId), 
-				"Partner ID does not match in PAS_ReqQueue_archived_table, Expected " + currentRow.get("partners") + ", Actual :" + dMemberId);
+				"Partner ID does not match in PAS_ReqCons_table, Expected " + currentRow.get("partners") + ", Actual :" + dMemberId);
+		
+		System.out.println("dUpDcDtime ReqQueArchive: " + dInsertedOn);
+		dInsertedOn= dInsertedOn.substring(0, 19);
+		
+		long timeElapsed = JunoAlertingUtils.getDateDifference(dInsertedOn,dUpDcDtime1);
+				
+		if(timeElapsed > 30000){
+			Assert.fail("Alert processing taken time more than expected value of 30 seconds.");
+		}else{
+			System.out.println("***Processing done within time limits - " + timeElapsed + " milliseconds" );
+		}
 	}
 	
 	@Given("^I verify an alert entry is created in pas_reqcons table on successful processing of an Alert request$")
@@ -356,11 +380,6 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		System.out.println("ConditionId " + currentRow.get("conditionId"));
 		System.out.println("SiteId " + currentRow.get("sites"));
 		System.out.println("MemberId " + currentRow.get("partners"));
-		
-		/*System.out.println("RegId " + currentRow.get("TotalPhysicalMemoryInMB"));
-		System.out.println("RegId " + currentRow.get("AverageMemoryInUseInMB"));
-		System.out.println("RegId " + currentRow.get("AverageAvailableMemoryInMB"));
-		System.out.println("RegId " + currentRow.get("ProcessConsumingHighestMemory"));*/
 		
 		
 		String query = "select * from PAS_ReqCons with(NOLOCK) where LastStatus = '" + getAlertID() + "'";
@@ -375,6 +394,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			dbValues.put("ChildUniqueId", rs.getString("ChildUniqueId"));
 			dbValues.put("ParentRegId", rs.getString("ParentRegId"));
 			dbValues.put("ChildRegid", rs.getString("ChildRegid"));
+			dbValues.put("LastStatus", rs.getString("LastStatus"));
 			dbValues.put("LastStatusDate", rs.getString("LastStatusDate"));
 			dbValues.put("Description", rs.getString("Description"));
 			dbValues.put("RefDatetime", rs.getString("RefDatetime"));
@@ -393,16 +413,12 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			dbValues.put("UpDcDtime", rs.getString("UpDcDtime"));
 			count++;
 		}
-		Assert.assertTrue(currentRow.get("partners").trim().equalsIgnoreCase(dbValues.get("MemberId")), 
-				"Resource ID does not match in PAS_ReqQueue_archived_table, Expected " + currentRow.get("partners") + ", Actual :" + dbValues.get("MemberId"));
-		Assert.assertTrue(currentRow.get("sites").trim().equalsIgnoreCase(dbValues.get("SiteId")), 
-				"Condition ID does not match in PAS_ReqQueue_archived_table, Expected " + currentRow.get("sites") + ", Actual :" + dbValues.get("SiteId"));
-		Assert.assertTrue(currentRow.get("resourceId").trim().equalsIgnoreCase(dbValues.get("ParentUniqueId")), 
-				"Site ID does not match in PAS_ReqQueue_archived_table, Expected " + currentRow.get("resourceId") + ", Actual :" + dbValues.get("ParentUniqueId"));
-		/*Assert.assertTrue(currentRow.get("partners").trim().equalsIgnoreCase(dbValues.get("ChildUniqueId")), 
-				"Partner ID does not match in PAS_ReqQueue_archived_table, Expected " + currentRow.get("") + ", Actual :" + dbValues.get("ChildUniqueId"));*/
+		
+		assertReqConTables(currentRow,dbValues); //asserting DB column values
 	}
 	
+	
+
 	@Given("^I verify an archived alert entry is created in PAS_ReqConsArchive table on successfull processing of close alert request$")
 	public void i_verify_an_archived_alert_entry_is_created_in_PAS_ReqConsArchive_table_on_successfull_processing_of_close_alert_request() throws Exception {
 
@@ -434,35 +450,33 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://10.2.40.45:1433", "DB_Architect", "DBabc@1234", query);
 		HashMap<String, String> dbValues = new HashMap<String, String>(); 
 		while (rs.next()) {
-			System.out.println(rs.getString("MemberId"));
-			System.out.println(rs.getString("SiteId"));
-			System.out.println(rs.getString("ParentUniqueId"));
-			System.out.println(rs.getString("ChildUniqueId"));
-			System.out.println(rs.getString("ParentRegId"));
-			System.out.println(rs.getString("ChildRegid"));
-			System.out.println(rs.getString("LastStatus"));
-			System.out.println(rs.getString("LastStatusDate"));
-			System.out.println(rs.getString("Description"));
-			System.out.println(rs.getString("RefDatetime"));
-			
-			System.out.println(rs.getString("RegType"));
-			System.out.println(rs.getString("ThreshValue"));
-			System.out.println(rs.getString("ConditionId"));
-			System.out.println(rs.getString("ConsLevel"));
-			System.out.println(rs.getString("AlertId"));
-			System.out.println(rs.getString("TicketId"));
-			System.out.println(rs.getString("CallQId"));
-			System.out.println(rs.getString("CallQRefId"));
-			System.out.println(rs.getString("MsgbId"));
-			
-			System.out.println(rs.getString("AssignToGrp"));
-			System.out.println(rs.getString("NocActionId"));
-			System.out.println(rs.getString("DcDtime"));
-			System.out.println(rs.getString("UpDcDtime"));
-			
+			dbValues.put("MemberId", rs.getString("MemberId")); //done
+			dbValues.put("SiteId", rs.getString("SiteId")); // done
+			dbValues.put("ParentUniqueId", rs.getString("ParentUniqueId")); //done
+			dbValues.put("ChildUniqueId", rs.getString("ChildUniqueId"));
+			dbValues.put("ParentRegId", rs.getString("ParentRegId"));
+			dbValues.put("ChildRegid", rs.getString("ChildRegid"));
+			dbValues.put("LastStatus", rs.getString("LastStatus"));
+			dbValues.put("LastStatusDate", rs.getString("LastStatusDate"));
+			dbValues.put("Description", rs.getString("Description"));
+			dbValues.put("RefDatetime", rs.getString("RefDatetime"));
+			dbValues.put("RegType", rs.getString("RegType"));
+			dbValues.put("ThreshValue", rs.getString("ThreshValue"));
+			dbValues.put("ConditionId", rs.getString("ConditionId"));
+			dbValues.put("ConsLevel", rs.getString("ConsLevel"));
+			dbValues.put("AlertId", rs.getString("AlertId"));
+			dbValues.put("TicketId", rs.getString("TicketId"));
+			dbValues.put("CallQId", rs.getString("CallQId"));
+			dbValues.put("CallQRefId", rs.getString("CallQRefId"));
+			dbValues.put("MsgbId", rs.getString("MsgbId"));
+			dbValues.put("AssignToGrp", rs.getString("AssignToGrp"));
+			dbValues.put("NocActionId", rs.getString("NocActionId"));
+			dbValues.put("DcDtime", rs.getString("DcDtime"));
+			dbValues.put("UpDcDtime", rs.getString("UpDcDtime"));
 			count++;
 		}
-		System.out.println("Count " + count);	
+		
+		assertReqConTables(currentRow, dbValues);
 	}
 	
 	@Given("^I trigger auto close alert API$")
@@ -519,21 +533,63 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		return rs;
 	}
 	
-	public static String getCurrentTime(String timezone) throws ParseException, InterruptedException
-	{
-		TimeZone.setDefault(TimeZone.getTimeZone(timezone));
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy HH:mm:ss a");
-		String currentTime = sdf.format(new Date());
-		return currentTime;
-	}
-	
-	public static long getDateDifference(String endTime, String startTime) throws ParseException 
-	{
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy HH:mm:ss a");
-		Date d11 = sdf.parse(startTime);
-		Date d22 = sdf.parse(endTime);
-		long diff = d22.getTime() - d11.getTime();
-		return diff;
+	/**
+	 * 
+	 * @param currentRow
+	 * @param dbValues
+	 */
+	private void assertReqConTables(HashMap<String, String> currentRow, HashMap<String, String> dbValues) {
+		
+		Assert.assertTrue(currentRow.get("partners").trim().equalsIgnoreCase(dbValues.get("MemberId")), 
+				"Member ID does not match in PAS_ReqCons_table, Expected " + currentRow.get("partners") + ", Actual :" + dbValues.get("MemberId"));
+		
+		Assert.assertTrue(currentRow.get("sites").trim().equalsIgnoreCase(dbValues.get("SiteId")), 
+				"Site ID does not match in PAS_ReqCons_table, Expected " + currentRow.get("sites") + ", Actual :" + dbValues.get("SiteId"));
+		
+		Assert.assertTrue(currentRow.get("resourceId").trim().equalsIgnoreCase(dbValues.get("ParentUniqueId")), 
+				"Resource ID does not match in PAS_ReqCons_table, Expected " + currentRow.get("resourceId") + ", Actual :" + dbValues.get("ParentUniqueId"));
+		
+		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("ChildUniqueId")), 
+				"ChildUniqueId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("ChildUniqueId"));
+		
+		Assert.assertTrue(currentRow.get("resourceId").trim().equalsIgnoreCase(dbValues.get("ParentRegId")), 
+				"ParentRegID does not match in PAS_ReqCons_table, Expected " + currentRow.get("resourceId") + ", Actual :" + dbValues.get("ParentRegId"));
+		
+		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("ChildRegid")), 
+				"ChildRegid does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("ChildRegid"));
+		
+		Assert.assertTrue(getAlertID().trim().equalsIgnoreCase(dbValues.get("LastStatus")), 
+				"Alert ID does not match in PAS_ReqCons_table, Expected " + getAlertID() + ", Actual :" + dbValues.get("LastStatus"));
+		
+		Assert.assertTrue("DPMA".trim().equalsIgnoreCase(dbValues.get("RegType")), 
+				"RegType does not match in PAS_ReqCons_table, Expected " + "DPMA" + ", Actual :" + dbValues.get("RegType"));
+		
+		Assert.assertTrue("1".trim().equalsIgnoreCase(dbValues.get("ThreshValue")), 
+				"ThreshValue does not match in PAS_ReqCons_table, Expected " + "1" + ", Actual :" + dbValues.get("ThreshValue"));
+		
+		Assert.assertTrue(currentRow.get("conditionId").trim().equalsIgnoreCase(dbValues.get("ConditionId")), 
+				"Condition ID does not match in PAS_ReqCons_table, Expected " + currentRow.get("conditionId") + ", Actual :" + dbValues.get("ConditionId"));
+		
+		Assert.assertTrue("Resource".trim().equalsIgnoreCase(dbValues.get("ConsLevel")), 
+				"ConsLevel does not match in PAS_ReqCons_table, Expected " + "Resource" + ", Actual :" + dbValues.get("ConsLevel"));
+		
+		if(!dbValues.get("AlertId").trim().equalsIgnoreCase("0")){
+			
+			Assert.assertTrue("0".equalsIgnoreCase(dbValues.get("TicketId")),
+					"Alert ID : " + dbValues.get("AlertId") + " and TicketID:  " + dbValues.get("TicketId")+ " both have non zero entry." );
+		}else{
+			Assert.assertTrue("0".equalsIgnoreCase(dbValues.get("AlertId")),
+					"Alert ID : " + dbValues.get("AlertId") + " and TicketID:  " + dbValues.get("TicketId")+ " both have non zero entry." );			
+		}
+		
+		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("CallQId")), 
+				"CallQId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("CallQId"));
+		
+		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("CallQRefId")), 
+				"CallQRefId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("CallQRefId"));
+		
+		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("MsgbId")), 
+				"MsgbId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("MsgbId"));		
 	}
 	
 }

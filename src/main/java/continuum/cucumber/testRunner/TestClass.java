@@ -14,6 +14,11 @@ public class TestClass {
 		String startTime = getCurrentTime("America/Los_Angeles");
 		Thread.sleep(1000);
 		String endTime = getCurrentTime("America/Los_Angeles");
+		startTime = startTime.substring(0, 19);
+		endTime = endTime.substring(0, 19);
+		System.out.println(endTime);
+		System.out.println(endTime);
+		
 		System.out.println(getDateDifference(endTime, startTime));
 		// TODO Auto-generated method stub
 		/*Calendar calendar = new GregorianCalendar();
@@ -60,14 +65,14 @@ public class TestClass {
 	public static String getCurrentTime(String timezone) throws ParseException, InterruptedException
 	{
 		TimeZone.setDefault(TimeZone.getTimeZone(timezone));
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy HH:mm:ss a");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss.SSS");
 		String currentTime = sdf.format(new Date());
 		return currentTime;
 	}
 	
 	public static long getDateDifference(String endTime, String startTime) throws ParseException 
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy HH:mm:ss a");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
 		Date d11 = sdf.parse(startTime);
 		Date d22 = sdf.parse(endTime);
 		long diff = d22.getTime() - d11.getTime();

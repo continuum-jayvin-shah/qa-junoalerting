@@ -27,10 +27,10 @@ And I verify create alert api request is deleted from pas_reqcons table
 
 Examples:
 |TestCase|
-#|Platform001|
+|Platform001|
 #|Platform002|
 #|Platform003|
-|Platform004|
+#|Platform004|
 #|Platform005|
 #|Platform006|
 #|Platform007|

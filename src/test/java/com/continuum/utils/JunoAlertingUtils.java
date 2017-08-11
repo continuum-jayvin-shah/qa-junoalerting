@@ -1,5 +1,9 @@
 package com.continuum.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.JavascriptExecutor;
@@ -50,4 +54,36 @@ public class JunoAlertingUtils {
 		        }
 		    });
 		}
+	
+	
+	/**
+	 * 
+	 * @param timezone
+	 * @return
+	 * @throws ParseException
+	 * @throws InterruptedException
+	 */
+	public static String getCurrentTime(String timezone) throws ParseException, InterruptedException
+	{
+		TimeZone.setDefault(TimeZone.getTimeZone(timezone));
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		String currentTime = sdf.format(new Date());
+		return currentTime;
+	}
+	
+	/**
+	 * 
+	 * @param endTime
+	 * @param startTime
+	 * @return
+	 * @throws ParseException
+	 */
+	public static long getDateDifference(String endTime, String startTime) throws ParseException 
+	{
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		Date d11 = sdf.parse(startTime);
+		Date d22 = sdf.parse(endTime);
+		long diff = d22.getTime() - d11.getTime();
+		return diff;
+	}
 }
