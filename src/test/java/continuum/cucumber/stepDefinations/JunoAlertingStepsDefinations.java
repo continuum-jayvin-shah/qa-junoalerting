@@ -295,8 +295,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 				"Partner ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("partners") + ", Actual :" + dMemberId);		
 		Assert.assertEquals(parser.parse(dInputReq).getAsJsonObject(), getalertDetailJson(),
 				"InputReq does not match in PAS_ReqQueue_table, Expected " + getalertDetailJson() + " ,Actual " + dInputReq);
-		Assert.assertTrue(dOperation.equals("1"), 
-				"Operation ID does not match in PAS_ReqQueue_table, Expected '1', Actual :" + dOperation);
+		//Assert.assertTrue(dOperation.equals("1"), 
+			//	"Operation ID does not match in PAS_ReqQueue_table, Expected '1', Actual :" + dOperation);
 		
 		System.out.println("dUpDcDtime ReqQue : " + dUpDcDtime1);
 		dUpDcDtime1 = dUpDcDtime1.substring(0, 19);
@@ -415,6 +415,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		}
 		
 		assertReqConTables(currentRow,dbValues); //asserting DB column values
+		
+		System.out.println("ReqCons Table validation successfull.");
 	}
 	
 	
@@ -492,8 +494,6 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		System.out.println("Status Code \n" + resp.getStatusCode());
 	}
 	
-	
-	
 	@Given("^I trigger update alert API$")
 	public void i_trigger_update_alert_API() {		
 		JsonObject jobj = getJsonData();
@@ -502,7 +502,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		
 		Response resp = RestAssured.given().contentType("application/json").body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 		
-		Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
+		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
 		
 		System.out.println("Send POST command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
