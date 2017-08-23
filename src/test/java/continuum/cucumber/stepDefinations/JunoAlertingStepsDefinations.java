@@ -208,7 +208,14 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	    JsonObject  jobject = jelement.getAsJsonObject();
 	    System.out.println("Status =====================================================" + jobject.get("status"));
 	    String apiStatusID = jobject.get("status").toString();
-	    System.out.println(jobject.get("alertId"));
+	    
+	    try{
+	    	System.out.println(jobject.get("alertId"));
+	    }catch(NullPointerException n){
+	    	System.out.println("No Alert/Ticket ID created. Exiting execution...");	    
+	    	Assert.fail("No Alert/Ticket ID created. Exiting execution...");
+	    }
+	    
 	    Assert.assertEquals(apiStatusID, "201", "Create alert API execution failed, the api status ID is " + apiStatusID + " and API message body is ");
 	    System.out.println("AlertID =====================================================" + jobject.get("alertId").getAsString());
 	    setAlertID(jobject.get("alertId").getAsString());
@@ -264,54 +271,69 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	
 	@Given("^I verify create alert api request in PAS_ReqQueue table$")
 	public void i_verify_create_alert_api_request_in_PAS_ReqQueue_table() throws Exception {
+		
+		commonReqQueValidation("create");		
+		
+	}
+	
+	private void commonReqQueValidation(String scenario) throws Exception {
 		String query = "select * from PAS_ReqQueue where CorrelationID like '" + getAlertID() + "'";
 		JsonParser parser = new JsonParser();
 		System.out.println(getDbHost());
 		System.out.println(getDbUserName());
 		System.out.println(getDbPassword());
 		
-		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost() , getDbUserName(), getDbPassword(), query);		
-		HashMap<String, String> currentRow = new HashMap<>();		
-		currentRow.putAll(DataUtils.getTestRow());				
-		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq = null, dOperation = null, dUpDcDtime = null;
+		String operationID ="2";
+		if(scenario.equalsIgnoreCase("create")){
+			operationID ="1";
+		}else if(scenario.equalsIgnoreCase("delete")){
+			operationID ="3";
+		}
+
+		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(),query);
+		HashMap<String, String> currentRow = new HashMap<>();
+		currentRow.putAll(DataUtils.getTestRow());
+		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq = null,
+				dOperation = null, dUpDcDtime = null;
+
 		while (rs.next()) {
 			dRegId = rs.getString("RegId").trim();
 			dConditionId = rs.getString("ConditionId").trim();
 			dSiteId = rs.getString("SiteId").trim();
 			dMemberId = rs.getString("MemberId").trim();
-			
+
 			dInputReq = rs.getString("InputReq").trim();
 			dOperation = rs.getString("Operation").trim();
 			String dDcDtime = rs.getString("DcDtime").trim();
 			dUpDcDtime1 = rs.getString("UpDcDtime").trim();
-		}		
-		Assert.assertTrue(currentRow.get("resourceId").trim().equalsIgnoreCase(dRegId), 
-				"Resource ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("resourceId") + ", Actual :" + dRegId);
-		Assert.assertTrue(currentRow.get("conditionId").trim().equalsIgnoreCase(dConditionId), 
-				"Condition ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("conditionId") + ", Actual :" + dConditionId);
-		Assert.assertTrue(currentRow.get("sites").trim().equalsIgnoreCase(dSiteId), 
-				"Site ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("sites") + ", Actual :" + dSiteId);
-		Assert.assertTrue(currentRow.get("partners").trim().equalsIgnoreCase(dMemberId), 
-				"Partner ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("partners") + ", Actual :" + dMemberId);		
+		}
+		Assert.assertTrue(currentRow.get("resourceId").trim().equalsIgnoreCase(dRegId),
+				"Resource ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("resourceId")+ ", Actual :" + dRegId);
+		Assert.assertTrue(currentRow.get("conditionId").trim().equalsIgnoreCase(dConditionId),
+				"Condition ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("conditionId")+ ", Actual :" + dConditionId);
+		Assert.assertTrue(currentRow.get("sites").trim().equalsIgnoreCase(dSiteId),
+				"Site ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("sites") + ", Actual :"+ dSiteId);
+		Assert.assertTrue(currentRow.get("partners").trim().equalsIgnoreCase(dMemberId),
+				"Partner ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("partners") + ", Actual :"+ dMemberId);
 		Assert.assertEquals(parser.parse(dInputReq).getAsJsonObject(), getalertDetailJson(),
-				"InputReq does not match in PAS_ReqQueue_table, Expected " + getalertDetailJson() + " ,Actual " + dInputReq);
-		//Assert.assertTrue(dOperation.equals("1"), 
-			//	"Operation ID does not match in PAS_ReqQueue_table, Expected '1', Actual :" + dOperation);
-		
+				"InputReq does not match in PAS_ReqQueue_table, Expected " + getalertDetailJson() + " ,Actual "+ dInputReq);
+		Assert.assertTrue(dOperation.equals(operationID),
+				"Operation ID does not match in PAS_ReqQueue_table, Expected"+ operationID+", Actual :" + dOperation);
+
 		System.out.println("dUpDcDtime ReqQue : " + dUpDcDtime1);
+
 		dUpDcDtime1 = dUpDcDtime1.substring(0, 19);
-		
-		
-		long timeElapsed = JunoAlertingUtils.getDateDifference(currentTime, dUpDcDtime1);
-		
-		if(timeElapsed > 30000){
+
+		long timeElapsed = JunoAlertingUtils.getDateDifference(dUpDcDtime1,currentTime);
+
+		if (timeElapsed > 30000) {
 			Assert.fail("Alert processing taken time more than expected value of 30 seconds.");
-		}else
-			System.out.println("***Processing done within time limits - " + timeElapsed + " milliseconds");
-		//System.out.println("Time Lapse +++++++++++++++++++++++++++++++++++++++++++++  " + getDateDifference(getCurrentTime("America/Los_Angeles"),dDcDtime));
-		
+		} else
+
+			System.out.println("***Processing done within time limits for" +scenario+" - " + timeElapsed + " milliseconds");
+
 	}
-	
+
 	@Given("^I verify create alert api request is deleted from pas_reqcons table$")
 	public void i_verify_create_alert_api_request_is_deleted_from_pas_reqcons_table() throws Exception {
 		String query = "select * from PAS_ReqQueue where CorrelationID like '" + getAlertID() + "'";
@@ -321,10 +343,20 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			count++;
 		}
 		System.out.println("Number of cons entry_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+  " + count);
+		if(count ==0)
+			System.out.println("Ticket entry has been removed from the ReqCons table");
+		else
+			Assert.fail("Ticket entry is not deleted from ReqCons table after Autoclose");
 	}
 	
 	@Given("^I verify create alert request is archived in PAS_ReqQueueArchive table$")
 	public void i_verify_create_alert_request_is_archived_in_PAS_ReqQueueArchive_table() throws Exception {		
+		
+		commonReqQueArchiveValidation("create");
+	}
+	
+	private void commonReqQueArchiveValidation(String scenario) throws Exception {
+		
 		HashMap<String, String> currentRow = new HashMap<>();		
 		currentRow.putAll(DataUtils.getTestRow());				
 		String query = "select * from PAS_ReqQueueArchive where CorrelationID like '" + getAlertID() + "'";	
@@ -367,10 +399,10 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		if(timeElapsed > 30000){
 			Assert.fail("Alert processing taken time more than expected value of 30 seconds.");
 		}else{
-			System.out.println("***Processing done within time limits - " + timeElapsed + " milliseconds" );
+			System.out.println("***Processing done within time limits for "+scenario+" - " + timeElapsed + " milliseconds" );
 		}
 	}
-	
+
 	@Given("^I verify an alert entry is created in pas_reqcons table on successful processing of an Alert request$")
 	public void i_verify_an_alert_entry_is_created_in_pas_reqcons_table_on_successful_processing_of_an_Alert_request() throws Exception {
 		
@@ -514,6 +546,73 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		int apiStatusID = resp.getStatusCode();
 	    System.out.println("Status =====================================================" + resp.getStatusCode());
 	    Assert.assertEquals(apiStatusID, 204, "Update alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 204");
+	}
+	
+	@Given("^I verify update alert api request in PAS_ReqQueue table$")
+	public void i_verify_update_alert_api_request_in_PAS_ReqQueue_table() throws Throwable {
+	    commonReqQueValidation("update");
+	}
+
+	@Given("^I verify update alert request is archived in PAS_ReqQueueArchive table$")
+	public void i_verify_update_alert_request_is_archived_in_PAS_ReqQueueArchive_table() throws Throwable {
+	    commonReqQueArchiveValidation("update");
+	}
+
+	@Given("^I verify an alert entry is created in pas_reqcons table on successful processing of an update Alert request$")
+	public void i_verify_an_alert_entry_is_created_in_pas_reqcons_table_on_successful_processing_of_an_update_Alert_request() throws Throwable {
+		HashMap<String, String> currentRow = new HashMap<>();		
+		currentRow.putAll(DataUtils.getTestRow());				
+		System.out.println("RegId " + currentRow.get("resourceId"));
+		System.out.println("ConditionId " + currentRow.get("conditionId"));
+		System.out.println("SiteId " + currentRow.get("sites"));
+		System.out.println("MemberId " + currentRow.get("partners"));
+		
+		
+		String query = "select * from PAS_ReqCons with(NOLOCK) where LastStatus = '" + getAlertID() + "'";
+		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(), query);		
+		int count = 0 ;
+		
+		HashMap<String, String> dbValues = new HashMap<String, String>(); 
+		while (rs.next()) {
+			dbValues.put("MemberId", rs.getString("MemberId")); //done
+			dbValues.put("SiteId", rs.getString("SiteId")); // done
+			dbValues.put("ParentUniqueId", rs.getString("ParentUniqueId")); //done
+			dbValues.put("ChildUniqueId", rs.getString("ChildUniqueId"));
+			dbValues.put("ParentRegId", rs.getString("ParentRegId"));
+			dbValues.put("ChildRegid", rs.getString("ChildRegid"));
+			dbValues.put("LastStatus", rs.getString("LastStatus"));
+			dbValues.put("LastStatusDate", rs.getString("LastStatusDate"));
+			dbValues.put("Description", rs.getString("Description"));
+			dbValues.put("RefDatetime", rs.getString("RefDatetime"));
+			dbValues.put("RegType", rs.getString("RegType"));
+			dbValues.put("ThreshValue", rs.getString("ThreshValue"));
+			dbValues.put("ConditionId", rs.getString("ConditionId"));
+			dbValues.put("ConsLevel", rs.getString("ConsLevel"));
+			dbValues.put("AlertId", rs.getString("AlertId"));
+			dbValues.put("TicketId", rs.getString("TicketId"));
+			dbValues.put("CallQId", rs.getString("CallQId"));
+			dbValues.put("CallQRefId", rs.getString("CallQRefId"));
+			dbValues.put("MsgbId", rs.getString("MsgbId"));
+			dbValues.put("AssignToGrp", rs.getString("AssignToGrp"));
+			dbValues.put("NocActionId", rs.getString("NocActionId"));
+			dbValues.put("DcDtime", rs.getString("DcDtime"));
+			dbValues.put("UpDcDtime", rs.getString("UpDcDtime"));
+			count++;
+		}
+		
+		assertReqConTables(currentRow,dbValues); //asserting DB column values
+		System.out.println("ReqCons Table validated for the Update Ticket...");
+		
+	}
+
+	@Given("^I verify delete alert api request in PAS_ReqQueue table$")
+	public void i_verify_delete_alert_api_request_in_PAS_ReqQueue_table() throws Throwable {
+		commonReqQueValidation("delete");
+	}
+
+	@Given("^I verify delete alert request is archived in PAS_ReqQueueArchive table$")
+	public void i_verify_delete_alert_request_is_archived_in_PAS_ReqQueueArchive_table() throws Throwable {
+		 commonReqQueArchiveValidation("delete");
 	}
 	
 	public static ResultSet executeQuery(String databaseName, String sqlServerURL, String username, String password,
