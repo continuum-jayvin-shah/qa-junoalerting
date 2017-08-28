@@ -1,6 +1,6 @@
 Feature: Auto Process Functionalities
 
-@BVT
+@BVT @Codes
 Scenario Outline: Verify for a create alert api a request is created in PASReqQueue table-C1915948,C1915949,C1915950,C1915951
 
 Given "PlatformAlertingCreateAlert" : "<TestCase>" : I trigger create alert API
@@ -17,14 +17,6 @@ And I verify delete alert request is archived in PAS_ReqQueueArchive table
 And I verify an archived alert entry is created in PAS_ReqConsArchive table on successfull processing of close alert request
 And I verify create alert api request is deleted from pas_reqcons table
 
-#Given I naviagte to ITS portal
-#When I login to ITS portal
-#And I navigate to New ticket window
-#And I search ticket id on report page
-#And I verify searched ticket details
-#And I navigate to ticket detail page for ticket
-#Then I verify ticket details on ticket details page of ITS portal
-
 Examples:
 |TestCase|
 #|Platform001|
@@ -34,31 +26,60 @@ Examples:
 #|Platform005|
 #|Platform006|
 |Platform007|
-#|Platform008|
-#|Platform009|
-#|Platform010|
-#|Platform011|
-#|Platform012|
-#|Platform013|
-#|Platform014|
-#|Platform015|
-#|Platform016|
-#|Platform017|
-#|Platform018|
-#|Platform019|
-#|Platform020|
-#|Platform021|
-#|Platform022|
-#|Platform023|
-#|Platform024|
-#|Platform025|
-#|Platform026|
-#|Platform027|
-#|Platform028|
-#|Platform029|
-#|Platform030|
-#|Platform031|
-#|Platform032|
+
+
+@Codes
+Scenario Outline: Verify Error Code 104 for create Alert api response for missing resource ID - C1915963
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with resource ID missing
+Then I verify create api response code is 104 for missing resource ID
+
+Examples:
+|TestCase|
+|ErrorCode104Res|
+
+@Codes
+Scenario Outline: Verify Error Code 104 for create Alert api response for missing condition ID - C1915964
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with condition ID missing
+Then I verify api response code is 104 for missing condition ID
+
+Examples:
+|TestCase|
+|ErrorCode104Con|
+
+@Codes
+Scenario Outline: Verify Error Code 102 for create Alert api response for invalid partner value - C1915960
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with datatype for partner invalid
+Then I verify create api response code is 102 for invalid partener datatype
+
+Examples:
+|TestCase|
+|PartnerCode102|
+
+@Codes
+Scenario Outline: Verify Error Code 102 for create Alert api response for invalid site value - C1915961
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with datatype for site invalid
+Then I verify api response code is 102 for invalid site datatype
+Examples:
+|TestCase|
+|SiteCode102|
+
+@Codes
+Scenario Outline: Verify Error Code 103 for create Alert api response for invalid request body - C1915962
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with invalid request body
+Then I verify api response code is 103 for invalid request body
+Examples:
+|TestCase|
+|ErrorCode103|
+
+#Given I naviagte to ITS portal
+#When I login to ITS portal
+#And I navigate to New ticket window
+#And I search ticket id on report page
+#And I verify searched ticket details
+#And I navigate to ticket detail page for ticket
+#Then I verify ticket details on ticket details page of ITS portal
+
+
 
 
 #Scenario Outline: AUVIKSC001 : Verify for a create alert api, a request is created in PAS_ReqQueue table.

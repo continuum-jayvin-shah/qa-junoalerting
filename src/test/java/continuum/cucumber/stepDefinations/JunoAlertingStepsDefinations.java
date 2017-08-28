@@ -1,19 +1,12 @@
 package continuum.cucumber.stepDefinations;
 
 import java.io.File;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.TimeZone;
 
-import org.openqa.selenium.OutputType;
-import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriverException;
 import org.testng.Assert;
 
 import com.continuum.utils.DataUtils;
@@ -25,7 +18,6 @@ import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 
 import continuum.cucumber.DatabaseUtility;
-import continuum.cucumber.DriverFactory;
 import continuum.cucumber.Utilities;
 import continuum.noc.pages.AuvikPageFactory;
 import cucumber.api.Scenario;
@@ -84,6 +76,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private String currentTime;
 	private String dUpDcDtime1 = null;
 	private JsonObject alertDetailJson;
+	private String statusCode = null;
 	
 	private void setJsonData(JsonObject jObject){
 		jsonObject = jObject;
@@ -156,10 +149,41 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private void setDbPassword(String userPassword){
 		databasePassword = userPassword;
 	}
+
+	private void setApiStatusID(String responseCode) {
+		statusCode = responseCode;		
+	}
+	private String getApiStatusID() {
+		return statusCode;
+	}
+
 	
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API$")
 	public void i_trigger_create_alert_API(String arg1, String arg2) throws Throwable {		
 			
+		
+		JsonObject albums = preProcessingCreateAlert(arg1,arg2);
+		
+		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
+		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
+		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+	    JsonObject  jobject = jelement.getAsJsonObject();
+	    System.out.println("Status =====================================================" + jobject.get("status"));
+	    String apiStatusID = jobject.get("status").toString();
+	    
+	    try{
+	    	System.out.println(jobject.get("alertId"));
+	    }catch(NullPointerException n){
+	    	System.out.println("No Alert/Ticket ID created. Exiting execution...");	    
+	    	Assert.fail("No Alert/Ticket ID created. Exiting execution...");
+	    }
+	    
+	    Assert.assertEquals(apiStatusID, "201", "Create alert API execution failed, the api status ID is " + apiStatusID + " and API message body is ");
+	    System.out.println("AlertID =====================================================" + jobject.get("alertId").getAsString());
+	    setAlertID(jobject.get("alertId").getAsString());
+	}
+	
+	private JsonObject preProcessingCreateAlert(String arg1, String arg2) throws IOException {
 		
 		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + getFileName();		
 		DataUtils.setTestRow(excelFilePath, arg1, arg2);
@@ -202,25 +226,9 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		System.out.println(albums);
 		System.out.println(URL);
 		
-		Response resp = RestAssured.given().contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
-		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
-		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
-	    JsonObject  jobject = jelement.getAsJsonObject();
-	    System.out.println("Status =====================================================" + jobject.get("status"));
-	    String apiStatusID = jobject.get("status").toString();
-	    
-	    try{
-	    	System.out.println(jobject.get("alertId"));
-	    }catch(NullPointerException n){
-	    	System.out.println("No Alert/Ticket ID created. Exiting execution...");	    
-	    	Assert.fail("No Alert/Ticket ID created. Exiting execution...");
-	    }
-	    
-	    Assert.assertEquals(apiStatusID, "201", "Create alert API execution failed, the api status ID is " + apiStatusID + " and API message body is ");
-	    System.out.println("AlertID =====================================================" + jobject.get("alertId").getAsString());
-	    setAlertID(jobject.get("alertId").getAsString());
+		return albums;
 	}
-	
+
 	@Given("^I naviagte to ITS portal$")
 	public void user_naviagte_to_Ticket_portal() throws Throwable {		
 		//Log.assertThat(iTSLoginPage.navigateToTicketPortal(), "Navigated to ITS portal page", "Failed to Navigate to ITS portal page", DriverFactory.getDriver());		
@@ -514,7 +522,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	}
 	
 	@Given("^I trigger auto close alert API$")
-	public void i_trigger_auto_close_alert_API() {
+	public void i_trigger_auto_close_alert_API() throws Exception {
 		HashMap<String, String> currentRow = new HashMap<>();		
 		currentRow.putAll(DataUtils.getTestRow());
 		/*String createAlertUrl = Utilities.getMavenProperties("PlatformAlertUrlSchema")
@@ -522,19 +530,19 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 				.replace("{sites}", currentRow.get("sites"))
 				.replace("{HostUrl}", getHostURL());*/
 		Response resp = RestAssured.given().delete(getURL() + "/" + getAlertID()).andReturn();
+		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 		System.out.println("Send POST command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
 	}
 	
 	@Given("^I trigger update alert API$")
-	public void i_trigger_update_alert_API() {		
+	public void i_trigger_update_alert_API() throws Exception {		
 		JsonObject jobj = getJsonData();
 		jobj.add("alertDetails", getalertDetailJson());
 		System.out.println(jobj.toString());
 		
 		Response resp = RestAssured.given().contentType("application/json").body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
-		
-		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
+		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
 		
 		System.out.println("Send POST command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
@@ -690,6 +698,80 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("MsgbId")), 
 				"MsgbId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("MsgbId"));		
 	}
+	
+	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with resource ID missing$")
+	public void i_trigger_create_alert_API_request_with_resource_ID_missing(String arg1, String arg2) throws Exception {
+		triggerCreateAlertAPI(arg1,arg2);
+	}
+
+	@Then("^I verify create api response code is (\\d+) for missing resource ID$")
+	public void i_verify_create_api_response_code_is_for_missing_resource_ID(int arg1) throws Exception {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	
+	}
+
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with condition ID missing$")
+	public void i_trigger_create_alert_API_request_with_condition_ID_missing(String arg1, String arg2) throws Exception {
+	 	triggerCreateAlertAPI(arg1,arg2);
+	}
+
+	@Then("^I verify api response code is (\\d+) for missing condition ID$")
+	public void i_verify_api_response_code_is_for_missing_condition_ID(int arg1) throws Throwable {
+	 	String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	
+	}
+
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with datatype for partner invalid$")
+	public void i_trigger_create_alert_API_request_with_datatype_for_partner_invalid(String arg1, String arg2) throws Exception  {
+		triggerCreateAlertAPI(arg1,arg2);
+	}
+
+	@Then("^I verify create api response code is (\\d+) for invalid partener datatype$")
+	public void i_verify_create_api_response_code_is_for_invalid_partener_datatype(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with datatype for site invalid$")
+	public void i_trigger_create_alert_API_request_with_datatype_for_site_invalid(String arg1, String arg2) throws Throwable {
+		triggerCreateAlertAPI(arg1,arg2);	   
+	}
+
+	@Then("^I verify api response code is (\\d+) for invalid site datatype$")
+	public void i_verify_api_response_code_is_for_invalid_site_datatype(int arg1) throws Throwable {
+	    String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}	
+	
+	private void triggerCreateAlertAPI(String arg1, String arg2) throws Exception {
+		JsonObject albums = preProcessingCreateAlert(arg1,arg2);		
+		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
+		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+	    JsonObject  jobject = jelement.getAsJsonObject();
+	    System.out.println("Status =====================================================" + jobject.get("status"));
+	    setApiStatusID(jobject.get("status").toString());
+	}
+	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with invalid request body$")
+	public void i_trigger_create_alert_API_request_with_invalid_request_body(String arg1, String arg2) throws Throwable {
+		JsonObject albums = preProcessingCreateAlert(arg1,arg2);
+		String invalidBody = albums.toString().replace("{", "");
+		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(invalidBody).post(getURL()).andReturn();
+		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+	    JsonObject  jobject = jelement.getAsJsonObject();
+	    System.out.println("Status =====================================================" + jobject.get("status"));
+	    setApiStatusID(jobject.get("status").toString());
+	}
+
+	@Then("^I verify api response code is (\\d+) for invalid request body$")
+	public void i_verify_api_response_code_is_for_invalid_request_body(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+
 	
 }
 
