@@ -1,6 +1,6 @@
 Feature: Auto Process Functionalities
 
-@BVT @Codes
+@BVT
 Scenario Outline: Verify for a create alert api a request is created in PASReqQueue table-C1915948,C1915949,C1915950,C1915951
 
 Given "PlatformAlertingCreateAlert" : "<TestCase>" : I trigger create alert API
@@ -29,24 +29,6 @@ Examples:
 
 
 @Codes
-Scenario Outline: Verify Error Code 104 for create Alert api response for missing resource ID - C1915963
-Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with resource ID missing
-Then I verify create api response code is 104 for missing resource ID
-
-Examples:
-|TestCase|
-|ErrorCode104Res|
-
-@Codes
-Scenario Outline: Verify Error Code 104 for create Alert api response for missing condition ID - C1915964
-Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with condition ID missing
-Then I verify api response code is 104 for missing condition ID
-
-Examples:
-|TestCase|
-|ErrorCode104Con|
-
-@Codes
 Scenario Outline: Verify Error Code 102 for create Alert api response for invalid partner value - C1915960
 Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with datatype for partner invalid
 Then I verify create api response code is 102 for invalid partener datatype
@@ -70,6 +52,61 @@ Then I verify api response code is 103 for invalid request body
 Examples:
 |TestCase|
 |ErrorCode103|
+
+@Codes
+Scenario Outline: Verify Error Code 104 for create Alert api response for missing resource ID - C1915963
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with resource ID missing
+Then I verify create api response code is 104 for missing resource ID
+
+Examples:
+|TestCase|
+|ErrorCode104Res|
+
+@Codes
+Scenario Outline: Verify Error Code 104 for create Alert api response for missing condition ID - C1915964
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with condition ID missing
+Then I verify api response code is 104 for missing condition ID
+
+Examples:
+|TestCase|
+|ErrorCode104Con|
+
+@Codes
+Scenario Outline: Verify Error Code 104 for create Alert api response for missing request body - C1915965
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with request body missing
+Then I verify api response code is 104 for missing request body
+
+Examples:
+|TestCase|
+|ErrorCode104ReqBody|
+
+@Codes
+Scenario Outline: Verify Error Code 105 for create Alert api response for incorrect partner ID - C1915966
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with incorrect partner ID
+Then I verify create api response code is 105 for incorrect partner ID
+
+Examples:
+|TestCase|
+|ErrorCode105Part|
+
+@Codes
+Scenario Outline: Verify Error Code 105 for create Alert api response for incorrect site ID - C1915967
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with incorrect site ID
+Then I verify create api response code is 105 for incorrect site ID
+
+Examples:
+|TestCase|
+|ErrorCode105Site|
+
+@Codes
+Scenario Outline: Verify Error Code 105 for create Alert api response for incorrect resource ID - C1915968
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with incorrect resource ID
+Then I verify create api response code is 105 for incorrect resource ID
+
+Examples:
+|TestCase|
+|ErrorCode105Res|
+
 
 #Given I naviagte to ITS portal
 #When I login to ITS portal

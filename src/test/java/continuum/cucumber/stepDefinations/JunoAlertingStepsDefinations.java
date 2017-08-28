@@ -699,7 +699,58 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 				"MsgbId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("MsgbId"));		
 	}
 	
+	private void triggerCreateAlertAPI(String arg1, String arg2) throws Exception {
+		JsonObject albums = preProcessingCreateAlert(arg1,arg2);		
+		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
+		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+	    JsonObject  jobject = jelement.getAsJsonObject();
+	    System.out.println("Status =====================================================" + jobject.get("status"));
+	    setApiStatusID(jobject.get("status").toString());
+	}
 	
+	/* ************************ Error Code 102**************************** */
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with datatype for partner invalid$")
+	public void i_trigger_create_alert_API_request_with_datatype_for_partner_invalid(String arg1, String arg2) throws Exception  {
+		triggerCreateAlertAPI(arg1,arg2);
+	}
+
+	@Then("^I verify create api response code is (\\d+) for invalid partener datatype$")
+	public void i_verify_create_api_response_code_is_for_invalid_partener_datatype(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with datatype for site invalid$")
+	public void i_trigger_create_alert_API_request_with_datatype_for_site_invalid(String arg1, String arg2) throws Throwable {
+		triggerCreateAlertAPI(arg1,arg2);	   
+	}
+
+	@Then("^I verify api response code is (\\d+) for invalid site datatype$")
+	public void i_verify_api_response_code_is_for_invalid_site_datatype(int arg1) throws Throwable {
+	    String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}	
+	
+	
+	/* ************************ Error Code 103**************************** */
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with invalid request body$")
+	public void i_trigger_create_alert_API_request_with_invalid_request_body(String arg1, String arg2) throws Throwable {
+		JsonObject albums = preProcessingCreateAlert(arg1,arg2);
+		String invalidBody = albums.toString().replace("{", "");
+		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(invalidBody).post(getURL()).andReturn();
+		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+	    JsonObject  jobject = jelement.getAsJsonObject();
+	    System.out.println("Status =====================================================" + jobject.get("status"));
+	    setApiStatusID(jobject.get("status").toString());
+	}
+
+	@Then("^I verify api response code is (\\d+) for invalid request body$")
+	public void i_verify_api_response_code_is_for_invalid_request_body(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+	
+	/* ************************ Error Code 104**************************** */
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with resource ID missing$")
 	public void i_trigger_create_alert_API_request_with_resource_ID_missing(String arg1, String arg2) throws Exception {
 		triggerCreateAlertAPI(arg1,arg2);
@@ -723,55 +774,58 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 	
 	}
-
-	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with datatype for partner invalid$")
-	public void i_trigger_create_alert_API_request_with_datatype_for_partner_invalid(String arg1, String arg2) throws Exception  {
-		triggerCreateAlertAPI(arg1,arg2);
-	}
-
-	@Then("^I verify create api response code is (\\d+) for invalid partener datatype$")
-	public void i_verify_create_api_response_code_is_for_invalid_partener_datatype(int arg1) throws Throwable {
-		String statusCode = getApiStatusID();		
-		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
-	}
-
-	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with datatype for site invalid$")
-	public void i_trigger_create_alert_API_request_with_datatype_for_site_invalid(String arg1, String arg2) throws Throwable {
-		triggerCreateAlertAPI(arg1,arg2);	   
-	}
-
-	@Then("^I verify api response code is (\\d+) for invalid site datatype$")
-	public void i_verify_api_response_code_is_for_invalid_site_datatype(int arg1) throws Throwable {
-	    String statusCode = getApiStatusID();		
-		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
-	}	
 	
-	private void triggerCreateAlertAPI(String arg1, String arg2) throws Exception {
-		JsonObject albums = preProcessingCreateAlert(arg1,arg2);		
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with request body missing$")
+	public void i_trigger_create_alert_API_request_with_request_body_missing(String arg1, String arg2) throws Throwable {
+		JsonObject albums = preProcessingCreateAlert(arg1,arg2);
+		albums.remove("conditionId");
+		System.out.println(albums);
 		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 	    JsonObject  jobject = jelement.getAsJsonObject();
 	    System.out.println("Status =====================================================" + jobject.get("status"));
 	    setApiStatusID(jobject.get("status").toString());
 	}
+
+	@Then("^I verify api response code is (\\d+) for missing request body$")
+	public void i_verify_api_response_code_is_for_missing_request_body(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 	
-	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with invalid request body$")
-	public void i_trigger_create_alert_API_request_with_invalid_request_body(String arg1, String arg2) throws Throwable {
-		JsonObject albums = preProcessingCreateAlert(arg1,arg2);
-		String invalidBody = albums.toString().replace("{", "");
-		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(invalidBody).post(getURL()).andReturn();
-		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
-	    JsonObject  jobject = jelement.getAsJsonObject();
-	    System.out.println("Status =====================================================" + jobject.get("status"));
-	    setApiStatusID(jobject.get("status").toString());
+	}
+	
+	/* ************************ Error Code 105**************************** */
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with incorrect partner ID$")
+	public void i_trigger_create_alert_API_request_with_incorrect_partner_ID(String arg1, String arg2) throws Throwable {
+	    triggerCreateAlertAPI(arg1, arg2);
 	}
 
-	@Then("^I verify api response code is (\\d+) for invalid request body$")
-	public void i_verify_api_response_code_is_for_invalid_request_body(int arg1) throws Throwable {
+	@Then("^I verify create api response code is (\\d+) for incorrect partner ID$")
+	public void i_verify_create_api_response_code_is_for_incorrect_partner_ID(int arg1) throws Throwable {
 		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 	}
 
-	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with incorrect site ID$")
+	public void i_trigger_create_alert_API_request_with_incorrect_site_ID(String arg1, String arg2) throws Throwable {
+	    triggerCreateAlertAPI(arg1, arg2);
+	}
+
+	@Then("^I verify create api response code is (\\d+) for incorrect site ID$")
+	public void i_verify_create_api_response_code_is_for_incorrect_site_ID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with incorrect resource ID$")
+	public void i_trigger_create_alert_API_request_with_incorrect_resource_ID(String arg1, String arg2) throws Throwable {
+		triggerCreateAlertAPI(arg1, arg2);
+	}
+
+	@Then("^I verify create api response code is (\\d+) for incorrect resource ID$")
+	public void i_verify_create_api_response_code_is_for_incorrect_resource_ID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}	
 }
 
