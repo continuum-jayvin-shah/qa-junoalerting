@@ -719,8 +719,9 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	    JsonObject  jobject = jelement.getAsJsonObject();
 	    System.out.println("Status =====================================================" + jobject.get("status"));
 	    setApiStatusID(jobject.get("status").toString());
+	    if(jobject.get("status").toString().equalsIgnoreCase("201")){
 	    setAlertID(jobject.get("alertId").getAsString());
-	    System.out.println("Alert ID ::  " + getAlertID());
+	    System.out.println("Alert ID ::  " + getAlertID());}
 	}
 	
 	private void triggerUpdateAlertAPI(String arg1, String arg2) throws Exception{
