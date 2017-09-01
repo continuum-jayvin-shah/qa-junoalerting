@@ -142,7 +142,7 @@ Examples:
 |TestCase|
 |ErrorCode104ReqBody|
 
-@Regression
+@Defect
 Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect partner ID - C1915966
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect partner ID
 Then I verify update api response code is 105 for incorrect partner ID
@@ -151,7 +151,7 @@ Examples:
 |TestCase|
 |ErrorCode105Part|
 
-@Regression
+@Defect
 Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect site ID - C1915967
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect site ID
 Then I verify update api response code is 105 for incorrect site ID
@@ -160,7 +160,7 @@ Examples:
 |TestCase|
 |ErrorCode105Site|
 
-@Regression
+@Defect
 Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect resource ID - C1915968
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect resource ID
 Then I verify update api response code is 105 for incorrect resource ID
