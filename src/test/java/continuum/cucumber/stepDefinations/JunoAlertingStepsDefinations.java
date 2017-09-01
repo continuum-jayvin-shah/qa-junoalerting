@@ -345,15 +345,18 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 	@Given("^I verify create alert api request is deleted from pas_reqcons table$")
 	public void i_verify_create_alert_api_request_is_deleted_from_pas_reqcons_table() throws Exception {
+		
+		int count = 1 ;
+		while(count >=1){
 		String query = "select * from PAS_ReqQueue where CorrelationID like '" + getAlertID() + "'";
 		
-		Thread.sleep(wait);
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://10.2.40.45:1433", "DB_Architect", "DBabc@1234", query);	
-		int count = 0 ;
-		while (rs.next()) {
-			count++;
+		
+		if (!rs.next()) {
+			count--;
 		}
 		System.out.println("Number of cons entry_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+  " + count);
+		}
 		if(count ==0)
 			System.out.println("Ticket entry has been removed from the ReqCons table");
 		else
