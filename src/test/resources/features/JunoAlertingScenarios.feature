@@ -116,7 +116,7 @@ Examples:
 |TestCase|
 |PartnerCode102|
 
-@Regression
+@Regression @Defect
 Scenario Outline: Verify Error Code 103 for update Alert api response for invalid request body - C1933216
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with invalid request body
 Then I verify update api response code is 103 for invalid request body
@@ -125,7 +125,16 @@ Examples:
 |ErrorCode103|
 
 @Regression
-Scenario Outline: Verify Error Code 104 for update Alert api response for missing condition ID - C1915964
+Scenario Outline: Verify Error Code 104 for update Alert api response for missing resource ID - C1933217
+Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with resource ID missing
+Then I verify update api response code is 104 for resource condition ID
+
+Examples:
+|TestCase|
+|ErrorCode104Res|
+
+@Regression
+Scenario Outline: Verify Error Code 104 for update Alert api response for missing condition ID - C1933218
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with condition ID missing
 Then I verify update api response code is 104 for missing condition ID
 
@@ -134,7 +143,7 @@ Examples:
 |ErrorCode104Con|
 
 @Regression
-Scenario Outline: Verify Error Code 104 for update Alert api response for missing request body - C1915965
+Scenario Outline: Verify Error Code 104 for update Alert api response for missing request body - C1933219
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with request body missing
 Then I verify update api response code is 104 for missing request body
 
@@ -142,8 +151,8 @@ Examples:
 |TestCase|
 |ErrorCode104ReqBody|
 
-@Defect
-Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect partner ID - C1915966
+@Regression
+Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect partner ID - C1933220
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect partner ID
 Then I verify update api response code is 105 for incorrect partner ID
 
@@ -151,8 +160,8 @@ Examples:
 |TestCase|
 |ErrorCode105Part|
 
-@Defect
-Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect site ID - C1915967
+@Regression
+Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect site ID - C1933221
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect site ID
 Then I verify update api response code is 105 for incorrect site ID
 
@@ -160,14 +169,50 @@ Examples:
 |TestCase|
 |ErrorCode105Site|
 
-@Defect
-Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect resource ID - C1915968
+@Regression
+Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect resource ID - C1933222
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect resource ID
 Then I verify update api response code is 105 for incorrect resource ID
 
 Examples:
 |TestCase|
 |ErrorCode105Res|
+
+@Regression
+Scenario Outline: Verify Error Code 102 for delete Alert api response for invalid partner value - C1933225
+Given "CodesValidation" : "<TestCase>" : I trigger delete alert API request with datatype for partner invalid
+Then I verify delete api response code is 102 for invalid partener datatype
+
+Examples:
+|TestCase|
+|PartnerCode102|
+
+@Regression
+Scenario Outline: Verify Error Code 404 for delete Alert api response for invalid alert value - C1933227
+Given "CodesValidation" : "<TestCase>" : I trigger delete alert API request with invalid alertID
+Then I verify delete api response code is 404 for invalid alertID
+
+Examples:
+|TestCase|
+|ErrorCode103|
+
+@Regression
+Scenario Outline: Verify Error Code 404 for update Alert api response for invalid alert value - C1933228
+Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with invalid alertID
+Then I verify update api response code is 404 for invalid alertID
+
+Examples:
+|TestCase|
+|ErrorCode103|
+
+@Regression
+Scenario Outline: Verify Error Code 202 for create Alert api response when alert already exist - C1933226
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request when alert already exist
+Then I verify create api response code is 202 when alert already exist
+
+Examples:
+|TestCase|
+|ErrorCode103|
 
 
 

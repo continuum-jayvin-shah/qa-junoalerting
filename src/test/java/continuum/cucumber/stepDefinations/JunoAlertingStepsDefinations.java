@@ -78,6 +78,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private String dUpDcDtime1 = null;
 	private JsonObject alertDetailJson;
 	private String statusCode = null;
+	private int httpstatusCode = 0;
 	
 	private void setJsonData(JsonObject jObject){
 		jsonObject = jObject;
@@ -156,6 +157,16 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	}
 	private String getApiStatusID() {
 		return statusCode;
+	}
+	
+	private void setStatusCode(int httpstatusCode) {
+		
+		this.httpstatusCode = httpstatusCode;
+	}
+	
+	private int getStatusCode() {
+		
+		return httpstatusCode;
 	}
 
 	
@@ -302,7 +313,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(),query);
 		HashMap<String, String> currentRow = new HashMap<>();
 		currentRow.putAll(DataUtils.getTestRow());
-		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq = null,
+		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq = null,o
 				dOperation = null, dUpDcDtime = null;
 
 		while (rs.next()) {
@@ -728,6 +739,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		JsonObject albums = preProcessingCreateAlert(arg1, arg2);	
 		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 		
+		setStatusCode(resp.getStatusCode());
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 	    JsonObject  jobject = jelement.getAsJsonObject();
 	   
@@ -739,9 +751,18 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Response resp = RestAssured.given().header("txKey","Automation").delete(getURL() + "/" + getAlertID()).andReturn();
 		System.out.println("Send Delete command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
+		setStatusCode(resp.getStatusCode());
 		System.out.println("Alert - " + getAlertID() + " deleted.");
+		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+		if(!jelement.equals(null)){
+			JsonObject  jobject = jelement.getAsJsonObject();
+		    System.out.println("Status =====================================================" + jobject.get("status") );
+		    setApiStatusID(jobject.get("status").toString());
+		}
 	}
 	
+	
+
 	/* ************************ Error Code 102**************************** */
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with datatype for partner invalid$")
 	public void i_trigger_create_alert_API_request_with_datatype_for_partner_invalid(String arg1, String arg2) throws Exception  {
@@ -865,6 +886,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	/* ************************ Update -  Error Code 102**************************** */
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger update alert API request with datatype for partner invalid$")
 	public void i_trigger_update_alert_API_request_with_datatype_for_partner_invalid(String arg1, String arg2) throws Throwable {
+		triggerCreateAlertAPI(arg1, "ErrorCode103");
+	    Thread.sleep(wait);
 		triggerUpdateAlertAPI(arg1, arg2);
 	}
 
@@ -872,6 +895,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	public void i_verify_update_api_response_code_is_for_invalid_partener_datatype(int arg1) throws Throwable {
 		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+		Thread.sleep(wait);
+		triggerDeleteAlertAPI();
 	}
 	/* ************************ Update -  Error Code 103**************************** */
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger update alert API request with invalid request body$")
@@ -900,6 +925,21 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	}
 	
 	/* ************************ Update -  Error Code 104**************************** */
+	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger update alert API request with resource ID missing$")
+	public void i_trigger_update_alert_API_request_with_resource_ID_missing(String arg1, String arg2) throws Throwable {
+		triggerCreateAlertAPI(arg1, "ErrorCode103");
+	    Thread.sleep(wait);
+	    triggerUpdateAlertAPI(arg1, arg2);
+	}
+
+	@Then("^I verify update api response code is (\\d+) for resource condition ID$")
+	public void i_verify_update_api_response_code_is_for_resource_condition_ID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+		Thread.sleep(wait);
+		triggerDeleteAlertAPI();	
+	}
 		@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger update alert API request with condition ID missing$")
 	public void i_trigger_update_alert_API_request_with_condition_ID_missing(String arg1, String arg2) throws Throwable {
 	    triggerCreateAlertAPI(arg1, "ErrorCode103");
@@ -909,7 +949,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 	@Then("^I verify update api response code is (\\d+) for missing condition ID$")
 	public void i_verify_update_api_response_code_is_for_missing_condition_ID(int arg1) throws Throwable {
-	    String statusCode = getApiStatusID();		
+		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 		Thread.sleep(wait);
 		triggerDeleteAlertAPI();
@@ -979,6 +1019,59 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 	@Then("^I verify update api response code is (\\d+) for incorrect resource ID$")
 	public void i_verify_update_api_response_code_is_for_incorrect_resource_ID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+		Thread.sleep(wait);
+		triggerDeleteAlertAPI();
+	}
+	
+	/* ************************ Delete -  Error Code 102**************************** */
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger delete alert API request with datatype for partner invalid$")
+	public void i_trigger_delete_alert_API_request_with_datatype_for_partner_invalid(String arg1, String arg2) throws Throwable {
+	    preProcessingCreateAlert(arg1, arg2);
+		triggerDeleteAlertAPI();
+	}
+
+	@Then("^I verify delete api response code is (\\d+) for invalid partener datatype$")
+	public void i_verify_delete_api_response_code_is_for_invalid_partener_datatype(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+	
+	/* ************************ Error Code 404**************************** */
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger delete alert API request with invalid alertID$")
+	public void i_trigger_delete_alert_API_request_with_invalid_alertID(String arg1, String arg2) throws Throwable {
+		preProcessingCreateAlert(arg1, arg2);
+		setAlertID("abc-abc-abc");
+		triggerDeleteAlertAPI();
+	}
+
+	@Then("^I verify delete api response code is (\\d+) for invalid alertID$")
+	public void i_verify_delete_api_response_code_is_for_invalid_alertID(int arg1) throws Throwable {
+		Assert.assertTrue(String.valueOf(getStatusCode()).equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + getStatusCode() );
+	}
+
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger update alert API request with invalid alertID$")
+	public void i_trigger_update_alert_API_request_with_invalid_alertID(String arg1, String arg2) throws Throwable {
+		setAlertID("abc-abc-abc");
+		triggerUpdateAlertAPI(arg1, arg2);
+	}
+
+	@Then("^I verify update api response code is (\\d+) for invalid alertID$")
+	public void i_verify_update_api_response_code_is_for_invalid_alertID(int arg1) throws Throwable {
+		Assert.assertTrue(String.valueOf(getStatusCode()).equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + getStatusCode() );
+	}
+	
+	/* ************************ Error Code 202**************************** */
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request when alert already exist$")
+	public void i_trigger_create_alert_API_request_when_alert_already_exist(String arg1, String arg2) throws Throwable {
+	    triggerCreateAlertAPI(arg1, arg2);
+	    Thread.sleep(wait);
+	    triggerCreateAlertAPI(arg1, arg2);
+	}
+
+	@Then("^I verify create api response code is (\\d+) when alert already exist$")
+	public void i_verify_create_api_response_code_is_when_alert_already_exist(int arg1) throws Throwable {	
 		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 		Thread.sleep(wait);
