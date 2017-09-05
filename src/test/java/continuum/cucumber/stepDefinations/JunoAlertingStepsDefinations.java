@@ -335,8 +335,11 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 				"Site ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("sites") + ", Actual :"+ dSiteId);
 		Assert.assertTrue(currentRow.get("partners").trim().equalsIgnoreCase(dMemberId),
 				"Partner ID does not match in PAS_ReqQueue_table, Expected " + currentRow.get("partners") + ", Actual :"+ dMemberId);
+		
+		if(Integer.parseInt(operationID)!=3)
 		Assert.assertEquals(parser.parse(dInputReq).getAsJsonObject(), getalertDetailJson(),
 				"InputReq does not match in PAS_ReqQueue_table, Expected " + getalertDetailJson() + " ,Actual "+ dInputReq);
+		
 		Assert.assertTrue(dOperation.equals(operationID),
 				"Operation ID does not match in PAS_ReqQueue_table, Expected"+ operationID+", Actual :" + dOperation);
 
