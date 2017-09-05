@@ -207,7 +207,7 @@ Examples:
 |TestCase|
 |ErrorCode103|
 
-@Regression1
+@Regression
 Scenario Outline: Verify Error Code 202 for create Alert api response when alert already exist - C1933226
 Given "CodesValidation" : "<TestCase>" : I trigger create alert API request when alert already exist
 Then I verify create api response code is 202 when alert already exist
