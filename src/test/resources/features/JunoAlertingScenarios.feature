@@ -188,24 +188,26 @@ Examples:
 |PartnerCode102|
 
 @Regression
-Scenario Outline: Verify Error Code 404 for delete Alert api response for invalid alert value - C1933227
+Scenario Outline: Verify Error Code 404 for delete Alert api response for invalid alert value - C1933227, C2130258
 Given "CodesValidation" : "<TestCase>" : I trigger delete alert API request with invalid alertID
-Then I verify delete api response code is 404 for invalid alertID
+Then I verify delete api response code is 203 for invalid alertID
+Then I verify delete api status code is 404 for invalid alertID
 
 Examples:
 |TestCase|
 |ErrorCode103|
 
 @Regression
-Scenario Outline: Verify Error Code 404 for update Alert api response for invalid alert value - C1933228
+Scenario Outline: Verify Error Code 404 for update Alert api response for invalid alert value - C1933228, C2130259
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with invalid alertID
-Then I verify update api response code is 404 for invalid alertID
+Then I verify update api response code is 203 for invalid alertID
+Then I verify update api status code is 404 for invalid alertID
 
 Examples:
 |TestCase|
 |ErrorCode103|
 
-@Regression
+@Regression1
 Scenario Outline: Verify Error Code 202 for create Alert api response when alert already exist - C1933226
 Given "CodesValidation" : "<TestCase>" : I trigger create alert API request when alert already exist
 Then I verify create api response code is 202 when alert already exist
@@ -213,6 +215,33 @@ Then I verify create api response code is 202 when alert already exist
 Examples:
 |TestCase|
 |ErrorCode103|
+
+@Regression
+Scenario Outline: Verify Error Code 107 for create Alert api response for incorrect condition ID - C1930254
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with incorrect condition ID
+Then I verify create api response code is 107 triggered with incorrect condition ID
+
+Examples:
+|TestCase|
+|ErrorCode107|
+
+@Regression
+Scenario Outline: Verify Error Code 108 for create Alert api response for incorrect post body - C1930255
+Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with incorrect post  ID
+Then I verify create api response code is 108 triggered with incorrect post ID
+
+Examples:
+|TestCase|
+|ErrorCode108|
+
+@Regression
+Scenario Outline: Verify Error Code 108 for update Alert api response for incorrect post body - C1930256
+Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect post  ID
+Then I verify update api response code is 108 triggered with incorrect post ID
+
+Examples:
+|TestCase|
+|ErrorCode108|
 
 
 

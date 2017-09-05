@@ -313,7 +313,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(),query);
 		HashMap<String, String> currentRow = new HashMap<>();
 		currentRow.putAll(DataUtils.getTestRow());
-		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq = null,o
+		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq = null,
 				dOperation = null, dUpDcDtime = null;
 
 		while (rs.next()) {
@@ -754,7 +754,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		setStatusCode(resp.getStatusCode());
 		System.out.println("Alert - " + getAlertID() + " deleted.");
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
-		if(!jelement.equals(null)){
+		if(getStatusCode()!=204){
 			JsonObject  jobject = jelement.getAsJsonObject();
 		    System.out.println("Status =====================================================" + jobject.get("status") );
 		    setApiStatusID(jobject.get("status").toString());
@@ -1048,7 +1048,13 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 	@Then("^I verify delete api response code is (\\d+) for invalid alertID$")
 	public void i_verify_delete_api_response_code_is_for_invalid_alertID(int arg1) throws Throwable {
-		Assert.assertTrue(String.valueOf(getStatusCode()).equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + getStatusCode() );
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+	
+	@Then("^I verify delete api status code is (\\d+) for invalid alertID$")
+	public void i_verify_delete_api_status_code_is_for_invalid_alertID(int arg1) throws Throwable {
+		Assert.assertTrue(String.valueOf(getStatusCode()).equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + getStatusCode() ); 
 	}
 
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger update alert API request with invalid alertID$")
@@ -1059,6 +1065,12 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 	@Then("^I verify update api response code is (\\d+) for invalid alertID$")
 	public void i_verify_update_api_response_code_is_for_invalid_alertID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+	
+	@Then("^I verify update api status code is (\\d+) for invalid alertID$")
+	public void i_verify_update_api_status_code_is_for_invalid_alertID(int arg1) throws Throwable {
 		Assert.assertTrue(String.valueOf(getStatusCode()).equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + getStatusCode() );
 	}
 	
@@ -1077,4 +1089,38 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Thread.sleep(wait);
 		triggerDeleteAlertAPI();
 	}
+	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with incorrect condition ID$")
+	public void i_trigger_create_alert_API_request_with_incorrect_condition_ID(String arg1, String arg2) throws Throwable {
+	    triggerCreateAlertAPI(arg1, arg2);
+	}
+
+	@Then("^I verify create api response code is (\\d+) triggered with incorrect condition ID$")
+	public void i_verify_create_api_response_code_is_triggered_with_incorrect_condition_ID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with incorrect post  ID$")
+	public void i_trigger_create_alert_API_request_with_incorrect_post_ID(String arg1, String arg2) throws Throwable {
+		triggerCreateAlertAPI(arg1, arg2);
+	}
+
+	@Then("^I verify create api response code is (\\d+) triggered with incorrect post ID$")
+	public void i_verify_create_api_response_code_is_triggered_with_incorrect_post_ID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger update alert API request with incorrect post  ID$")
+	public void i_trigger_update_alert_API_request_with_incorrect_post_ID(String arg1, String arg2) throws Throwable {
+	    triggerUpdateAlertAPI(arg1, arg2);
+	}
+
+	@Then("^I verify update api response code is (\\d+) triggered with incorrect post ID$")
+	public void i_verify_update_api_response_code_is_triggered_with_incorrect_post_ID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+
 }
