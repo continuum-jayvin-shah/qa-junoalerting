@@ -171,28 +171,11 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 	
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API$")
-	public void i_trigger_create_alert_API(String arg1, String arg2) throws Throwable {		
-			
+	public void i_trigger_create_alert_API(String arg1, String arg2) throws Throwable {
 		
-		JsonObject albums = preProcessingCreateAlert(arg1,arg2);
-		
-		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
-		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
-		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
-	    JsonObject  jobject = jelement.getAsJsonObject();
-	    System.out.println("Status =====================================================" + jobject.get("status"));
-	    String apiStatusID = jobject.get("status").toString();
-	    
-	    try{
-	    	System.out.println(jobject.get("alertId"));
-	    }catch(NullPointerException n){
-	    	System.out.println("No Alert/Ticket ID created. Exiting execution...");	    
-	    	Assert.fail("No Alert/Ticket ID created. Exiting execution...");
-	    }
-	    
-	    Assert.assertEquals(apiStatusID, "201", "Create alert API execution failed, the api status ID is " + apiStatusID + " and API message body is ");
-	    System.out.println("AlertID =====================================================" + jobject.get("alertId").getAsString());
-	    setAlertID(jobject.get("alertId").getAsString());
+		triggerCreateAlertAPI(arg1, arg2);
+		Assert.assertEquals(getApiStatusID(), "201", "Create alert API execution failed, the api status ID is " + getApiStatusID() + " and API message body is ");
+	    System.out.println("AlertID =====================================================" + getAlertID());
 	}
 	
 	private JsonObject preProcessingCreateAlert(String arg1, String arg2) throws IOException {
@@ -370,11 +353,13 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			count--;
 		}
 		System.out.println("Number of cons entry_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+_+  " + count);
+		Thread.sleep(5000);
 		}
 		if(count ==0)
 			System.out.println("Ticket entry has been removed from the ReqCons table");
 		else
 			Assert.fail("Ticket entry is not deleted from ReqCons table after Autoclose");
+		
 	}
 	
 	@Given("^I verify create alert request is archived in PAS_ReqQueueArchive table$")
@@ -729,13 +714,27 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private void triggerCreateAlertAPI(String arg1, String arg2) throws Exception {
 		JsonObject albums = preProcessingCreateAlert(arg1,arg2);		
 		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
+		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
+		
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 	    JsonObject  jobject = jelement.getAsJsonObject();
+	    
 	    System.out.println("Status =====================================================" + jobject.get("status"));
 	    setApiStatusID(jobject.get("status").toString());
-	    if(jobject.get("status").toString().equalsIgnoreCase("201")){
+	    
+	    if(jobject.get("status").toString().equalsIgnoreCase("201") || jobject.get("status").toString().equalsIgnoreCase("202")){
 	    setAlertID(jobject.get("alertId").getAsString());
-	    System.out.println("Alert ID ::  " + getAlertID());}
+	    System.out.println("Alert ID ::  " + getAlertID());
+	    }
+	    
+	    if(getApiStatusID().equals("100"))
+			triggerCreateAlertAPI(arg1, arg2);
+		
+		if(getApiStatusID().equals("202")){
+			triggerDeleteAlertAPI();
+			i_verify_create_alert_api_request_is_deleted_from_pas_reqcons_table();
+			triggerCreateAlertAPI(arg1, arg2);
+		}
 	}
 	
 	private void triggerUpdateAlertAPI(String arg1, String arg2) throws Exception{
@@ -916,14 +915,14 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	   
 	    System.out.println("Status =====================================================" + jobject.get("status") );
 	    setApiStatusID(jobject.get("status").toString());
-	   	        
+	  	        
 	}
 
 	@Then("^I verify update api response code is (\\d+) for invalid request body$")
 	public void i_verify_update_api_response_code_is_for_invalid_request_body(int arg1) throws Throwable {
 		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
-		Thread.sleep(wait);
+		//Thread.sleep(wait);
 		triggerDeleteAlertAPI();
 	}
 	
