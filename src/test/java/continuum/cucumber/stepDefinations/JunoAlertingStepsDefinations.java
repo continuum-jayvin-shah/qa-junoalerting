@@ -79,6 +79,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private JsonObject alertDetailJson;
 	private String statusCode = null;
 	private int httpstatusCode = 0;
+	private String errorCodeScenario = null;
 	
 	private void setJsonData(JsonObject jObject){
 		jsonObject = jObject;
@@ -167,6 +168,14 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private int getStatusCode() {
 		
 		return httpstatusCode;
+	}
+	
+	private void setErrorCodeScneario(String code) {
+			this.errorCodeScenario	= code;
+	}
+	
+	private String getErrorCodeScenario(){
+		return errorCodeScenario;
 	}
 
 	
@@ -712,6 +721,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	}
 	
 	private void triggerCreateAlertAPI(String arg1, String arg2) throws Exception {
+		
 		JsonObject albums = preProcessingCreateAlert(arg1,arg2);		
 		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
@@ -729,11 +739,13 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	    
 	    if(getApiStatusID().equals("100"))
 			triggerCreateAlertAPI(arg1, arg2);
-		
-		if(getApiStatusID().equals("202")){
-			triggerDeleteAlertAPI();
-			i_verify_create_alert_api_request_is_deleted_from_pas_reqcons_table();
-			triggerCreateAlertAPI(arg1, arg2);
+	    
+		if(!getErrorCodeScenario().equalsIgnoreCase("202")){
+			if(getApiStatusID().equals("202")){
+				triggerDeleteAlertAPI();
+				i_verify_create_alert_api_request_is_deleted_from_pas_reqcons_table();
+				triggerCreateAlertAPI(arg1, arg2);
+			}
 		}
 	}
 	
@@ -1079,9 +1091,12 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	/* ************************ Error Code 202**************************** */
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request when alert already exist$")
 	public void i_trigger_create_alert_API_request_when_alert_already_exist(String arg1, String arg2) throws Throwable {
+		setErrorCodeScneario("202");
 	    triggerCreateAlertAPI(arg1, arg2);
-	    Thread.sleep(wait);
-	    triggerCreateAlertAPI(arg1, arg2);
+	    if (!getApiStatusID().equalsIgnoreCase("202")) {
+	    	Thread.sleep(wait);
+		    triggerCreateAlertAPI(arg1, arg2);			
+		}	    
 	}
 
 	@Then("^I verify create api response code is (\\d+) when alert already exist$")
