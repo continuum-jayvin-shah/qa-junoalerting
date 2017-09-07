@@ -79,7 +79,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private JsonObject alertDetailJson;
 	private String statusCode = null;
 	private int httpstatusCode = 0;
-	private String errorCodeScenario = null;
+	private String errorCodeScenario = "111";
 	
 	private void setJsonData(JsonObject jObject){
 		jsonObject = jObject;
