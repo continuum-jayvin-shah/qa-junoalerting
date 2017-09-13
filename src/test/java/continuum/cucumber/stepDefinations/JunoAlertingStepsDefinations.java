@@ -29,7 +29,7 @@ import cucumber.api.java.en.When;
 public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	
 	public static Scenario scenario;
-	long wait = 20000;
+	long wait = 200;
 	
 	@Before
 	 public void readScenario(Scenario scenario) {
@@ -392,7 +392,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			Thread.sleep(500);
 		}		
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://10.2.40.45:1433", "DB_Architect", "DBabc@1234", query);	
-		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq, dOperation, dDcDtime = null, dUpDcDtime=null, dInsertedOn=null;
+		String dRegId = null, dConditionId = null, dSiteId = null, dMemberId = null, dInputReq, dOperation=null, dDcDtime = null, dUpDcDtime=null, dInsertedOn=null;
 		while (rs.next()) {
 			dRegId = rs.getString("RegId");
 			dConditionId = rs.getString("ConditionId");
@@ -438,7 +438,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		
 		String query = "select * from PAS_ReqCons with(NOLOCK) where LastStatus = '" + getAlertID() + "'";
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(), query);		
-		int count = 0 ;
+		
 		
 		HashMap<String, String> dbValues = new HashMap<String, String>(); 
 		while (rs.next()) {
@@ -465,7 +465,6 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			dbValues.put("NocActionId", rs.getString("NocActionId"));
 			dbValues.put("DcDtime", rs.getString("DcDtime"));
 			dbValues.put("UpDcDtime", rs.getString("UpDcDtime"));
-			count++;
 		}
 		
 		assertReqConTables(currentRow,dbValues); //asserting DB column values
@@ -598,8 +597,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		
 		
 		String query = "select * from PAS_ReqCons with(NOLOCK) where LastStatus = '" + getAlertID() + "'";
-		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(), query);		
-		int count = 0 ;
+		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(), query);
 		
 		HashMap<String, String> dbValues = new HashMap<String, String>(); 
 		while (rs.next()) {
@@ -626,7 +624,6 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			dbValues.put("NocActionId", rs.getString("NocActionId"));
 			dbValues.put("DcDtime", rs.getString("DcDtime"));
 			dbValues.put("UpDcDtime", rs.getString("UpDcDtime"));
-			count++;
 		}
 		
 		assertReqConTables(currentRow,dbValues); //asserting DB column values
@@ -934,7 +931,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	public void i_verify_update_api_response_code_is_for_invalid_request_body(int arg1) throws Throwable {
 		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
-		//Thread.sleep(wait);
+		Thread.sleep(wait);
 		triggerDeleteAlertAPI();
 	}
 	
@@ -1139,5 +1136,58 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 	}
+	
+	private void setEmailTestData(){
+		HashMap <String, String> testData = DataUtils.getTestRow();
+		System.out.println(testData);
+		
+		iTSHomePage.setAlertFamilyName(testData.get("AlertFamilies"));
+		iTSHomePage.setSiteValue(testData.get("Site ID"));
+		iTSHomePage.setResourceValue(testData.get("Resource ID"));
+		iTSHomePage.setNotificationName(testData.get("NotificationName"));
+	}
+	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" I am able to login to ITS Portal$")
+	public void i_am_able_to_login_to_ITS_Portal(String arg1, String arg2) throws Throwable {
+		
+		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + getFileName();		
+		DataUtils.setTestRow(excelFilePath, arg1, arg2);
+		iTSLoginPage.navigateToTicketPortal();
+		iTSLoginPage.loginToTicketPortal();
+	}
+
+	@Then("^I am able to Navigate to Intellimon Email Extension Section$")
+	public void i_am_able_to_Navigate_to_Intellimon_Email_Extension_Section() throws Throwable {
+	    iTSHomePage.openIntellimonEmailSection();
+	}
+
+	@Then("^I should be able to set a resource level rule$")
+	public void i_should_be_able_to_set_a_resource_level_rule() throws Throwable {
+		setEmailTestData();
+		iTSHomePage.setResourceRule();
+		iTSHomePage.setAlertFamilies();
+		Thread.sleep(4000);
+		iTSHomePage.deleteNotificationRule();
+		
+	}
+	
+	@Then("^I should be able to set a site level rule$")
+	public void i_should_be_able_to_set_a_site_level_rule() throws Throwable {
+		setEmailTestData();
+		iTSHomePage.setSiteRule();
+		iTSHomePage.setAlertFamilies();
+		Thread.sleep(4000);
+		iTSHomePage.deleteNotificationRule();
+	}
+
+	@Then("^I should be able to set a Member level rule$")
+	public void i_should_be_able_to_set_a_Member_level_rule() throws Throwable {
+		setEmailTestData();
+		iTSHomePage.setMemberRule();
+		iTSHomePage.setAlertFamilies();
+		Thread.sleep(4000);
+		iTSHomePage.deleteNotificationRule();
+	}
+
 
 }

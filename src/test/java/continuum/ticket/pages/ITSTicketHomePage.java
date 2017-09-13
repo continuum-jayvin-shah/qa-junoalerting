@@ -16,12 +16,45 @@ import continuum.cucumber.Locator;
 import continuum.cucumber.WebdriverWrapper;
 
 public class ITSTicketHomePage {
+	
 	ITSLoginPage login = new ITSLoginPage();
 	WebdriverWrapper wd = new WebdriverWrapper();
+	
 	
 	public Locator frame1 = new Locator("frame1", "#iframe", "css");
 	public Locator frame2 = new Locator("frame2", "#Main1", "css");
 	public Locator frame3 = new Locator("frame3", "#rightBottom", "css");
+	
+	private String siteValue 		= 	null;
+	private String resourceValue 	= 	null;
+	private String notificationName	=	null;
+	private String alertFamilies 	=	null;
+	
+	
+	//Intellimon Email Section Locators
+	public Locator RMMLink = new Locator("RMMLinkTab", ".//*[@id='ctl00_ctl00_mnuSetup']/a");
+	public Locator extensionsLink = new Locator("Intellimon Email Notifications Link", ".//*[@id='ctl00_ctl00_leftPanel_mnuExtensions']/a");
+	public Locator intellimonEmailLink = new Locator("Intellimon Email Notifications Link", ".//*[@id='ctl00_ctl00_leftPanel_LinkButton8']");
+	public Locator addNewButton = new Locator("Add Rule", ".//*[@id='btnAddRule']");
+	public Locator configName = new Locator(" Notification Configuration Name", ".//*[@id='txtPolicyName']");
+	public Locator siteRadioButton = new Locator("siteRadioButton", ".//*[@id='rbSites']");
+	public Locator resourceRadioButton = new Locator("siteRadioButton", ".//*[@id='rbResources']");
+	public Locator siteListBox = new Locator("SiteListBox", ".//*[@id='div_site']/button");
+	public Locator siteListBox_resource = new Locator("SiteListBox Resource", "//*[@id='div_siteResource']/button");
+	
+	public Locator closeSiteListMenu = new Locator("closeSiteListMenu", ".ui-icon.ui-icon-circle-close","css");
+	public Locator alertFamiliesRadioButton = new Locator("alertFamiliesRadioButton", "#alertFamilies","css");
+	public Locator alertFamiliesSelect = new Locator("alertFamiliesSelect", "#familyList","css");
+	public Locator rightButtonToSelect = new Locator("rightButtonToSelect", "#btnright","css");
+	public Locator submitButton = new Locator("rightButtonToSelect", "#btnSubmit","css");
+	public Locator frameId = new Locator("frame", ".k-content-frame","css");
+	public Locator deleteNotificationButton = new Locator("deleteNotificationButton", "btnDelete","id");
+	public Locator confirmDeleteBox = new Locator("confirmDeleteBox", "confirmItemDeletion","id");
+	public Locator confirmDeleteBtn = new Locator("confirmDeleteBtn", "btnDeleteConfirmYes","id");
+	public Locator resourceType 	=	new Locator("resource type drop down", "//*[@id='ddlResourcesType']");
+	public Locator resourceNameDropDown = new Locator("Resource Name Drop down", ".//*[@id='div_Resource']/button");
+	public Locator selectAllResourcesLink 	=	new Locator("selectAllResourcesLink", "//a/span[text()='Select all']");
+	public Locator applyToNewSites 	=	new Locator("applyToNewSites", ".//*[@id='chkApplyTo']");	
 	
 	public Locator lnkMyTeamQueueNew = new Locator("My Team Queue New Ticket link",
 			"#toggleNow11 > tbody > tr:nth-child(2) > td.MainTxt > a", "css");
@@ -31,8 +64,43 @@ public class ITSTicketHomePage {
 			"css");
 	public Locator lnkSearchedTicketID = new Locator("Seached TicketID", "#id0 > a", "css");
 	public Locator friendlyNameTicketID = new Locator("Seached Ticket Friendly Name", "td:nth-child(5)[id=id0]", "css");
-
-
+	
+	
+	
+	
+	public void setSiteValue(String siteValue) {
+		this.siteValue = siteValue;
+	}
+	
+	public String getSiteValue() {
+		return siteValue;
+	}
+	
+	public void setResourceValue(String resourceValue) {
+		this.resourceValue = resourceValue;
+	}
+	
+	public String getResourceValue(){
+		return resourceValue;
+	}
+	
+	public void setNotificationName(String notificationName) {
+		this.notificationName = notificationName;
+	}
+	
+	public String getNotificationName() {
+		return notificationName;
+	}
+	
+	public void setAlertFamilyName(String alertFamilies) {
+		this.alertFamilies = alertFamilies;
+	}
+	
+	public String getAlertFamilyName() {
+		return alertFamilies;
+	}
+	
+	
 	public void clickTab(String WebElement) throws InterruptedException{
 		List<WebElement> tabs = wd.getWebdriver().findElements(By.cssSelector("#divMainTopNav > #ulNav > li"));
 		for(WebElement tab : tabs){
@@ -130,5 +198,92 @@ public class ITSTicketHomePage {
 		System.out.println("Status Actual ===================" + getSearchedTicketDetails("Status").trim());
 		System.out.println("Escalation Category Actual ===================" + getSearchedTicketDetails("Escalation Category").trim());
 		return false;
+	}
+	
+	public void openIntellimonEmailSection(){
+		wd.waitForElementToBeClickable(RMMLink,5000);
+		wd.clickElement(RMMLink);
+		wd.waitForElementToBeClickable(extensionsLink,5000);
+		wd.clickElement(extensionsLink);
+		wd.waitForElementToBeClickable(intellimonEmailLink,2000);
+		wd.clickElement(intellimonEmailLink);
+	}
+	
+	public void setMemberRule(){
+		wd.waitForElementToBeClickable(addNewButton,3000);
+		wd.clickElement(addNewButton);
+		wd.switchToFrame(frameId);
+		wd.waitForElementToBeClickable(configName,3000);
+		wd.clearandSendKeys(notificationName, configName);
+		wd.waitForElementToBeClickable(siteRadioButton,3000);
+		wd.clickElement(siteRadioButton);
+		wd.clickElement(siteListBox);
+		wd.waitForElementToBeClickable(selectAllResourcesLink, 2000);
+		wd.clickElement(selectAllResourcesLink);
+		wd.clickElement(closeSiteListMenu);
+		wd.clickElement(applyToNewSites);
+	}
+	
+	public void setSiteRule(){	
+		wd.waitForElementToBeClickable(addNewButton,3000);
+		wd.clickElement(addNewButton);
+		wd.switchToFrame(frameId);
+		wd.waitForElementToBeClickable(configName,3000);
+		wd.clearandSendKeys(notificationName, configName);
+		wd.waitForElementToBeClickable(siteRadioButton,3000);
+		wd.clickElement(siteRadioButton);
+		wd.clickElement(siteListBox);
+		wd.waitForElementToBeClickable(closeSiteListMenu,3000);
+		WebElement siteName = wd.getWebdriver().findElement(By.xpath(".//input[@value='"+getSiteValue()
+		+"' and @name = 'multiselect_ddlSites']"));
+		siteName.click();;
+		wd.clickElement(closeSiteListMenu);		
+	}
+	
+	public void setAlertFamilies(){
+		wd.clickElement(alertFamiliesRadioButton);
+		wd.waitForElementToBeClickable(alertFamiliesSelect, 2000);
+		wd.selectByTextFromDropDown(alertFamiliesSelect, getAlertFamilyName());
+		wd.clickElement(rightButtonToSelect);
+		wd.clickElement(submitButton);
+	}
+	
+	public void setResourceRule(){
+		
+		
+		wd.waitForElementToBeClickable(addNewButton,3000);
+		wd.clickElement(addNewButton);
+		wd.switchToFrame(frameId);
+		wd.waitForElementToBeClickable(configName,3000);
+		wd.clearandSendKeys(notificationName, configName);
+		
+		wd.waitForElementToBeClickable(resourceRadioButton,3000);
+		wd.clickElement(resourceRadioButton);
+		wd.clickElement(siteListBox_resource);
+		WebElement siteName_resource = wd.getWebdriver().findElement(By.xpath(".//input[@value='"+getSiteValue()
+		+"' and @name = 'multiselect_ddlSiteResources']"));
+		siteName_resource.click();
+		wd.clickElement(closeSiteListMenu);	
+		
+		
+		wd.selectByTextFromDropDown(resourceType, "Windows Desktop");
+		wd.clickElement(resourceNameDropDown);
+		WebElement resourceName = wd.getWebdriver().findElement(By.xpath(".//*[@value= '"+getSiteValue()+"|"+getResourceValue()
+		+ "' and @name='multiselect_ddlResources']"));
+		resourceName.click();
+		wd.clickElement(closeSiteListMenu);	
+		
+	}
+	
+	public void deleteNotificationRule(){
+		
+		wd.switchtoParentWindow();
+		WebElement notificatonCheckBox = wd.getWebdriver().findElement(By.xpath("//td/div/span[text()='"+	 
+				getNotificationName() + "']/parent :: div/parent :: td/preceding-sibling:: td/input"));		
+		notificatonCheckBox.click();
+		wd.clickElement(deleteNotificationButton);
+		wd.waitForElementToBeClickable(confirmDeleteBox, 2000);
+		wd.clickElement(confirmDeleteBtn);
+		
 	}
 }
