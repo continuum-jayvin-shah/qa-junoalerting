@@ -1142,8 +1142,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		System.out.println(testData);
 		
 		iTSHomePage.setAlertFamilyName(testData.get("AlertFamilies"));
-		iTSHomePage.setSiteValue(testData.get("Site ID"));
-		iTSHomePage.setResourceValue(testData.get("Resource ID"));
+		iTSHomePage.setSiteValue(testData.get("sites"));
+		iTSHomePage.setResourceValue(testData.get("resourceId"));
 		iTSHomePage.setNotificationName(testData.get("NotificationName"));
 	}
 	
@@ -1165,10 +1165,9 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	public void i_should_be_able_to_set_a_resource_level_rule() throws Throwable {
 		setEmailTestData();
 		iTSHomePage.setResourceRule();
-		iTSHomePage.setAlertFamilies();
+		iTSHomePage.setAlertFamilies();		
 		Thread.sleep(4000);
-		iTSHomePage.deleteNotificationRule();
-		
+		iTSHomePage.deleteNotificationRule();		
 	}
 	
 	@Then("^I should be able to set a site level rule$")
@@ -1188,6 +1187,77 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Thread.sleep(4000);
 		iTSHomePage.deleteNotificationRule();
 	}
+	
+	@Then("^\"([^\"]*)\" : \"([^\"]*)\" I verify the email params in SaazOnline Live table$")
+	public void i_verify_the_email_params_in_SaazOnline_Live_table(String arg1, String arg2) throws Throwable {
+		ResultSet rs 		= null;
+		String ticketID 	= null;
+		String emailFrom 	= null;
+		String emailTo 		= null;
+		String emailSubject = null;
+		String timeStamp 	= null;
+		int count 			= 0;
+		
+		triggerCreateAlertAPI(arg1, arg2);
+		
+		String query = "Select TicketId from PAS_ReqCons with(NOLOCK) where LastStatus = '" + getAlertID() + "'";
+		while (count < 1) {
+			rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(), query);
+			while (rs.next()) {
+				count++;
+				ticketID = rs.getString("TicketId");
+			}
+			System.out.println("No of rows in reqCOns = " + count);
+			Thread.sleep(2000);
+		}
+		count = 0;
+		
+		query = "Select * from MailDump with(NOLOCK) where StrTo like '%aditya%' and StrSubject like '%" + ticketID	+ "%'";
+		
+		while (count < 1) {
+			rs = executeQuery("ITSUPPORT247DB", "10.2.40.45:1433", "QA Automation", "aUt0T3$t#958", query);
+			while (rs.next()) {
+				count++;
+				emailFrom = rs.getString("StrFrom");
+				emailTo = rs.getString("StrTo");
+				emailSubject = rs.getString("StrSubject");
+				timeStamp = rs.getString("CreatedOn");
 
+				System.out.println(emailFrom + "\n" + emailTo + "\n" + emailSubject + "\n" + timeStamp);
+			}
+			System.out.println("Ticket entry found  +++++++++++ " + count);
+			Thread.sleep(2000);
+		}		
+		Assert.assertTrue(emailFrom.equalsIgnoreCase("tickets@itsupport247.net"),"Email from expected tickets@itsupport247.net but found - " + emailFrom);
+		Assert.assertTrue(emailTo.contains("sachin.thakur@continuum.net"),"Email To expected to contain email address - sachin.thakur@continuum.net but found " + emailTo);
+		Assert.assertTrue(emailTo.contains("aditya.gaur@continuum.net"),"Email To expected to contain email address - aditya.gaur@continuum.net but found " + emailTo);
+		Assert.assertTrue(emailSubject.contains(ticketID), "Email subject expected to contains ticket ID as " + ticketID + "but subject is - " + emailSubject);
+		count=0;
+		
+		
+		query = "Select * from MailDump with(NOLOCK) where StrTo like '%aditya%' and StrBody like '%" + ticketID
+				+ "%' and StrFrom='notify@dtitsupport247.net'";
+		while (count < 1) {
+			rs = executeQuery("ITSUPPORT247DB", "10.2.40.45:1433", "QA Automation", "aUt0T3$t#958", query);
+
+			while (rs.next()) {
+				count++;
+				emailFrom = rs.getString("StrFrom");
+				emailTo = rs.getString("StrTo");
+				emailSubject = rs.getString("StrSubject");
+				timeStamp = rs.getString("CreatedOn");
+
+				System.out.println(emailFrom + "\n" + emailTo + "\n" + emailSubject + "\n" + timeStamp);
+			}
+			System.out.println("Notify entry found  +++++++++++ " + count);
+			Thread.sleep(2000);
+		}
+		
+		Assert.assertTrue(emailFrom.equalsIgnoreCase("notify@dtitsupport247.net"),"Email from expected notify@dtitsupport247.net but found - " + emailFrom);
+		Assert.assertTrue(emailTo.contains("sachin.thakur@continuum.net"),"EMail To expected to contain email address - sachin.thakur@continuum.net but found " + emailTo);
+		Assert.assertTrue(emailTo.contains("aditya.gaur@continuum.net"),"EMail To expected to contain email address - aditya.gaur@continuum.net but found " + emailTo);
+
+		triggerDeleteAlertAPI();
+	}
 
 }
