@@ -1,10 +1,16 @@
 Feature: Resource level suspension scenarios
 
-Background: Verify for resource level suspension if Alert is suspended monthly recursive rule with end date
-Given  I apply resource level Alert suspension for 5 minutes
+Scenario Outline: Verify for resource level suspension if Alert is suspended monthly recursive rule with end date
+Given "Suspension" : "<TestCase>" I am able to login to ITS Portal
+And I am able to Navigate to Intellimon Alert Suspension Section
+And I apply resource level Alert suspension weekly for 5 minutes
 And I wait for x minutes for suspesnion to get applied
 When I trigger create alert API
 Then I verify create api response code is 205 for invalid partener datatype 
+
+Examples:
+|TestCase|
+|Suspension01|
 
 Scenario Outline: Verify Alert should get deleted for resouce where suspension rule is applied
 When I trigger create alert API

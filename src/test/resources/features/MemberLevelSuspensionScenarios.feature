@@ -29,7 +29,7 @@ Examples:
 
 Scenario Outline: Verify Alert should get deleted for member where suspension rule is applied
 When I trigger create alert API
-Then I verify create api response code is 201 for invalid partener datatype 
+Then I verify create api response code is 204 for invalid partener datatype 
 
 Examples:
 |TestCase|
