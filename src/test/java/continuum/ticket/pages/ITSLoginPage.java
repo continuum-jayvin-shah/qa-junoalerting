@@ -53,7 +53,7 @@ public class ITSLoginPage {
 	 * @return object of ITSHomePage
 	 * @throws SQLException
 	 */
-	public ITSTicketHomePage loginToTicketPortal() throws SQLException {
+	public ITSTicketHomePage loginToTicketPortal() {
 		//Reporter.log("Enter login credentials  to NOC portal");
 		wd.waitForElementToBeClickable(emailId, 3000);
 		wd.clearandSendKeys(Utilities.getMavenProperties("ITSPortalUserName"), emailId);

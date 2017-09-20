@@ -105,7 +105,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		return transactionID;
 	}
 	
-	private String getFileName(){
+	public String getFileName(){
 		return fileName;
 	}
 	
@@ -1137,7 +1137,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 	}
 	
-	private void setEmailTestData(){
+	public void setEmailTestData(){
 		HashMap <String, String> testData = DataUtils.getTestRow();
 		System.out.println(testData);
 		

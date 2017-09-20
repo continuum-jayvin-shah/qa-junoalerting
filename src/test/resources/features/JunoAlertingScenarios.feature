@@ -245,10 +245,10 @@ Examples:
 
 @Email1
 Scenario Outline: Verify I should be able to set Email Notification Rule at resource Level
-#Given "EmailNotification" : "<TestCase>" I am able to login to ITS Portal
-#Then I am able to Navigate to Intellimon Email Extension Section
-#Then I should be able to set a resource level rule
-Then "EmailNotification" : "<TestCase>" I verify the email params in SaazOnline Live table
+Given "EmailNotification" : "<TestCase>" I am able to login to ITS Portal
+Then I am able to Navigate to Intellimon Email Extension Section
+Then I should be able to set a resource level rule
+#Then "EmailNotification" : "<TestCase>" I verify the email params in SaazOnline Live table
 Examples:
 |TestCase|
 |Email01|
