@@ -2,37 +2,37 @@ package continuum.cucumber.stepDefinations;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.HashMap;
-
-import org.testng.Assert;
 
 import com.continuum.utils.DataUtils;
-import com.continuum.utils.JunoAlertingUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
 
-import continuum.cucumber.DatabaseUtility;
-import continuum.cucumber.Utilities;
 import continuum.noc.pages.AuvikPageFactory;
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class SuspensionStepDefinations{
+public class SuspensionStepDefinations extends AuvikPageFactory{
+	
+	JunoAlertingStepsDefinations junoAlertingStepDef = new JunoAlertingStepsDefinations();
+	Scenario scenario = null;
+	
+	@Before
+	 public void readScenario(Scenario scenario) {
+		this.scenario = scenario;
+	}
 	
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" I apply member level family suspension for (\\d+) minutes$")
-	public void i_apply_member_level_family_suspension_for_minutes(String arg1, String arg2, int arg3){
-	    // Write code here that turns the phrase above into concrete actions
-	   // throw new PendingException();
-		System.out.println("Step1");
+	public void i_apply_member_level_family_suspension_for_minutes(String arg1, String arg2, int arg3) throws IOException{
+		junoAlertingStepDef.readScenario(scenario);
+		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + junoAlertingStepDef.getFileName();
+		DataUtils.setTestRow(excelFilePath, arg1, arg2);
+		junoAlertingStepDef.setEmailTestData();
+		iTSLoginPage.navigateToTicketPortal();
+		iTSLoginPage.loginToTicketPortal();
+		iTSHomePage.openIntellimonSuspensionSection();
+		iTSHomePage.setMemberRule();
+		iTSHomePage.setAlertFamilies();
+		iTSHomePage.setSuspensionScheduleOneTime();
 	}
 
 	@Given("^I wait for x minutes for suspesnion to get applied$")

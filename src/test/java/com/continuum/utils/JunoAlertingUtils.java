@@ -66,7 +66,7 @@ public class JunoAlertingUtils {
 	public static String getCurrentTime(String timezone) throws ParseException, InterruptedException
 	{
 		TimeZone.setDefault(TimeZone.getTimeZone(timezone));
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String currentTime = sdf.format(new Date());
 		return currentTime;
 	}
@@ -80,7 +80,7 @@ public class JunoAlertingUtils {
 	 */
 	public static long getDateDifference(String endTime, String startTime) throws ParseException 
 	{
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date d11 = sdf.parse(startTime);
 		Date d22 = sdf.parse(endTime);
 		long diff = d22.getTime() - d11.getTime();

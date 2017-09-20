@@ -1,7 +1,9 @@
 package continuum.ticket.pages;
 
 import java.io.IOException;
-import java.util.HashMap;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.openqa.selenium.By;
@@ -9,9 +11,7 @@ import org.openqa.selenium.WebElement;
 
 //import com.continuum.framework.utils.Log;
 import com.continuum.utils.JunoAlertingUtils;
-import com.continuum.utils.DataUtils;
 
-import continuum.cucumber.DriverFactory;
 import continuum.cucumber.Locator;
 import continuum.cucumber.WebdriverWrapper;
 
@@ -35,6 +35,7 @@ public class ITSTicketHomePage {
 	public Locator RMMLink = new Locator("RMMLinkTab", ".//*[@id='ctl00_ctl00_mnuSetup']/a");
 	public Locator extensionsLink = new Locator("Intellimon Email Notifications Link", ".//*[@id='ctl00_ctl00_leftPanel_mnuExtensions']/a");
 	public Locator intellimonEmailLink = new Locator("Intellimon Email Notifications Link", ".//*[@id='ctl00_ctl00_leftPanel_LinkButton8']");
+	public Locator intellimonSuspensionLink = new Locator("Intellimon Alert Suspension Link", ".//*[@id='ctl00_ctl00_leftPanel_LinkButton6']");
 	public Locator addNewButton = new Locator("Add Rule", ".//*[@id='btnAddRule']");
 	public Locator configName = new Locator(" Notification Configuration Name", ".//*[@id='txtPolicyName']");
 	public Locator siteRadioButton = new Locator("siteRadioButton", ".//*[@id='rbSites']");
@@ -54,8 +55,16 @@ public class ITSTicketHomePage {
 	public Locator resourceType 	=	new Locator("resource type drop down", "//*[@id='ddlResourcesType']");
 	public Locator resourceNameDropDown = new Locator("Resource Name Drop down", ".//*[@id='div_Resource']/button");
 	public Locator selectAllResourcesLink 	=	new Locator("selectAllResourcesLink", "//a/span[text()='Select all']");
-	public Locator applyToNewSites 	=	new Locator("applyToNewSites", ".//*[@id='chkApplyTo']");	
+	public Locator applyToNewSites 	=	new Locator("applyToNewSites", ".//*[@id='chkApplyTo']");
 	
+	public Locator suspensionScheduleOnetimeRadioButton 	=	new Locator("suspensionScheduleRadioButton", ".//*[@id='rdbonetime']");
+	public Locator timeZoneDropDown 	=	new Locator("timeZoneDropDown", ".//*[@id='ddlTimeZone']");
+	public Locator fromDateCalendar = new Locator("fromDateCalendar",".//*[@id='divonetime']/div[1]/div[2]/span/span/span/span");
+	public Locator fromDate = new Locator("fromDate",".//div[@id='txtCustomFdt_dateview']//td/a[@title='"+getformattedDate()+"']");
+	public Locator EndDateCalendar = new Locator("EndDateCalendar",".//*[@id='divonetime']/div[2]/div[1]/div[2]/span/span/span/span");
+	public Locator endDate = new Locator("endDate",".//div[@id='txtCustomTodt_dateview']//td/a[@title='"+getformattedDate()+"']");
+	public Locator suspensionStartTime = new Locator("suspensionStartTime",".//*[@id='tbInstanceTimeStart']");
+	public Locator suspensionEndTime = new Locator("suspensionEndTime",".//*[@id='tbInstanceTimeEnd']");
 	public Locator lnkMyTeamQueueNew = new Locator("My Team Queue New Ticket link",
 			"#toggleNow11 > tbody > tr:nth-child(2) > td.MainTxt > a", "css");
 	public Locator txtTicketID = new Locator("TicketID text box", "#txtTicketId", "css");
@@ -71,7 +80,7 @@ public class ITSTicketHomePage {
 	public void setSiteValue(String siteValue) {
 		this.siteValue = siteValue;
 	}
-	
+
 	public String getSiteValue() {
 		return siteValue;
 	}
@@ -209,12 +218,21 @@ public class ITSTicketHomePage {
 		wd.clickElement(intellimonEmailLink);
 	}
 	
+	public void openIntellimonSuspensionSection(){
+		wd.waitForElementToBeClickable(RMMLink,5000);
+		wd.clickElement(RMMLink);
+		wd.waitForElementToBeClickable(extensionsLink,5000);
+		wd.clickElement(extensionsLink);
+		wd.waitForElementToBeClickable(intellimonSuspensionLink,2000);
+		wd.clickElement(intellimonSuspensionLink);
+	}
+	
 	public void setMemberRule(){
 		wd.waitForElementToBeClickable(addNewButton,3000);
 		wd.clickElement(addNewButton);
 		wd.switchToFrame(frameId);
 		wd.waitForElementToBeClickable(configName,3000);
-		wd.clearandSendKeys(notificationName, configName);
+		wd.clearandSendKeys(getNotificationName(), configName);
 		wd.waitForElementToBeClickable(siteRadioButton,3000);
 		wd.clickElement(siteRadioButton);
 		wd.clickElement(siteListBox);
@@ -229,7 +247,7 @@ public class ITSTicketHomePage {
 		wd.clickElement(addNewButton);
 		wd.switchToFrame(frameId);
 		wd.waitForElementToBeClickable(configName,3000);
-		wd.clearandSendKeys(notificationName, configName);
+		wd.clearandSendKeys(getNotificationName(), configName);
 		wd.waitForElementToBeClickable(siteRadioButton,3000);
 		wd.clickElement(siteRadioButton);
 		wd.clickElement(siteListBox);
@@ -243,7 +261,8 @@ public class ITSTicketHomePage {
 	public void setAlertFamilies(){
 		wd.clickElement(alertFamiliesRadioButton);
 		wd.waitForElementToBeClickable(alertFamiliesSelect, 2000);
-		wd.selectByTextFromDropDown(alertFamiliesSelect, getAlertFamilyName());
+		wd.waitFor(10000);
+		wd.selectByTextFromDropDown(alertFamiliesSelect, "Desktop Health (4 alerts)");//getAlertFamilyName());
 		wd.clickElement(rightButtonToSelect);
 		wd.clickElement(submitButton);
 	}
@@ -255,7 +274,7 @@ public class ITSTicketHomePage {
 		wd.clickElement(addNewButton);
 		wd.switchToFrame(frameId);
 		wd.waitForElementToBeClickable(configName,3000);
-		wd.clearandSendKeys(notificationName, configName);
+		wd.clearandSendKeys(getNotificationName(), configName);
 		
 		wd.waitForElementToBeClickable(resourceRadioButton,3000);
 		wd.clickElement(resourceRadioButton);
@@ -285,5 +304,43 @@ public class ITSTicketHomePage {
 		wd.waitForElementToBeClickable(confirmDeleteBox, 2000);
 		wd.clickElement(confirmDeleteBtn);
 		
+	}
+	
+	public void setSuspensionScheduleOneTime(){
+		wd.clickElement(suspensionScheduleOnetimeRadioButton);
+		wd.selectByTextFromDropDown(timeZoneDropDown, "UTC+05:30 (India)");
+		wd.clickElement(fromDateCalendar);
+		wd.waitForElementToBeClickable(fromDate, 2000);
+		wd.clickElement(fromDate);
+		String [] suspentionTime = getSusupensionTime();
+		wd.clearandSendKeys(suspentionTime[0],suspensionStartTime);
+		wd.clickElement(EndDateCalendar);
+		wd.waitForElementToBeClickable(endDate, 3000);
+		wd.clickElement(endDate);
+		wd.clearandSendKeys(suspentionTime[1], suspensionEndTime);
+		wd.clickElement(submitButton);
+		
+	}
+	
+		
+	public static String[] getSusupensionTime(){
+		String [] timevalues = new String[2];
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		timevalues[0] = sdf.format(new Date(System.currentTimeMillis()+5*60*1000));
+		timevalues[1] = sdf.format(new Date(System.currentTimeMillis()+10*60*1000));
+		return timevalues;
+	}
+	
+	private static String getformattedDate() {
+		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
+		String strDate = dateFormat.format(new Date());
+		
+		String temp1 = strDate.substring(0,10);
+		String temp2 = strDate.substring(10,13);
+		String temp3 = strDate.substring(13,23);
+		String temp4 = strDate.substring(23,29);
+		strDate = temp1+temp3+temp2+temp4;
+		System.out.println(strDate);
+		return strDate;
 	}
 }
