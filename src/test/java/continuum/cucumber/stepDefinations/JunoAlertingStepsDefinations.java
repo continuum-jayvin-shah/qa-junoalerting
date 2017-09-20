@@ -1161,6 +1161,11 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	    iTSHomePage.openIntellimonEmailSection();
 	}
 
+	@Then("^I am able to Navigate to Intellimon Alert Suspension Section$")
+	public void i_am_able_to_Navigate_to_Intellimon_Alert_Suspension_Section() throws Throwable {
+	    iTSHomePage.openIntellimonSuspensionSection();
+	}
+	
 	@Then("^I should be able to set a resource level rule$")
 	public void i_should_be_able_to_set_a_resource_level_rule() throws Throwable {
 		setEmailTestData();
