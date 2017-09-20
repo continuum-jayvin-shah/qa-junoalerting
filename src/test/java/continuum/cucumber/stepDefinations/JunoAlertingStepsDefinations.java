@@ -156,7 +156,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	private void setApiStatusID(String responseCode) {
 		statusCode = responseCode;		
 	}
-	private String getApiStatusID() {
+	public String getApiStatusID() {
 		return statusCode;
 	}
 	
@@ -717,7 +717,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 				"MsgbId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("MsgbId"));		
 	}
 	
-	private void triggerCreateAlertAPI(String arg1, String arg2) throws Exception {
+	public void triggerCreateAlertAPI(String arg1, String arg2) throws Exception {
 		
 		JsonObject albums = preProcessingCreateAlert(arg1,arg2);		
 		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();

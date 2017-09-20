@@ -4,8 +4,8 @@ Feature: Member level suspension scenarios
 Scenario Outline: Verify for member level suspension if family is suspended one-time until time
 Given "EmailNotification" : "<TestCase>" I apply member level family suspension for 5 minutes
 And I wait for x minutes for suspesnion to get applied
-When I trigger create alert API
-Then I verify create api response code is 205 for invalid partener datatype 
+When "EmailNotification" : "<TestCase>" I trigger create alert API
+Then I verify create api response code is 205 for suspended partner 
 
 Examples:
 |TestCase|
