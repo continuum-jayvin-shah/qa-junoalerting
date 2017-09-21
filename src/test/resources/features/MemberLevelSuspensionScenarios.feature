@@ -12,23 +12,23 @@ Examples:
 |Email01|
 
 Scenario Outline: Verify Alert should get generated for members where suspension rules are not applied
-When I trigger create alert API
-Then I verify create api response code is 201 for invalid partener datatype 
+When "EmailNotification" : "<TestCase>" I trigger create alert API
+Then I verify create api response code is 201 for suspended partner
 
 Examples:
 |TestCase|
 |Platform008|
 
 Scenario Outline: Verify Alert should get generated for family where suspension rules are not applied
-When I trigger create alert API
-Then I verify create api response code is 201 for invalid partener datatype 
+When "EmailNotification" : "<TestCase>" I trigger create alert API
+Then I verify create api response code is 201 for suspended partner 
 
 Examples:
 |TestCase|
 |Platform008|
 
 Scenario Outline: Verify Alert should get deleted for member where suspension rule is applied
-When I trigger create alert API
+When "EmailNotification" : "<TestCase>" I trigger delete alert API
 Then I verify create api response code is 204 for invalid partener datatype 
 
 Examples:
@@ -36,7 +36,7 @@ Examples:
 |Platform008|
 
 Scenario Outline: Verify Alert should get deleted for family where suspension rule is applied
-When I trigger create alert API
+When "EmailNotification" : "<TestCase>" I trigger delete alert API
 Then I verify create api response code is 201 for invalid partener datatype 
 
 Examples:

@@ -14,7 +14,7 @@ import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class SuspensionStepDefinations extends AuvikPageFactory{
+public class SuspensionStepDefinations {
 	
 	JunoAlertingStepsDefinations junoAlertingStepDef = new JunoAlertingStepsDefinations();
 	Scenario scenario = null;
@@ -31,17 +31,17 @@ public class SuspensionStepDefinations extends AuvikPageFactory{
 		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + junoAlertingStepDef.getFileName();
 		DataUtils.setTestRow(excelFilePath, arg1, arg2);
 		junoAlertingStepDef.setEmailTestData();
-		iTSLoginPage.navigateToTicketPortal();
-		iTSLoginPage.loginToTicketPortal();
-		iTSHomePage.openIntellimonSuspensionSection();
-		iTSHomePage.setMemberRule();
-		iTSHomePage.setAlertFamilies();
-		iTSHomePage.setSuspensionScheduleOneTime();
+		junoAlertingStepDef.iTSLoginPage.navigateToTicketPortal();
+		junoAlertingStepDef.iTSLoginPage.loginToTicketPortal();
+		junoAlertingStepDef.iTSHomePage.openIntellimonSuspensionSection();
+		junoAlertingStepDef.iTSHomePage.setMemberRule();
+		junoAlertingStepDef.iTSHomePage.setAlertFamilies();
+		junoAlertingStepDef.iTSHomePage.setSuspensionScheduleOneTime();
 	}
 
 	@Given("^I wait for x minutes for suspesnion to get applied$")
 	public void i_wait_for_x_minutes_for_suspesnion_to_get_applied() throws InterruptedException{
-	    long waitTime= 300000;
+	    long waitTime= 420000;
 	    
 	    while(waitTime>=0){
 	    	System.out.println("Waiting for suspension rule to be synced.. Time remaining : " + (waitTime/1000)+ " Seconds");
@@ -58,8 +58,9 @@ public class SuspensionStepDefinations extends AuvikPageFactory{
 	
 	@Then("^I verify create api response code is (\\d+) for suspended partner$")
 	public void i_verify_create_api_response_code_is_for_suspended_partner(int arg1) throws Throwable {
-		 String statusCode = junoAlertingStepDef.getApiStatusID();		
+		 String statusCode = junoAlertingStepDef.getApiStatusID();
 		 Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+		 junoAlertingStepDef.iTSHomePage.deleteSuspensionRule();
 	}
 
 }

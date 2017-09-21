@@ -20,13 +20,13 @@ And I verify create alert api request is deleted from pas_reqcons table
 Examples:
 |TestCase|
 #|Platform001|
-#|Platform002|
+|Platform002|
 #|Platform003|
 #|Platform004|
 #|Platform005|
 #|Platform006|
 #|Platform007|
-|Platform008|
+#|Platform008|
 
 @Regression @102
 Scenario Outline: Verify Error Code 102 for create Alert api response for invalid partner value - C1915960
@@ -248,7 +248,7 @@ Scenario Outline: Verify I should be able to set Email Notification Rule at reso
 Given "EmailNotification" : "<TestCase>" I am able to login to ITS Portal
 Then I am able to Navigate to Intellimon Email Extension Section
 Then I should be able to set a resource level rule
-#Then "EmailNotification" : "<TestCase>" I verify the email params in SaazOnline Live table
+Then "EmailNotification" : "<TestCase>" I verify the email params in SaazOnline Live table
 Examples:
 |TestCase|
 |Email01|

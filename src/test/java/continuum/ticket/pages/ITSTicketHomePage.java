@@ -231,7 +231,7 @@ public class ITSTicketHomePage {
 		wd.waitForElementToBeClickable(addNewButton,3000);
 		wd.clickElement(addNewButton);
 		wd.switchToFrame(frameId);
-		wd.waitForElementToBeClickable(configName,3000);
+		wd.waitForTextToAppearInTextField(configName,3000);
 		wd.clearandSendKeys(getNotificationName(), configName);
 		wd.waitForElementToBeClickable(siteRadioButton,3000);
 		wd.clickElement(siteRadioButton);
@@ -260,9 +260,11 @@ public class ITSTicketHomePage {
 	
 	public void setAlertFamilies(){
 		wd.clickElement(alertFamiliesRadioButton);
-		wd.waitForElementToBeClickable(alertFamiliesSelect, 2000);
-		wd.waitFor(10000);
-		wd.selectByTextFromDropDown(alertFamiliesSelect, "Desktop Health (4 alerts)");//getAlertFamilyName());
+		wd.waitForElementToBeClickable(alertFamiliesSelect, 3000);
+		wd.waitFor(5000);
+		String text = getAlertFamilyName();
+		System.out.println(text.trim());
+		wd.selectByTextFromDropDown(alertFamiliesSelect,"Desktop Health (4 alerts)");
 		wd.clickElement(rightButtonToSelect);
 		wd.clickElement(submitButton);
 	}
@@ -322,8 +324,18 @@ public class ITSTicketHomePage {
 		
 	}
 	
+	public void deleteSuspensionRule(){
+		wd.switchtoParentWindow();
+		WebElement notificatonCheckBox = wd.getWebdriver().findElement(By.xpath("//td/div/span[text()='"+	 
+				getNotificationName() + "']/parent :: div/parent :: td/preceding-sibling:: td/input"));		
+		notificatonCheckBox.click();
+		wd.clickElement(deleteNotificationButton);
+		wd.waitForElementToBeClickable(confirmDeleteBox, 2000);
+		wd.clickElement(confirmDeleteBtn);		
+	}
+	
 		
-	public static String[] getSusupensionTime(){
+	public String[] getSusupensionTime(){
 		String [] timevalues = new String[2];
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		timevalues[0] = sdf.format(new Date(System.currentTimeMillis()+5*60*1000));
@@ -331,16 +343,10 @@ public class ITSTicketHomePage {
 		return timevalues;
 	}
 	
-	private static String getformattedDate() {
-		DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL);
-		String strDate = dateFormat.format(new Date());
-		
-		String temp1 = strDate.substring(0,10);
-		String temp2 = strDate.substring(10,13);
-		String temp3 = strDate.substring(13,23);
-		String temp4 = strDate.substring(23,29);
-		strDate = temp1+temp3+temp2+temp4;
-		System.out.println(strDate);
-		return strDate;
+	
+	private String getformattedDate() {
+		SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, YYYY");
+		System.out.println(sdf.format(new Date()));
+		return sdf.format(new Date());
 	}
 }
