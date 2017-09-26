@@ -1,7 +1,6 @@
 package continuum.ticket.pages;
 
 import java.io.IOException;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -65,6 +64,18 @@ public class ITSTicketHomePage {
 	public Locator endDate = new Locator("endDate",".//div[@id='txtCustomTodt_dateview']//td/a[@title='"+getformattedDate()+"']");
 	public Locator suspensionStartTime = new Locator("suspensionStartTime",".//*[@id='tbInstanceTimeStart']");
 	public Locator suspensionEndTime = new Locator("suspensionEndTime",".//*[@id='tbInstanceTimeEnd']");
+	
+	public Locator suspensionScheduleWeeklyRadioButton = new Locator("Weekly Schedule Radio Button", ".//*[@id='rdbweekly']");
+	public Locator susIntervalWeekTxtBox = new Locator("susIntervalWeekTxtBox", ".//*[@id='txtintervalweek']");
+	public Locator dayOfWeekCheckBox = new Locator("dayOfWeekCheckBox", ".//*[@id='"+getDayOfWeek()[0]+"']");
+	public Locator fromTimeWeekly = new Locator("fromTimeWeekly", ".//*[@id='timepicker"+getDayOfWeek()[1]+"from']");
+	public Locator endTimeWeekly = new Locator("endTimeWeekly", ".//*[@id='timepicker"+getDayOfWeek()[1]+"to']");
+	public Locator fromDateCalendarWeekly = new Locator("fromDateCalendarWeekly",".//*[@id='txtfromdateweekly']/following-sibling :: span/span");
+	public Locator fromDateWeekly = new Locator("fromDateWeekly",".//div[@id='txtfromdateweekly_dateview']//td/a[@title='"+getformattedDate()+"']");
+	public Locator EndDateCalendarWeekly = new Locator("EndDateCalendarWeekly",".//*[@id='divonetime']/div[2]/div[1]/div[2]/span/span/span/span");
+	public Locator endDateWeekly = new Locator("endDateWeekly",".//div[@id='txttodatenewweekly_dateview']//td/a[@title='"+getformattedDate()+"']");
+	public Locator noEndDateRoadioButton = new Locator("No End Date", ".//*[@id='rbtnweeklynoend']");
+	
 	public Locator lnkMyTeamQueueNew = new Locator("My Team Queue New Ticket link",
 			"#toggleNow11 > tbody > tr:nth-child(2) > td.MainTxt > a", "css");
 	public Locator txtTicketID = new Locator("TicketID text box", "#txtTicketId", "css");
@@ -74,8 +85,7 @@ public class ITSTicketHomePage {
 	public Locator lnkSearchedTicketID = new Locator("Seached TicketID", "#id0 > a", "css");
 	public Locator friendlyNameTicketID = new Locator("Seached Ticket Friendly Name", "td:nth-child(5)[id=id0]", "css");
 	
-	
-	
+		
 	
 	public void setSiteValue(String siteValue) {
 		this.siteValue = siteValue;
@@ -314,7 +324,7 @@ public class ITSTicketHomePage {
 		wd.clickElement(fromDateCalendar);
 		wd.waitForElementToBeClickable(fromDate, 2000);
 		wd.clickElement(fromDate);
-		String [] suspentionTime = getSusupensionTime();
+		String [] suspentionTime = getSusupensionTime(5,10);
 		wd.clearandSendKeys(suspentionTime[0],suspensionStartTime);
 		wd.clickElement(EndDateCalendar);
 		wd.waitForElementToBeClickable(endDate, 3000);
@@ -323,6 +333,23 @@ public class ITSTicketHomePage {
 		wd.clickElement(submitButton);
 		
 	}
+	
+	public void setSiteLevelSuspensionRule(){
+		wd.clickElement(suspensionScheduleWeeklyRadioButton);
+		wd.selectByTextFromDropDown(timeZoneDropDown, "UTC+05:30 (India)");
+		wd.clearandSendKeys("4", susIntervalWeekTxtBox);
+		wd.clickElement(dayOfWeekCheckBox);
+		String [] time = getSusupensionTime(5, 20);
+		wd.sendKeys(time[0],fromTimeWeekly);	
+		wd.sendKeys(time[1], endTimeWeekly);
+		
+		wd.clickUsingJavaScript(fromDateCalendarWeekly);
+		wd.waitFor(3000);
+		wd.clickUsingJavaScript(fromDateWeekly);
+		wd.clickElement(noEndDateRoadioButton);
+		wd.clickElement(submitButton);
+	}
+	
 	
 	public void deleteSuspensionRule(){
 		wd.switchtoParentWindow();
@@ -334,12 +361,17 @@ public class ITSTicketHomePage {
 		wd.clickElement(confirmDeleteBtn);		
 	}
 	
-		
-	public String[] getSusupensionTime(){
+	/**
+	 * 
+	 * @param start (in minutes)
+	 * @param end   (in minutes)	 
+	 * @return
+	 */
+	public String[] getSusupensionTime(int start, int end){
 		String [] timevalues = new String[2];
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-		timevalues[0] = sdf.format(new Date(System.currentTimeMillis()+5*60*1000));
-		timevalues[1] = sdf.format(new Date(System.currentTimeMillis()+10*60*1000));
+		timevalues[0] = sdf.format(new Date(System.currentTimeMillis()+start*60*1000));
+		timevalues[1] = sdf.format(new Date(System.currentTimeMillis()+end*60*1000));
 		return timevalues;
 	}
 	
@@ -348,5 +380,14 @@ public class ITSTicketHomePage {
 		SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM dd, YYYY");
 		System.out.println(sdf.format(new Date()));
 		return sdf.format(new Date());
+	}
+	
+	private String[] getDayOfWeek() {		
+		SimpleDateFormat full = new SimpleDateFormat("EEEE");
+		SimpleDateFormat half = new SimpleDateFormat("E");
+		String days [] = new String[2];
+		days[0] = full.format(new Date());
+		days[1] = half.format(new Date()).toLowerCase();
+		return days;
 	}
 }

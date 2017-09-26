@@ -27,9 +27,7 @@ public class SuspensionStepDefinations {
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" I apply member level family suspension for (\\d+) minutes$")
 	public void i_apply_member_level_family_suspension_for_minutes(String arg1, String arg2, int arg3) throws IOException{
 		
-		junoAlertingStepDef.readScenario(scenario);
-		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + junoAlertingStepDef.getFileName();
-		DataUtils.setTestRow(excelFilePath, arg1, arg2);
+		setTestDataRow(arg1, arg2);
 		junoAlertingStepDef.setEmailTestData();
 		junoAlertingStepDef.iTSLoginPage.navigateToTicketPortal();
 		junoAlertingStepDef.iTSLoginPage.loginToTicketPortal();
@@ -37,6 +35,12 @@ public class SuspensionStepDefinations {
 		junoAlertingStepDef.iTSHomePage.setMemberRule();
 		junoAlertingStepDef.iTSHomePage.setAlertFamilies();
 		junoAlertingStepDef.iTSHomePage.setSuspensionScheduleOneTime();
+	}
+
+	private void setTestDataRow(String arg1, String arg2) throws IOException {
+		junoAlertingStepDef.readScenario(scenario);
+		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + junoAlertingStepDef.getFileName();
+		DataUtils.setTestRow(excelFilePath, arg1, arg2);
 	}
 
 	@Given("^I wait for x minutes for suspesnion to get applied$")
@@ -61,6 +65,19 @@ public class SuspensionStepDefinations {
 		 String statusCode = junoAlertingStepDef.getApiStatusID();
 		 Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 		 junoAlertingStepDef.iTSHomePage.deleteSuspensionRule();
+	}
+	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" I apply site level family suspension for (\\d+) minutes$")
+	public void i_apply_site_level_family_suspension_for_minutes(String arg1, String arg2, int arg3) throws Throwable {
+		setTestDataRow(arg1, arg2);
+		junoAlertingStepDef.setEmailTestData();
+		junoAlertingStepDef.iTSLoginPage.navigateToTicketPortal();
+		junoAlertingStepDef.iTSLoginPage.loginToTicketPortal();
+		junoAlertingStepDef.iTSHomePage.openIntellimonSuspensionSection();
+		junoAlertingStepDef.iTSHomePage.setSiteRule();
+		junoAlertingStepDef.iTSHomePage.setAlertFamilies();
+		junoAlertingStepDef.iTSHomePage.setSiteLevelSuspensionRule();
+		
 	}
 
 }
