@@ -165,7 +165,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		this.httpstatusCode = httpstatusCode;
 	}
 	
-	private int getStatusCode() {
+	public int getStatusCode() {
 		
 		return httpstatusCode;
 	}
@@ -746,7 +746,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		}
 	}
 	
-	private void triggerUpdateAlertAPI(String arg1, String arg2) throws Exception{
+	public void triggerUpdateAlertAPI(String arg1, String arg2) throws Exception{
 		JsonObject albums = preProcessingCreateAlert(arg1, arg2);	
 		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 		
@@ -758,7 +758,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	    setApiStatusID(jobject.get("status").toString());
 	}
 	
-	private void triggerDeleteAlertAPI(){
+	public void triggerDeleteAlertAPI(){
 		Response resp = RestAssured.given().header("txKey","Automation").delete(getURL() + "/" + getAlertID()).andReturn();
 		System.out.println("Send Delete command");
 		System.out.println("Status Code \n" + resp.getStatusCode());

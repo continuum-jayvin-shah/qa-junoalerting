@@ -12,19 +12,19 @@ Examples:
 
 Scenario Outline: Verify Alert should get generated for condition where suspension rules are not applied
 When "EmailNotification" : "<TestCase>" I trigger create alert API
-Then I verify create api response code is 201 for invalid partener datatype 
+Then I verify create api response code is 201 for suspended partner 
 
 Examples:
 |TestCase|
-|Platform008|
+|Email02|
 
 Scenario Outline: Verify Alert should get deleted for condition where suspension rule is applied
 When "EmailNotification" : "<TestCase>" I trigger create alert API
-Then I verify create api response code is 201 for invalid partener datatype 
+Then I verify create api response code is 204 for suspended partner
 
 Examples:
 |TestCase|
-|Platform008|
+|Email01|
 
 Scenario Outline: Verify Alert should get generated for site where suspension rules are not applied
 When "EmailNotification" : "<TestCase>" I trigger create alert API
@@ -32,7 +32,7 @@ Then I verify create api response code is 201 for invalid partener datatype
 
 Examples:
 |TestCase|
-|Platform008|
+|Email02|
 
 Scenario Outline: Verify Alert should get deleted for site where suspension rule is applied
 When "EmailNotification" : "<TestCase>" I trigger create alert API
@@ -40,7 +40,7 @@ Then I verify create api response code is 201 for invalid partener datatype
 
 Examples:
 |TestCase|
-|Platform008|
+|Email01|
 
 Scenario Outline: Verify Alert should get generated when rule is expired for Site.
 When "EmailNotification" : "<TestCase>" I trigger create alert API
@@ -48,4 +48,4 @@ Then I verify create api response code is 201 for invalid partener datatype
 
 Examples:
 |TestCase|
-|Platform008|
+|Email01|

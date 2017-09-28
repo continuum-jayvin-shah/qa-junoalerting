@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -361,17 +362,22 @@ public class ITSTicketHomePage {
 		wd.clickElement(confirmDeleteBtn);		
 	}
 	
+	public static void main(String[] args) {
+		getSusupensionTime(5, 10);
+	}
 	/**
 	 * 
 	 * @param start (in minutes)
 	 * @param end   (in minutes)	 
 	 * @return
 	 */
-	public String[] getSusupensionTime(int start, int end){
+	public static String[] getSusupensionTime(int start, int end){
 		String [] timevalues = new String[2];
+		TimeZone.setDefault(TimeZone.getTimeZone("IST"));
 		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
 		timevalues[0] = sdf.format(new Date(System.currentTimeMillis()+start*60*1000));
 		timevalues[1] = sdf.format(new Date(System.currentTimeMillis()+end*60*1000));
+		System.out.println(timevalues[0] +" and "+ timevalues[1]);
 		return timevalues;
 	}
 	
