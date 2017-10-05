@@ -69,6 +69,7 @@ public class SuspensionStepDefinations {
 	public void i_verify_create_api_response_code_is_for_suspended_partner(int arg1) throws Throwable {
 		 String statusCode = junoAlertingStepDef.getApiStatusID();
 		 Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+		 junoAlertingStepDef.iTSHomePage.deleteSuspensionRule();
 	}
 	
 	@Then("^I verify delete api response code is (\\d+) for suspended partner$")
@@ -95,6 +96,18 @@ public class SuspensionStepDefinations {
 		junoAlertingStepDef.iTSHomePage.setAlertFamilies();
 		junoAlertingStepDef.iTSHomePage.setSiteLevelSuspensionRule();
 		
+	}
+	
+	@Given("^\"([^\"]*)\" : \"([^\"]*)\" I apply resource level family suspension for (\\d+) minutes$")
+	public void i_apply_resource_level_family_suspension_for_minutes(String arg1, String arg2, int arg3) throws Throwable {
+		setTestDataRow(arg1, arg2);
+		junoAlertingStepDef.setEmailTestData();
+		junoAlertingStepDef.iTSLoginPage.navigateToTicketPortal();
+		junoAlertingStepDef.iTSLoginPage.loginToTicketPortal();
+		junoAlertingStepDef.iTSHomePage.openIntellimonSuspensionSection();
+		junoAlertingStepDef.iTSHomePage.setResourceRule();
+		junoAlertingStepDef.iTSHomePage.setAlertFamilies();
+		junoAlertingStepDef.iTSHomePage.setSuspensionScheduleOneTime();
 	}
 
 }

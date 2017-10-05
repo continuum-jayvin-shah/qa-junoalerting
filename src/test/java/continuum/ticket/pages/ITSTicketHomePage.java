@@ -325,7 +325,7 @@ public class ITSTicketHomePage {
 		wd.clickElement(fromDateCalendar);
 		wd.waitForElementToBeClickable(fromDate, 2000);
 		wd.clickElement(fromDate);
-		String [] suspentionTime = getSusupensionTime(5,10);
+		String [] suspentionTime = getSusupensionTime(6,20);
 		wd.clearandSendKeys(suspentionTime[0],suspensionStartTime);
 		wd.clickElement(EndDateCalendar);
 		wd.waitForElementToBeClickable(endDate, 3000);
@@ -340,7 +340,7 @@ public class ITSTicketHomePage {
 		wd.selectByTextFromDropDown(timeZoneDropDown, "UTC+05:30 (India)");
 		wd.clearandSendKeys("4", susIntervalWeekTxtBox);
 		wd.clickElement(dayOfWeekCheckBox);
-		String [] time = getSusupensionTime(5, 20);
+		String [] time = getSusupensionTime(6, 20);
 		wd.sendKeys(time[0],fromTimeWeekly);	
 		wd.sendKeys(time[1], endTimeWeekly);
 		
