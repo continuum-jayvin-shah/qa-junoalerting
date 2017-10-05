@@ -713,8 +713,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("CallQRefId")), 
 				"CallQRefId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("CallQRefId"));
 		
-		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("MsgbId")), 
-				"MsgbId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("MsgbId"));		
+//		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("MsgbId")), 
+//				"MsgbId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("MsgbId"));		
 	}
 	
 	public void triggerCreateAlertAPI(String arg1, String arg2) throws Exception {
