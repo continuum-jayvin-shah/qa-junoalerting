@@ -289,7 +289,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	}
 	
 	private void commonReqQueValidation(String scenario) throws Exception {
-		String query = "select * from PAS_ReqQueue where CorrelationID like '" + getAlertID() + "'";
+		
 		JsonParser parser = new JsonParser();
 		System.out.println(getDbHost());
 		System.out.println(getDbUserName());
@@ -302,6 +302,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			operationID ="3";
 		}
 
+		String query = "select * from PAS_ReqQueue where Operation = " + operationID + " and CorrelationID like '" + getAlertID() + "'";
+		
 		ResultSet rs = executeQuery("ITSAlertDB", "jdbc:sqlserver://" + getDbHost(), getDbUserName(), getDbPassword(),query);
 		HashMap<String, String> currentRow = new HashMap<>();
 		currentRow.putAll(DataUtils.getTestRow());
@@ -418,8 +420,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		
 		long timeElapsed = JunoAlertingUtils.getDateDifference(dInsertedOn,dUpDcDtime1);
 				
-		if(timeElapsed > 30000){
-			Assert.fail("Alert processing taken time more than expected value of 30 seconds.");
+		if(timeElapsed > 45000){
+			Assert.fail("Alert processing taken time more than expected value of 45 seconds.");
 		}else{
 			System.out.println("***Processing done within time limits for "+scenario+" - " + timeElapsed + " milliseconds" );
 		}
