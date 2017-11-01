@@ -707,11 +707,11 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 					"Alert ID : " + dbValues.get("AlertId") + " and TicketID:  " + dbValues.get("TicketId")+ " both have non zero entry." );			
 		}
 		
-		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("CallQId")), 
+	/*	Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("CallQId")), 
 				"CallQId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("CallQId"));
-		
-		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("CallQRefId")), 
-				"CallQRefId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("CallQRefId"));
+	*/	
+		/*Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("CallQRefId")), 
+				"CallQRefId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("CallQRefId"));*/
 		
 //		Assert.assertTrue("0".trim().equalsIgnoreCase(dbValues.get("MsgbId")), 
 //				"MsgbId does not match in PAS_ReqCons_table, Expected " + "0" + ", Actual :" + dbValues.get("MsgbId"));		
