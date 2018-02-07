@@ -234,14 +234,14 @@ Examples:
 |TestCase|
 |ErrorCode108|
 
-@Regression
-Scenario Outline: Verify Error Code 108 for update Alert api response for incorrect post body - C1930256
-Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect post  ID
-Then I verify update api response code is 108 triggered with incorrect post ID
+#@Regression
+#Scenario Outline: Verify Error Code 108 for update Alert api response for incorrect post body - C1930256
+#Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect post  ID
+#Then I verify update api response code is 108 triggered with incorrect post ID
 
-Examples:
-|TestCase|
-|ErrorCode108|
+#Examples:
+#|TestCase|
+#|ErrorCode108|
 
 @Email1
 Scenario Outline: Verify I should be able to set Email Notification Rule at resource Level
