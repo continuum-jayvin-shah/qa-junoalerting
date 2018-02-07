@@ -169,14 +169,14 @@ Examples:
 |TestCase|
 |ErrorCode105Site|
 
-@Regression
-Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect resource ID - C1933222
-Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect resource ID
-Then I verify update api response code is 105 for incorrect resource ID
+#@Regression
+#Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect resource ID - C1933222
+#Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect resource ID
+#Then I verify update api response code is 105 for incorrect resource ID
 
-Examples:
-|TestCase|
-|ErrorCode105Res|
+#Examples:
+#|TestCase|
+#|ErrorCode105Res|
 
 @Regression
 Scenario Outline: Verify Error Code 102 for delete Alert api response for invalid partner value - C1933225
