@@ -19,10 +19,10 @@ public class SuspensionStepDefinations {
 	JunoAlertingStepsDefinations junoAlertingStepDef = new JunoAlertingStepsDefinations();
 	Scenario scenario = null;
 	
-	@Before
-	 public void readScenario(Scenario scenario) {
-		this.scenario = scenario;
-	}
+//	@Before
+//	 public void readScenario(Scenario scenario) {
+//		this.scenario = scenario;
+//	}
 	
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" I apply member level family suspension for (\\d+) minutes$")
 	public void i_apply_member_level_family_suspension_for_minutes(String arg1, String arg2, int arg3) throws Exception{
