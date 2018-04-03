@@ -129,7 +129,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		return hostUrl;
 	}
 	
-	private String getDbHost(){
+	public String getDbHost(){
 		return databaseHost;
 	}
 	
@@ -137,7 +137,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		databaseHost = dbHost;
 	}
 	
-	private String getDbUserName(){
+	public String getDbUserName(){
 		return databaseUserName;
 	}
 	
@@ -145,7 +145,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		databaseUserName = userCreds;
 	}
 	
-	private String getDbPassword(){
+	public String getDbPassword(){
 		return databasePassword;
 	}
 	
