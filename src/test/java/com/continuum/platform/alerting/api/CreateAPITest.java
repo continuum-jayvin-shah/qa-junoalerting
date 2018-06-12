@@ -1,20 +1,13 @@
 package com.continuum.platform.alerting.api;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import java.util.HashMap;
 
-//import com.continuum.framework.utils.Log;
-import com.continuum.utils.DataUtils;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+
 /*import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
 */
