@@ -61,11 +61,10 @@ public class AlertDetailAPITest {
 	}
 
 
-	public static ResultSet executeQuery(String databaseName, String sqlServerURL, String username, String password,String query) throws Exception {
+/*	public static ResultSet executeQuery(String databaseName, String sqlServerURL, String username, String password,String query) throws Exception {
 
-		DatabaseUtility.getListByQuery(databaseName, sqlServerURL, username, password, query, column);
-		database
-	}
+		//DatabaseUtility.getListByQuery(databaseName, sqlServerURL, username, password, query, column);
+	}*/
 
 	public String getAlertDetailsUrl() {
 		return alertDetailsUrl;
