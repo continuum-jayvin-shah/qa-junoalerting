@@ -49,6 +49,11 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			setDbHost(Utilities.getMavenProperties("DTDBHost"));
 			setDbUserName(Utilities.getMavenProperties("DTDBUserName"));
 			setDbPassword(Utilities.getMavenProperties("DTDBPassword"));
+		} else if (environment.equals("PROD")) {
+			setHostURL(Utilities.getMavenProperties("PRODHostUrl"));
+			setDbHost(Utilities.getMavenProperties("PRODDBHost"));
+			setDbUserName(Utilities.getMavenProperties("PRODDBUserName"));
+			setDbPassword(Utilities.getMavenProperties("PRODDBPassword"));
 		} else {
 			Assert.assertTrue(hostUrl != null ,"Host URL is not defined for environment : " + environment);
 		}
