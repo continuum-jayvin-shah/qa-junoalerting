@@ -10,7 +10,6 @@
 	<name>JunoAuvikAutomation</name>
 	<url>http://maven.apache.org</url>
 
-
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jre.level>1.8</jre.level>
@@ -26,11 +25,29 @@
 	</repositories>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.continuum</groupId>
 			<artifactId>cucumber</artifactId>
-			<version>0.0.1</version>
+			<version>2.0.7</version>
+		</dependency>
+		
+				<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.jayway.restassured</groupId>
+			<artifactId>rest-assured</artifactId>
+			<version>2.9.0</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.googlecode.grep4j</groupId>
+			<artifactId>grep4j</artifactId>
+			<version>1.8.7</version>
 		</dependency>
 
 		<dependency>
@@ -39,8 +56,13 @@
 			<version>5.1.39</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
 
-	<!--  	<dependency>
+		<dependency>
 			<groupId>com.jcraft</groupId>
 			<artifactId>jsch</artifactId>
 			<version>0.1.54</version>
@@ -52,11 +74,23 @@
 			<version>2.0</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.offbytwo.jenkins</groupId>
+			<artifactId>jenkins-client</artifactId>
+			<version>0.3.7</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.jprocesses</groupId>
 			<artifactId>jProcesses</artifactId>
 			<version>1.6.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-pool</groupId>
+			<artifactId>commons-pool</artifactId>
+			<version>1.6</version>
 		</dependency>
 
 		<dependency>
@@ -89,6 +123,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+			<version>2.0.0</version>
+			<scope>test</scope>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.datastax.cassandra</groupId>
@@ -98,6 +139,7 @@
 
 
 
+		<!-- https://mvnrepository.com/artifact/com.github.mkolisnyk/cucumber-reports -->
 		<dependency>
 			<groupId>com.github.mkolisnyk</groupId>
 			<artifactId>cucumber-reports</artifactId>
@@ -113,7 +155,7 @@
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
-			<version>4.3.5</version>
+			<version>4.5.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -148,7 +190,7 @@
 			<artifactId>selenium-java</artifactId>
 			<version>2.53.0</version>
 		</dependency>
-		
+		<!-- https://mvnrepository.com/artifact/net.masterthought/maven-cucumber-reporting -->
 		<dependency>
 			<groupId>net.masterthought</groupId>
 			<artifactId>maven-cucumber-reporting</artifactId>
@@ -177,7 +219,7 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.17</version>
-		</dependency> -->
+		</dependency>
 		<dependency>
 			<groupId>org.apache.poi</groupId>
 			<artifactId>poi</artifactId>
@@ -193,7 +235,8 @@
 			<artifactId>poi-ooxml</artifactId>
 			<version>3.9</version>
 		</dependency>
-		
+		<!-- <dependency> <groupId>org.apache.poi</groupId> <artifactId>poi</artifactId> 
+			<version>3.11-beta3</version> </dependency> -->
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
@@ -208,7 +251,7 @@
 		<dependency>
 			<groupId>org.testng</groupId>
 			<artifactId>testng</artifactId>
-			<version>6.9.10</version>
+			<version>6.11</version>
 		</dependency>
 
 		<dependency>
@@ -216,6 +259,13 @@
 			<artifactId> reportng</artifactId>
 			<version>1.1.4</version>
 		</dependency>
+		
+<dependency>
+    <groupId>org.jboss.spec.javax.net.ssl</groupId>
+    <artifactId>jboss-jsse-api_8.0_spec</artifactId>
+    <version>1.0.0.Final</version>
+</dependency>
+
 
 		<dependency>
 			<groupId>com.google.inject</groupId>
@@ -235,10 +285,6 @@
 			<version>1.5.2</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.apache.poi</groupId> <artifactId>poi</artifactId> 
-			<version>3.14</version> </dependency> <dependency> <groupId>org.apache.poi</groupId> 
-			<artifactId>poi-ooxml</artifactId> <version>3.14</version> </dependency> -->
-		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
 		<dependency>
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
@@ -247,11 +293,17 @@
 
 
 
-		<dependency>
+	<!-- 	<dependency>
 			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
-			<version>2.6</version>
-		</dependency>
+			<version>3.4</version>
+		</dependency> -->
+		
+		<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.4</version>
+</dependency>
 
 		<dependency>
 			<groupId>com.microsoft.sqlserver</groupId>
@@ -261,13 +313,7 @@
 			<systemPath>${project.basedir}/lib/sqljdbc4-3.0.jar</systemPath>
 		</dependency>
 
-		<dependency>
-			<groupId>com.jayway.restassured</groupId>
-			<artifactId>rest-assured</artifactId>
-			<version>2.9.0</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>	
+	</dependencies>
 	<distributionManagement>
 		<repository>
 			<id>central</id>
@@ -275,15 +321,26 @@
 			<url>http://artifact.corp.continuum.net:8081/artifactory/libs-release-local</url>
 		</repository>
 	</distributionManagement>
-	
 
 	<build>
-	
 		<pluginManagement>
 			<plugins>
 
 
 				<!-- Below plug-in is used to execute tests -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>3.0.2</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>test-jar</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -326,7 +383,6 @@
 					<configuration>
 						<source>${jdk.level}</source>
 						<target>${jdk.level}</target>
-						<compilerArgument>-Werror</compilerArgument>
 					</configuration>
 				</plugin>
 
@@ -347,20 +403,39 @@
 						</execution>
 					</executions>
 				</plugin>
-				
-				<plugin>
-        				<groupId>org.apache.maven.plugins</groupId>
-        				<artifactId>maven-jar-plugin</artifactId>
-        				<version>3.0.2</version>
-        				<executions>
-          					<execution>
-            						<goals>
-              							<goal>test-jar</goal>
-            						</goals>
-          					</execution>
-        				</executions>
-     				 </plugin>
 
+
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-dependency-plugin
+										</artifactId>
+										<versionRange>
+											[3.0.1,)
+										</versionRange>
+										<goals>
+											<goal>unpack</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -402,7 +477,7 @@
 								<artifactItem>
 									<groupId>org.continuum</groupId>
 									<artifactId>cucumber</artifactId>
-									<version>0.0.1</version>
+									<version>2.0.1</version>
 									<type>jar</type>
 								</artifactItem>
 							</artifactItems>
@@ -425,9 +500,7 @@
 			</testResource>
 		</testResources>
 
-
-		<!-- https://mvnrepository.com/artifact/com.jayway.restassured/rest-assured -->
-
-
 	</build>
+
+
 </project>

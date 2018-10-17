@@ -33,7 +33,7 @@ import cucumber.api.testng.TestNGCucumberRunner;
 				"html:test-report/cucumber",
 				"json:test-report/cucumber.json",
 		"rerun:target/rerun.txt" },
-		tags={"@Defect"}
+		tags={"@Regression"}
 		)
 
 
@@ -81,13 +81,23 @@ public class TestRunner {
 	}
 
 
-	@AfterClass(alwaysRun = true)
+	/*@AfterClass(alwaysRun = true)
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
 		GenerateReport.generateReport();
 		HtmlEmailSender.sendReport();
 
 		TestRailIntegrator.updateResultToTestRail();
+		
+	}*/
+	
+	@AfterClass(alwaysRun = true)
+	public void tearDownClass() throws Exception {
+		testNGCucumberRunner.finish();
+		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
+		HtmlEmailSender.sendReport("test-report");
+
+		TestRailIntegrator.updateResultToTestRail("test-report");
 		
 	}
 
