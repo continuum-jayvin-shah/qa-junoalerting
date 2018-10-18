@@ -32,7 +32,7 @@ import cucumber.api.java.en.When;
 public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 	public static Scenario scenario;
-	long wait = 200;
+	long wait = 2000;
 
 	@Before
 	public void readScenario(Scenario scenario) {
