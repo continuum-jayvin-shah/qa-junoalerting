@@ -216,7 +216,7 @@ Examples:
 |TestCase|
 |ErrorCode103|
 
-@Regression @107
+@V1Regression @107
 Scenario Outline: Verify Error Code 107 for create Alert api response for incorrect condition ID - C1930254
 Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with incorrect condition ID
 Then I verify create api response code is 107 triggered with incorrect condition ID
