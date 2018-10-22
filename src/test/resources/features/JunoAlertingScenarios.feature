@@ -225,7 +225,7 @@ Examples:
 |TestCase|
 |ErrorCode107|
 
-@Regression
+@Regression @108
 Scenario Outline: Verify Error Code 108 for create Alert api response for incorrect post body - C1930255
 Given "CodesValidation" : "<TestCase>" : I trigger create alert API request with incorrect post  ID
 Then I verify create api response code is 108 triggered with incorrect post ID
