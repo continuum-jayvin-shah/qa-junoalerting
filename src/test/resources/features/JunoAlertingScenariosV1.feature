@@ -160,7 +160,7 @@ Examples:
 |TestCase|
 |ErrorCode105Part|
 
-@Regression
+@V1Regression
 Scenario Outline: Verify Error Code 105 for update Alert api response for incorrect site ID - C1933221
 Given "CodesValidation" : "<TestCase>" : I trigger update alert API request with incorrect site ID
 Then I verify update api response code is 105 for incorrect site ID
