@@ -1125,6 +1125,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 	}
 
+	//@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with incorrect post  ID$")
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API request with incorrect post  ID$")
 	public void i_trigger_create_alert_API_request_with_incorrect_post_ID(String arg1, String arg2) throws Throwable {
 		triggerCreateAlertAPI(arg1, arg2);
