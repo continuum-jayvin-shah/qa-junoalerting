@@ -25,7 +25,7 @@ Examples:
 |Platform003|
 |Platform004|
 |Platform005|
-|Platform006|
+#|Platform006|
 |Platform007|
 |Platform008|
 |Platform010|
