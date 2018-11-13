@@ -8,11 +8,11 @@ Then AlertID should get generated
 #And I verify create alert api request in PAS_ReqQueue table
 #And I verify create alert request is archived in PAS_ReqQueueArchive table
 #And I verify an alert entry is created in pas_reqcons table on successful processing of an Alert request
-And I trigger update alert API
+#And I trigger update alert API
 #And I verify update alert api request in PAS_ReqQueue table
 #And I verify update alert request is archived in PAS_ReqQueueArchive table
 #And I verify an alert entry is created in pas_reqcons table on successful processing of an update Alert request
-And I trigger auto close alert API
+#And I trigger auto close alert API
 #And I verify delete alert api request in PAS_ReqQueue table
 #And I verify delete alert request is archived in PAS_ReqQueueArchive table
 #And I verify an archived alert entry is created in PAS_ReqConsArchive table on successfull processing of close alert request
@@ -26,9 +26,9 @@ Examples:
 |Platform004|
 |Platform005|
 |Platform006|
-#|Platform007|
-#|Platform008|
-#|Platform010|
+|Platform007|
+|Platform008|
+|Platform010|
 #|Platform011|
 #|Platform012|
 #|Platform013|
