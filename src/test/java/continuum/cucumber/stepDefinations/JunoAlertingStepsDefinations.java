@@ -21,7 +21,6 @@ import com.jayway.restassured.response.Response;
 
 import continuum.cucumber.DatabaseUtility;
 import continuum.cucumber.Utilities;
-import continuum.cucumber.webservices.RestServicesUtility;
 import continuum.noc.pages.AuvikPageFactory;
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;

@@ -1,4 +1,4 @@
-Feature: Auto Process Functionalities
+Feature: Alerting-JAS-Alignment
 
 @V2Regression
 Scenario Outline: Verify for a create alert api a request is created in PASReqQueue table-C1915948,C1915949,C1915950,C1915951
