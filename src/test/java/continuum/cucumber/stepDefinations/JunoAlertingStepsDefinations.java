@@ -248,8 +248,9 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		setJsonData(albums);
 		URL = createAlertUrl;
 		setURL(URL);		
-		scenario.write(URL);		
-		System.out.println(albums);
+		scenario.write(URL);				
+		System.out.println(albums);		
+		scenario.write("Payload =====================================================" + albums);		
 		System.out.println(URL);
 
 		return albums;
@@ -753,13 +754,15 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).post(getURL()).andReturn();
 		
 		System.out.println("Status =====================================================" + resp.getStatusCode());
+		scenario.write("StatusCode =====================================================" + resp.getStatusCode());
+		
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 		
 		//JsonElement jelement2 = new JsonParser().parse.Integer.parseInt(resp.getStatusCode());
 		JsonObject  jobject = jelement.getAsJsonObject();
-		
+		scenario.write("AlertID =====================================================" + jobject.get("alertId").getAsString());
 		System.out.println("Status =====================================================" + resp.getStatusCode());
 
 		System.out.println("Status =====================================================" + jobject.get("status"));
@@ -778,6 +781,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 			if(getApiStatusID().equals("202")){
 				triggerDeleteAlertAPI();
 				//i_verify_create_alert_api_request_is_deleted_from_pas_reqcons_table();
+				Thread.sleep(60000);
 				triggerCreateAlertAPI(arg1, arg2);
 			}
 		}
