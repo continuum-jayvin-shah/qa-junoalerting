@@ -575,10 +575,10 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 				.replace("{HostUrl}", getHostURL());*/
 		//Response resp = RestAssured.given().delete(getURL() + "/" + getAlertID()).andReturn();
 
-		Response resp = RestAssured.given().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
+		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
 
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
-		System.out.println("Send POST command");
+		System.out.println("Send DELETE command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
 		int apiStatusID = resp.getStatusCode();
 		Assert.assertEquals(apiStatusID, 204, "Delete alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 204");
@@ -792,7 +792,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		JsonObject albums = preProcessingCreateAlert(arg1, arg2);	
 		//Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 
-		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
+		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 
 		setStatusCode(resp.getStatusCode());
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
@@ -805,7 +805,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	public void triggerDeleteAlertAPI(){
 		//Response resp = RestAssured.given().header("txKey","Automation").delete(getURL() + "/" + getAlertID()).andReturn();
 
-		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
+		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
 
 		System.out.println("Send Delete command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
