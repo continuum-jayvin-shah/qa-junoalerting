@@ -11,7 +11,7 @@ And I trigger auto close alert API
 Examples:
 |TestCase|
 |Platform001|
-|Platform002|
+#|Platform002|
 #|Platform003|
 #|Platform004|
 #|Platform005|
@@ -28,10 +28,10 @@ And I trigger auto close alert API
 Examples:
 |TestCase|
 |Platform010|
-|Platform011|
-|Platform012|
-|Platform013|
-|Platform014|
+#|Platform011|
+#|Platform012|
+#|Platform013|
+#|Platform014|
 
 
 @V2Regression
