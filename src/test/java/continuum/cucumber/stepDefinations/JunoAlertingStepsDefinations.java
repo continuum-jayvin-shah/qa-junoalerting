@@ -580,10 +580,12 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 		System.out.println("Send POST command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
+		int apiStatusID = resp.getStatusCode();
+		Assert.assertEquals(apiStatusID, 204, "Delete alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 204");
 	}
 
 	@Given("^I trigger update alert API$")
-	public void i_trigger_update_alert_API() throws Exception {		
+	public void i_trigger_update_alert_API() throws Exception {	
 		JsonObject jobj = getJsonData();
 		jobj.add("alertDetails", getalertDetailJson());
 		System.out.println(jobj.toString());
@@ -591,7 +593,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Response resp = RestAssured.given().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
 
-		System.out.println("Send POST command");
+		System.out.println("Send PUT command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
 		System.out.println("Status Body \n" + resp.getBody().asString());
 		System.out.println("Time taken to get response is \n" + resp.getTime()+" milli second");
