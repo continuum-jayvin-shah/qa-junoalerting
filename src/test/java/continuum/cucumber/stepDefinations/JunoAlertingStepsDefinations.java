@@ -756,7 +756,9 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).post(getURL()).andReturn();
 
 		System.out.println("Status =====================================================" + resp.getStatusCode());
+		System.out.println("Response Body  =====================================================" + resp.getBody().asString());
 		scenario.write("StatusCode =====================================================" + resp.getStatusCode());
+		scenario.write("StatusCode =====================================================" + resp.getBody().asString());
 
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 
@@ -765,9 +767,9 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		//JsonElement jelement2 = new JsonParser().parse.Integer.parseInt(resp.getStatusCode());
 		JsonObject  jobject = jelement.getAsJsonObject();
 		scenario.write("AlertID =====================================================" + jobject.get("alertId").getAsString());
-		System.out.println("Status =====================================================" + resp.getStatusCode());
+		//System.out.println("Status =====================================================" + resp.getStatusCode());
 
-		System.out.println("Status =====================================================" + jobject.get("status"));
+		//System.out.println("Status =====================================================" + jobject.get("status"));
 		setApiStatusID(jobject.get("status").toString());
 
 		if(jobject.get("status").toString().equalsIgnoreCase("201") || jobject.get("status").toString().equalsIgnoreCase("202")){
