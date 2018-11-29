@@ -580,6 +580,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 		System.out.println("Send DELETE command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
+		System.out.println("Status Body \n" + resp.getBody().asString());
 		int apiStatusID = resp.getStatusCode();
 		Assert.assertEquals(apiStatusID, 204, "Delete alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 204");
 	}
@@ -758,7 +759,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		System.out.println("Status =====================================================" + resp.getStatusCode());
 		System.out.println("Response Body  =====================================================" + resp.getBody().asString());
 		scenario.write("StatusCode =====================================================" + resp.getStatusCode());
-		scenario.write("StatusCode =====================================================" + resp.getBody().asString());
+		scenario.write("Response Body =====================================================" + resp.getBody().asString());
 
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 
@@ -1357,7 +1358,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		//JsonObject jobj = getJsonData();
 		//jobj.add("alertDetails", getalertDetailJson());
 		//System.out.println(jobj.toString());
-
+		System.out.println("\n ====================EXECUTING GET REQUEST FOR GETTING ALERTS================================= \n");
 		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get(getURL() + "/" + getAlertID()).andReturn();
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
 
