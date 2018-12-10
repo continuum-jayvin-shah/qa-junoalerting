@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import org.json.simple.parser.ParseException;
 import org.testng.Assert;
+import org.testng.Reporter;
 
 import com.continuum.platform.alerting.api.AlertDetailAPITest;
 import com.continuum.utils.DataUtils;
@@ -36,6 +37,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	@Before
 	public void readScenario(Scenario scenario) {
 		JunoAlertingStepsDefinations.scenario = scenario;
+		Reporter.log("Scenario Name: "+ JunoAlertingStepsDefinations.scenario);
 		String environment = Utilities.getMavenProperties("Environment").trim();
 		setFileName("TestData_" + environment + ".xls");
 		if (environment.equals("QA")) {
@@ -197,9 +199,10 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	// Added by Bilal to validate HashID response
 	@Then("^AlertID should get generated$")
 	public void alertIDShouldGetGenerated() throws Throwable {
-
-		Assert.assertEquals(getApiStatusID(), "201", "Create alert API execution failed, the api status ID is " + getApiStatusID() + " and API message body is ");
 		System.out.println("AlertID =====================================================" + getAlertID());
+		Reporter.log("AlertID =====================================================" + getAlertID());
+		Assert.assertEquals(getApiStatusID(), "201", "Create alert API execution failed, the api status ID is " + getApiStatusID() + " and API message body is ");
+		
 	}
 
 	private JsonObject preProcessingCreateAlert(String arg1, String arg2) throws IOException {
