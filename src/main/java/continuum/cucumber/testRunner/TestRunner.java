@@ -10,9 +10,8 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import continuum.cucumber.reporting.GenerateReport;
-
+import continuum.cucumber.reporting.HtmlEmailSender;
 import continuum.cucumber.reporting.TestRailIntegrator;
-import continuum.cucumber.stepDefinations.SendReport;
 import cucumber.api.CucumberOptions;
 import cucumber.api.testng.CucumberFeatureWrapper;
 import cucumber.api.testng.TestNGCucumberRunner;
@@ -89,7 +88,7 @@ public class TestRunner {
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
 		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
-		SendReport.sendReportWithMail("test-report");
+		HtmlEmailSender.sendReport("test-report");
 
 		TestRailIntegrator.updateResultToTestRail("test-report");
 		
