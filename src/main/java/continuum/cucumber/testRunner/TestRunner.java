@@ -9,8 +9,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-
-import com.continuum.utils.*;
 import continuum.cucumber.reporting.GenerateReport;
 
 import continuum.cucumber.reporting.TestRailIntegrator;
@@ -32,7 +30,7 @@ import cucumber.api.testng.TestNGCucumberRunner;
 		)
 
 
-public class TestRunner {
+public class TestRunner extends SuiteLevelDesign{
 	private TestNGCucumberRunner testNGCucumberRunner;
 	private static String scenarioName=null;
 	static RemoteWebDriver driver=null;
@@ -90,10 +88,7 @@ public class TestRunner {
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
 		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
-		SendReport.sendReport("test-report");
-
 		TestRailIntegrator.updateResultToTestRail("test-report");
-		
 	}
 
 	public static String getScenarioName(){
