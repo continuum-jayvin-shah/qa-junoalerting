@@ -12,6 +12,8 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import com.continuum.utils.SendReport;
+
 import continuum.cucumber.DriverFactory;
 import continuum.cucumber.SeleniumServerUtility;
 import continuum.cucumber.Utilities;
@@ -95,7 +97,7 @@ public class TestRunner {
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
 		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
-		HtmlEmailSender.sendReport("test-report");
+		SendReport.sendReport("test-report");
 
 		TestRailIntegrator.updateResultToTestRail("test-report");
 		
