@@ -1,4 +1,4 @@
-package com.continuum.utils;
+package continuum.cucumber.stepDefinations;
 
 import java.io.File;
 import java.io.FileInputStream;
