@@ -38,7 +38,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 	@Before
 	public void readScenario(Scenario scenario) {
 		JunoAlertingStepsDefinations.scenario = scenario;
-		Reporter.log("<b><i><font color='Yellow'>====== Scenario Name: ====="+ scenario.getName()+"</font></i></b>");
+		Reporter.log("<b><i><font color='Blue'>====== Scenario Name: ====="+ scenario.getName()+"</font></i></b>");
 		String environment = Utilities.getMavenProperties("Environment").trim();
 		setFileName("TestData_" + environment + ".xls");
 		if (environment.equals("QA")) {
