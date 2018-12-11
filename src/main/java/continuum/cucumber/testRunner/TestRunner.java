@@ -44,21 +44,21 @@ public class TestRunner {
 
 	@BeforeClass(alwaysRun = true)
 	public void setUpClass() throws Exception {
-		SeleniumServerUtility.startServer();
+		//SeleniumServerUtility.startServer();
 		testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 	}
 
 	@BeforeTest(alwaysRun = true)
 	public void beforeTest()
 	{
-		 String browserName= Utilities.getMavenProperties("browser").toUpperCase();
+		/* String browserName= Utilities.getMavenProperties("browser").toUpperCase();
 		  driver=WebDriverInitialization.createInstance(driver,browserName);
 		   
-		    DriverFactory.setWebDriver(driver);
+		    DriverFactory.setWebDriver(driver);*/
 
 	}
 
-	@Test(groups="cucumber", description = "Runs Cucumber Feature", dataProvider = "features")
+	@Test(groups="V2Regression", description = "Runs Cucumber Feature", dataProvider = "features")
 	public void feature(CucumberFeatureWrapper cucumberFeature) {
 
 		scenarioName=cucumberFeature.getCucumberFeature().getPath();
@@ -77,7 +77,7 @@ public class TestRunner {
 
 	@AfterTest(alwaysRun = true)
 	public void afterTest(){
-		DriverFactory.getDriver().quit();
+		/*DriverFactory.getDriver().quit();*/
 	}
 
 
