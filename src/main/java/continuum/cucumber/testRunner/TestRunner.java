@@ -89,7 +89,7 @@ public class TestRunner {
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
 		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
-		SendReport.sendReport("test-report");
+		SendReport.sendReportWithMail("test-report");
 
 		TestRailIntegrator.updateResultToTestRail("test-report");
 		

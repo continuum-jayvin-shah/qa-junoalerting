@@ -26,9 +26,7 @@ import continuum.cucumber.Utilities;
 import continuum.cucumber.reporting.Artifactory;
 
 public class SendReport {
-
-	static String absolutePath = new File("").getAbsolutePath();
-
+	
 	/**
 	 * @param userName
 	 * @param password
@@ -68,11 +66,11 @@ public class SendReport {
 			msg.setSubject(subject);
 			msg.setSentDate(new Date());
 
-			addReportToMailBody(msg, report);
+			addReportBody(msg, report);
 			
 			
 			//New Code Added in reporting
-			
+			String absolutePath = new File("").getAbsolutePath();
 			String [] attachFiles={absolutePath+"\\target\\surefire-reports\\Cucumber-Report\\Juno-Alerting-AutomationReport.html"};
 			
 			MimeBodyPart messageBodyPart =   new MimeBodyPart();
@@ -110,7 +108,7 @@ public class SendReport {
 		}
 	}
 
-	public static void addReportToMailBody(Message msg, File report) throws MessagingException {
+	public static void addReportBody(Message msg, File report) throws MessagingException {
 		StringWriter writer = new StringWriter();
 		try {
 			IOUtils.copy(new FileInputStream(report), writer);
@@ -121,7 +119,8 @@ public class SendReport {
 		}
 	}
 
-	public static void sendReport(String folderName) {
+	public static void sendReportWithMail(String folderName) {
+		String absolutePath = new File("").getAbsolutePath();
 		if (Utilities.getMavenProperties("reportMail").equalsIgnoreCase("true")) {
 			String sender = Utilities.getMavenProperties("reportUser");
 			JSONObject buildNumberInfo = Artifactory.getLatestBuildNumberOfRespository();
