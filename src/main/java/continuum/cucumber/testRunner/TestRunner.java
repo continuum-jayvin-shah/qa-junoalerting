@@ -1,7 +1,5 @@
 package continuum.cucumber.testRunner;
 
-
-
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
 
@@ -12,14 +10,9 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.continuum.utils.SendReport;
-
-import continuum.cucumber.DriverFactory;
-import continuum.cucumber.SeleniumServerUtility;
-import continuum.cucumber.Utilities;
-import continuum.cucumber.WebDriverInitialization;
+import com.continuum.utils.*;
 import continuum.cucumber.reporting.GenerateReport;
-import continuum.cucumber.reporting.HtmlEmailSender;
+
 import continuum.cucumber.reporting.TestRailIntegrator;
 import cucumber.api.CucumberOptions;
 import cucumber.api.testng.CucumberFeatureWrapper;
