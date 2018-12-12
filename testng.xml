@@ -6,7 +6,7 @@
               <method-selector>
                     <script language="beanshell"> 
                     <![CDATA[ 
-                           groups.containsKey("V2Regression") 
+                           groups.containsKey("testautomationtest") 
                     ]]>
               </script>
               </method-selector>
