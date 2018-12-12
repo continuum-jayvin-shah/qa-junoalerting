@@ -94,6 +94,15 @@ public class SendReport {
 
 			         // Now set the actual message
 			        // messageBodyPart.setText("This is message body");
+			        // messageBodyPart.setText(+addReportBody);
+			         StringWriter writer = new StringWriter();
+			 		try {
+			 			IOUtils.copy(new FileInputStream(report), writer);
+			 			messageBodyPart.setContent(writer.toString(), "text/html");
+			 		} catch (IOException e) {
+			 			System.out.println("Not able to retrive cucumber report file");
+			 			e.printStackTrace();
+			 		}
 
 			         // Create a multipar message
 			         Multipart multipart = new MimeMultipart();
