@@ -98,11 +98,10 @@ public class SendReport {
 	                DataSource source = new FileDataSource(attachFiles);
 	                messageBodyPart.setDataHandler(new DataHandler(source));
 	                messageBodyPart.setFileName(attachFiles);	 
-	                multipart.addBodyPart(attachPart);	        
-	                msg.setContent(multipart);
-			
-			
-			Transport.send(msg);
+	                multipart.addBodyPart(attachPart);	  
+	                msg.setContent(multipart);		
+	                System.out.println("Message Content : " +msg);
+	                Transport.send(msg);
 			System.out.println("********Sending report mail**********");
 
 		} catch (MessagingException e) {
