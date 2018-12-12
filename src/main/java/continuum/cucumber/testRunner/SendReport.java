@@ -40,7 +40,7 @@ public class SendReport {
 	 * @param report
 	 *            sending email
 	 */
-	public void sendEmailWithAttachment(final String userName, final String password, String reciever, String subject,
+	public static void sendEmailWithAttachment(final String userName, final String password, String reciever, String subject,
 			String message, File report) {
 		try {
 			// sets SMTP server properties
@@ -78,8 +78,6 @@ public class SendReport {
 
 			msg.setSubject(subject);
 			msg.setSentDate(new Date());
-
-			addReportBody(msg, report);
 			
 			
 			//New Code Added in reporting
@@ -137,18 +135,7 @@ public class SendReport {
 		}
 	}
 
-	public void addReportBody(Message msg, File report) throws MessagingException {
-		StringWriter writer = new StringWriter();
-		try {
-			IOUtils.copy(new FileInputStream(report), writer);
-			msg.setContent(writer.toString(), "text/html");
-		} catch (IOException e) {
-			System.out.println("Not able to retrive cucumber report file");
-			e.printStackTrace();
-		}
-	}
-
-	public void sendReportWithMail(String folderName) {
+	public static void sendReportWithMail(String folderName) {
 		String absolutePath = new File("").getAbsolutePath();
 		if (Utilities.getMavenProperties("reportMail").equalsIgnoreCase("true")) {
 			String sender = Utilities.getMavenProperties("reportUser");
