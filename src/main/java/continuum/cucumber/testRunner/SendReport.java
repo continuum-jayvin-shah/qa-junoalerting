@@ -99,7 +99,7 @@ public class SendReport {
 	                messageBodyPart.setDataHandler(new DataHandler(source));
 	                messageBodyPart.setFileName(attachFiles);	 
 	                multipart.addBodyPart(attachPart);
-	                msg.setContent(attachFiles, "text/html; charset=utf-8");
+	                attachPart.setContent(attachFiles, "text/html; charset=utf-8");
 	                msg.setContent(multipart);		
 	                System.out.println("Message Content : " +msg.toString());
 	                Transport.send(msg);
