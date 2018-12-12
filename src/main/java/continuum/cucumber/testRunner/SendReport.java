@@ -8,6 +8,9 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.Properties;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -75,7 +78,7 @@ public class SendReport {
 			
 			//New Code Added in reporting
 			String absolutePath = new File("").getAbsolutePath();
-			String [] attachFiles={absolutePath+"\\target\\surefire-reports\\Cucumber-Report\\Juno-Alerting-AutomationReport.html"};
+			String attachFiles=absolutePath+"\\target\\surefire-reports\\Cucumber-Report\\Juno-Alerting-AutomationReport.html";
 			
 			System.out.println("File Path : " +absolutePath);
 			
@@ -88,25 +91,15 @@ public class SendReport {
 		    // Part two is attachment
 		    messageBodyPart = new MimeBodyPart();
 		
-		    // adds attachments
-	        if (attachFiles != null && attachFiles.length > 0) {
-	            for (String filePath : attachFiles) {
-	            	
-	            	System.out.println("File Path : " +filePath);
+		    // adds attachments	            	
+	            	System.out.println("File Path : " +attachFiles);
 	            	
 	                MimeBodyPart attachPart = new MimeBodyPart();
-	 
-	                try {
-	                    attachPart.attachFile(filePath);
-	                } catch (IOException ex) {
-	                    ex.printStackTrace();
-	                }
-	 
-	                multipart.addBodyPart(attachPart);
-	            }
-	        }
-	        
-	        msg.setContent(multipart);
+	                DataSource source = new FileDataSource(attachFiles);
+	                messageBodyPart.setDataHandler(new DataHandler(source));
+	                messageBodyPart.setFileName(attachFiles);	 
+	                multipart.addBodyPart(attachPart);	        
+	                msg.setContent(multipart);
 			
 			
 			Transport.send(msg);
