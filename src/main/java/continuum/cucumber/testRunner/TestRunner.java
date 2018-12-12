@@ -2,7 +2,7 @@ package continuum.cucumber.testRunner;
 
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
-
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 
@@ -88,12 +88,16 @@ public class TestRunner {
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
 		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
-		Thread.sleep(3000);
-		//HtmlEmailSender.sendReport("test-report");
+		
+		TestRailIntegrator.updateResultToTestRail("test-report");
+		
+	}
+	
+	@AfterSuite(alwaysRun = true)
+	public void AfterSuiteRptGeneration () throws Exception {
+		
 		SendReport se = new SendReport();
 		se.sendReportWithMail("test-report");
-
-		TestRailIntegrator.updateResultToTestRail("test-report");
 		
 	}
 
