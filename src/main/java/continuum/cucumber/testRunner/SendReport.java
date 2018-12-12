@@ -100,7 +100,7 @@ public class SendReport {
 	                messageBodyPart.setFileName(attachFiles);	 
 	                multipart.addBodyPart(attachPart);	  
 	                msg.setContent(multipart);		
-	                System.out.println("Message Content : " +msg);
+	                System.out.println("Message Content : " +msg.toString());
 	                Transport.send(msg);
 			System.out.println("********Sending report mail**********");
 
