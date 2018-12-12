@@ -45,11 +45,16 @@ public class SendReport {
 		try {
 			// sets SMTP server properties
 			Properties properties = new Properties();
-			properties.setProperty("mail.smtp.host", Utilities.getMavenProperties("emailHost"));
-			properties.setProperty("mail.smtp.port", Utilities.getMavenProperties("emailPort"));
+/*			properties.setProperty("mail.smtp.host", Utilities.getMavenProperties("emailHost"));
+			properties.setProperty("mail.smtp.port", Utilities.getMavenProperties("emailHost"));
 			properties.setProperty("mail.smtp.auth", "true");
 
-			properties.setProperty("mail.smtp.starttls.enable", "true");
+			properties.setProperty("mail.smtp.starttls.enable", "true");*/
+			
+			properties.put("mail.smtp.auth", "true");
+			properties.put("mail.smtp.starttls.enable", "true");
+			properties.put("mail.smtp.host", Utilities.getMavenProperties("emailHost"));
+			properties.put("mail.smtp.port", Utilities.getMavenProperties("emailHost"));
 
 			/*Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
@@ -83,31 +88,38 @@ public class SendReport {
 			
 			System.out.println("File Path : " +absolutePath);
 			
-			
-			Multipart multipart = new MimeMultipart();            
+		      try {
+			         // Create the message part
+			         BodyPart messageBodyPart = new MimeBodyPart();
 
-            BodyPart messageBodyPart = new MimeBodyPart();
+			         // Now set the actual message
+			         messageBodyPart.setText("This is message body");
 
-            BodyPart attachmentBodyPart = new MimeBodyPart();            
+			         // Create a multipar message
+			         Multipart multipart = new MimeMultipart();
 
-            messageBodyPart.setContent(attachFiles+"<br><br>" , "text/html"); //5
+			         // Set text message part
+			         multipart.addBodyPart(messageBodyPart);
 
-            multipart.addBodyPart(messageBodyPart);
-            
+			         // Part two is attachment
+			         messageBodyPart = new MimeBodyPart();
+			         
+			         DataSource source = new FileDataSource(attachFiles);
+			         messageBodyPart.setDataHandler(new DataHandler(source));
+			         messageBodyPart.setFileName(attachFiles);
+			         multipart.addBodyPart(messageBodyPart);
 
-            DataSource source = new FileDataSource(attachFiles);
+			         // Send the complete message parts
+			         msg.setContent(multipart);
 
-            attachmentBodyPart.setDataHandler(new DataHandler(source));
+			         // Send message
+			         Transport.send(msg);
 
-            attachmentBodyPart.setFileName(new File(attachFiles).getName());
-
-            multipart.addBodyPart(attachmentBodyPart);            
-
-            msg.setContent(multipart);
-
-            //message.writeTo(new FileOutputStream(new File("kpiEmail.text")));
-
-            Transport.send(msg);
+			         System.out.println("Sent message successfully....");
+			  
+			      } catch (MessagingException e) {
+			         throw new RuntimeException(e);
+			      }
 			
 			System.out.println("********Sending report mail**********");
 
