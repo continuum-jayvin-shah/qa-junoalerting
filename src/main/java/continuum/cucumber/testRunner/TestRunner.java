@@ -88,6 +88,7 @@ public class TestRunner {
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
 		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
+		Thread.sleep(3000);
 		//HtmlEmailSender.sendReport("test-report");
 		SendReport se = new SendReport();
 		se.sendReportWithMail("test-report");
