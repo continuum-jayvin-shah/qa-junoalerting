@@ -9,6 +9,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import com.continuum.utils.SendReport;
+
 import continuum.cucumber.reporting.GenerateReport;
 import continuum.cucumber.reporting.HtmlEmailSender;
 import continuum.cucumber.reporting.TestRailIntegrator;
@@ -26,7 +29,7 @@ import cucumber.api.testng.TestNGCucumberRunner;
 				"html:test-report/cucumber",
 				"json:test-report/cucumber.json",
 		"rerun:target/rerun.txt" },
-		tags={"@V2Regression"}
+		tags={"@testautomationtest"}
 		)
 
 
@@ -51,7 +54,7 @@ public class TestRunner {
 
 	}
 
-	@Test(groups="V2Regression", description = "Runs Cucumber Feature", dataProvider = "features")
+	@Test(groups="testautomationtest", description = "Runs Cucumber Feature", dataProvider = "features")
 	public void feature(CucumberFeatureWrapper cucumberFeature) {
 
 		scenarioName=cucumberFeature.getCucumberFeature().getPath();
@@ -88,7 +91,7 @@ public class TestRunner {
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
 		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
-		HtmlEmailSender.sendReport("test-report");
+		SendReport.sendReportWithMail("test-report");
 
 		TestRailIntegrator.updateResultToTestRail("test-report");
 		

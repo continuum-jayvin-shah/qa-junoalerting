@@ -46,15 +46,19 @@ public class SendReport {
 			properties.setProperty("mail.smtp.auth", "true");
 
 			properties.setProperty("mail.smtp.starttls.enable", "true");
-			// properties.setProperty("mail.smtp.EnableSSL.enable","true");
-			// oo
-			// properties.setProperty("mail.smtp.ssl.trust",Utilities.getMavenProperties("emailHost"));
 
-			Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
+			/*Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
 					return new PasswordAuthentication(userName, password);
 				}
-			});
+			});*/
+			
+			Session session = Session.getDefaultInstance(properties,  
+				    new javax.mail.Authenticator() {  
+				     protected PasswordAuthentication getPasswordAuthentication() {  
+				      return new PasswordAuthentication(userName,password);  
+				     }  
+				      });
 
 			// creates a new e-mail message
 			MimeMessage msg = new MimeMessage(session);
