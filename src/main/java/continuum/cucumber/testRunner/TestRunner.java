@@ -87,17 +87,19 @@ public class TestRunner {
 	@AfterClass(alwaysRun = true)
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
-		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
+		//GenerateReport.generateReport("JunoAlertingAutomation","test-report");
 		
-		TestRailIntegrator.updateResultToTestRail("test-report");
+		//TestRailIntegrator.updateResultToTestRail("test-report");
 		
 	}
 	
 	@AfterSuite(alwaysRun = true)
 	public void AfterSuiteRptGeneration () throws Exception {
 		
+		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
 		SendReport se = new SendReport();
 		se.sendReportWithMail("test-report");
+		TestRailIntegrator.updateResultToTestRail("test-report");
 		
 	}
 
