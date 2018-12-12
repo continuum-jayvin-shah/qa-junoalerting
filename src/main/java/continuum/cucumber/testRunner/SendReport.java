@@ -77,6 +77,8 @@ public class SendReport {
 			String absolutePath = new File("").getAbsolutePath();
 			String [] attachFiles={absolutePath+"\\target\\surefire-reports\\Cucumber-Report\\Juno-Alerting-AutomationReport.html"};
 			
+			System.out.println("File Path : " +absolutePath);
+			
 			MimeBodyPart messageBodyPart =   new MimeBodyPart();
 
 		    Multipart multipart = new MimeMultipart();
@@ -89,6 +91,9 @@ public class SendReport {
 		    // adds attachments
 	        if (attachFiles != null && attachFiles.length > 0) {
 	            for (String filePath : attachFiles) {
+	            	
+	            	System.out.println("File Path : " +filePath);
+	            	
 	                MimeBodyPart attachPart = new MimeBodyPart();
 	 
 	                try {
