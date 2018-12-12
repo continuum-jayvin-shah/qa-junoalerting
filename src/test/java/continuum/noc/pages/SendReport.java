@@ -36,7 +36,7 @@ public class SendReport {
 	 * @param report
 	 *            sending email
 	 */
-	public static void sendEmailWithAttachment(final String userName, final String password, String reciever, String subject,
+	public void sendEmailWithAttachment(final String userName, final String password, String reciever, String subject,
 			String message, File report) {
 		try {
 			// sets SMTP server properties
@@ -112,7 +112,7 @@ public class SendReport {
 		}
 	}
 
-	public static void addReportBody(Message msg, File report) throws MessagingException {
+	public void addReportBody(Message msg, File report) throws MessagingException {
 		StringWriter writer = new StringWriter();
 		try {
 			IOUtils.copy(new FileInputStream(report), writer);
@@ -123,7 +123,7 @@ public class SendReport {
 		}
 	}
 
-	public static void sendReportWithMail(String folderName) {
+	public void sendReportWithMail(String folderName) {
 		String absolutePath = new File("").getAbsolutePath();
 		if (Utilities.getMavenProperties("reportMail").equalsIgnoreCase("true")) {
 			String sender = Utilities.getMavenProperties("reportUser");

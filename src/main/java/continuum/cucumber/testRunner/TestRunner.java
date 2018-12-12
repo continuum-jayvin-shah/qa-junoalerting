@@ -90,7 +90,8 @@ public class TestRunner {
 		testNGCucumberRunner.finish();
 		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
 		//HtmlEmailSender.sendReport("test-report");
-		SendReport.sendReportWithMail("test-report");
+		SendReport se = new SendReport();
+		se.sendReportWithMail("test-report");
 
 		TestRailIntegrator.updateResultToTestRail("test-report");
 		
