@@ -98,7 +98,8 @@ public class SendReport {
 	                DataSource source = new FileDataSource(attachFiles);
 	                messageBodyPart.setDataHandler(new DataHandler(source));
 	                messageBodyPart.setFileName(attachFiles);	 
-	                multipart.addBodyPart(attachPart);	  
+	                multipart.addBodyPart(attachPart);
+	                msg.setContent(attachFiles, "text/html; charset=utf-8");
 	                msg.setContent(multipart);		
 	                System.out.println("Message Content : " +msg.toString());
 	                Transport.send(msg);
