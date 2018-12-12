@@ -11,6 +11,7 @@ import java.util.Properties;
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
@@ -82,27 +83,32 @@ public class SendReport {
 			
 			System.out.println("File Path : " +absolutePath);
 			
-			MimeBodyPart messageBodyPart =   new MimeBodyPart();
+			
+			Multipart multipart = new MimeMultipart();            
 
-		    Multipart multipart = new MimeMultipart();
-		    
-		    multipart.addBodyPart(messageBodyPart);
+            BodyPart messageBodyPart = new MimeBodyPart();
 
-		    // Part two is attachment
-		    messageBodyPart = new MimeBodyPart();
-		
-		    // adds attachments	            	
-	            	System.out.println("File Path : " +attachFiles);
-	            	
-	                MimeBodyPart attachPart = new MimeBodyPart();
-	                DataSource source = new FileDataSource(attachFiles);
-	                messageBodyPart.setDataHandler(new DataHandler(source));
-	                messageBodyPart.setFileName(attachFiles);	 
-	                multipart.addBodyPart(attachPart);
-	                attachPart.setContent(attachFiles, "text/html; charset=utf-8");
-	                msg.setContent(multipart);		
-	                System.out.println("Message Content : " +msg.toString());
-	                Transport.send(msg);
+            BodyPart attachmentBodyPart = new MimeBodyPart();            
+
+            messageBodyPart.setContent(attachFiles+"<br><br>" , "text/html"); //5
+
+            multipart.addBodyPart(messageBodyPart);
+            
+
+            DataSource source = new FileDataSource(attachFiles);
+
+            attachmentBodyPart.setDataHandler(new DataHandler(source));
+
+            attachmentBodyPart.setFileName(new File(attachFiles).getName());
+
+            multipart.addBodyPart(attachmentBodyPart);            
+
+            msg.setContent(multipart);
+
+            //message.writeTo(new FileOutputStream(new File("kpiEmail.text")));
+
+            Transport.send(msg);
+			
 			System.out.println("********Sending report mail**********");
 
 		} catch (MessagingException e) {
