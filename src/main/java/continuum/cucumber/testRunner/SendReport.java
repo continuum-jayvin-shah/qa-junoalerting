@@ -93,7 +93,7 @@ public class SendReport {
 			         BodyPart messageBodyPart = new MimeBodyPart();
 
 			         // Now set the actual message
-			         messageBodyPart.setText("This is message body");
+			        // messageBodyPart.setText("This is message body");
 
 			         // Create a multipar message
 			         Multipart multipart = new MimeMultipart();
