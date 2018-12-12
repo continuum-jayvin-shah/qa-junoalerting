@@ -12,7 +12,6 @@ import org.testng.annotations.Test;
 
 import continuum.cucumber.reporting.GenerateReport;
 import continuum.cucumber.reporting.TestRailIntegrator;
-import continuum.noc.pages.SendReport;
 import cucumber.api.CucumberOptions;
 import cucumber.api.testng.CucumberFeatureWrapper;
 import cucumber.api.testng.TestNGCucumberRunner;

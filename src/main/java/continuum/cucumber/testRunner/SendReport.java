@@ -1,4 +1,4 @@
-package continuum.noc.pages;
+package continuum.cucumber.testRunner;
 
 import java.io.File;
 import java.io.FileInputStream;
