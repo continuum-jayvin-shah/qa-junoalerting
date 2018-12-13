@@ -1,24 +1,24 @@
 Feature: Alerting-JAS-Alignment
 
-@V2Regression
-Scenario Outline: Verify for a create alert api for DM2.0 Conditions-C4105995,C4105996,C4105997,C4105998,C4429075,C4429076,C4429077,C3998495,C3998496,C3998497,C3998498,C3994724,C3994725,C399477
-Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert API
-Then AlertID should get generated
-And I trigger GetAPI to verify alerts exists
-And I trigger update alert API
-And I trigger auto close alert API
+#@V2Regression
+#Scenario Outline: Verify for a create alert api for DM2.0 Conditions-C4105995,C4105996,C4105997,C4429075,C4429076,C4429077,C3998495,C3998496,C3998497,C3994724,C4502020,C3994775
+#Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert API
+#Then AlertID should get generated
+#And I trigger GetAPI to verify alerts exists
+#And I trigger update alert API
+#And I trigger auto close alert API
+#
+#Examples:
+#|TestCase|
+#|Platform001|
+#|Platform002|
+##|Platform003|
+##|Platform004|
+##|Platform005|
+##|Platform006|
 
-Examples:
-|TestCase|
-|Platform001|
-|Platform002|
-#|Platform003|
-#|Platform004|
-#|Platform005|
-#|Platform006|
-
 @V2Regression
-Scenario Outline: Verify for a create alert api for Windows Service Conditions-C4105995,C4105996,C4105997,C4105998,C4429075,C4429076,C4429077,C3998495,C3998496,C3998497,C3998498,C3994724,C3994725,C399477
+Scenario Outline: Verify for a create alert api for Windows Service Conditions-C4475873,C4475877,C4475881,C4476574,C4501336,C4501340,C4503372,C4503376,C4503380,C4501344,C4502019,C4502024
 Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert API
 Then AlertID should get generated
 And I trigger GetAPI to verify alerts exists
@@ -35,7 +35,7 @@ Examples:
 
 
 @V2Regression
-Scenario Outline: Verify for a create alert api for Veritas Conditions-C4105995,C4105996,C4105997,C4105998,C4429075,C4429076,C4429077,C3998495,C3998496,C3998497,C3998498,C3994724,C3994725,C399477
+Scenario Outline: Verify for a create alert api for Veritas Conditions-C4475874,C4475878,C4475882,C4476562,C4501333,C4501337,C4503373,C4503377,C4503381,C4501341,C3994725,C4502021
 Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert API
 Then AlertID should get generated
 And I trigger GetAPI to verify alerts exists
@@ -51,7 +51,7 @@ Examples:
 #|Platform006|
 
 @V2Regression
-Scenario Outline: Verify for a create alert api for VSS Conditions-C4105995,C4105996,C4105997,C4105998,C4429075,C4429076,C4429077,C3998495,C3998496,C3998497,C3998498,C3994724,C3994725,C399477
+Scenario Outline: Verify for a create alert api for VSS Conditions-C4475875,C4475879,C4475883,C4476563,C4501334,C4501338,C4503374,C4503378,C4503382,C4501342,C4502017,C4502022
 Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert API
 Then AlertID should get generated
 And I trigger GetAPI to verify alerts exists
@@ -66,7 +66,7 @@ Examples:
 #|Platform006|
 
 @V2Regression
-Scenario Outline: Verify for a create alert api for SQL Conditions-C4105995,C4105996,C4105997,C4105998,C4429075,C4429076,C4429077,C3998495,C3998496,C3998497,C3998498,C3994724,C3994725,C399477
+Scenario Outline: Verify for a create alert api for SQL Conditions-C4475876,C4475880,C4475884,C4476566,C4501335,C4501339,C4503375,C4503379,C4503383,C4501343,C4502018,C4502023
 Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert API
 Then AlertID should get generated
 And I trigger GetAPI to verify alerts exists
