@@ -113,7 +113,7 @@ public class SendReport {
 			         
 			         DataSource source = new FileDataSource(attachFiles);
 			         messageBodyPart.setDataHandler(new DataHandler(source));
-			         messageBodyPart.setFileName(attachFiles);
+			         messageBodyPart.setFileName("Juno-Alerting-AutomationReport.html");
 			         multipart.addBodyPart(messageBodyPart);
 
 			         // Send the complete message parts
