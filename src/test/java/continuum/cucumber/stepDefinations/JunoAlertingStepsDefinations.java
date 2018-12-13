@@ -22,6 +22,7 @@ import com.jayway.restassured.response.Response;
 
 import continuum.cucumber.DatabaseUtility;
 import continuum.cucumber.Utilities;
+import continuum.cucumber.testRunner.SendReport;
 import continuum.noc.pages.AuvikPageFactory;
 import continuum.noc.pages.NewAlertingMSPageFactory;
 import cucumber.api.Scenario;
@@ -1383,6 +1384,22 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		Assert.assertEquals(apiStatusID, 200, "GET alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 200");
 		Reporter.log("AlertId in GET API ======= " + jobject.get("alertId").getAsString());
 		Assert.assertEquals(AlertID, getAlertID(), "GET alert API execution failed, the api AlertID is " + AlertID + ", Expected AertID is :"+getAlertID());
+
+	}
+	
+	@Given("^Get Version API Build Number$")
+	public void getVersion() throws Exception {		
+		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get("http://internal-qaplatformalertingservice-1206480811.us-east-1.elb.amazonaws.com/alerting/version").andReturn();
+		
+
+		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+		JsonObject  jobject = jelement.getAsJsonObject();
+
+		
+		String versionNumber = jobject.get("Build").getAsString();
+		SendReport.buildNo = versionNumber;
+		System.out.println(versionNumber);
+		
 
 	}
 }

@@ -31,6 +31,8 @@ import continuum.cucumber.reporting.Artifactory;
 
 public class SendReport {
 	
+	public static String buildNo;
+	
 	/**
 	 * @param userName
 	 * @param password
