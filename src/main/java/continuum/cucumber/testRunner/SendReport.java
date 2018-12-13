@@ -143,12 +143,15 @@ public class SendReport {
 			String sender = Utilities.getMavenProperties("reportUser");
 			JSONObject buildNumberInfo = Artifactory.getLatestBuildNumberOfRespository();
 			String subject;
-			if (buildNumberInfo == null || buildNumberInfo.isEmpty() || buildNumberInfo.size() < 0) {
+			/*if (buildNumberInfo == null || buildNumberInfo.isEmpty() || buildNumberInfo.size() < 0) {
 				subject = "Automation Report for " + Utilities.getMavenProperties("ProjectName");
 			} else {
 				subject = "Automation Report for " + Utilities.getMavenProperties("ProjectName") + " on "
 						+ Artifactory.formTheBuildVersionsForReporting(Artifactory.getLatestBuildNumberOfRespository());
-			}
+			}*/
+			
+			subject = "Automation Report for " + Utilities.getMavenProperties("ProjectName") + " on "
+					+ buildNo;
 
 			String message = "Automation Report for " + Utilities.getMavenProperties("ProjectName");
 			if (Utilities.getMavenProperties("ProjectName").equalsIgnoreCase("Platform-Alerting")) {
