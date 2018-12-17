@@ -8,9 +8,15 @@ import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 /*import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;*/
+import com.google.gson.JsonParser;
+import com.jayway.restassured.RestAssured;
+import com.jayway.restassured.response.Response;
+
+import continuum.cucumber.testRunner.SendReport;
 
 public class JunoAlertingAPIUtil {
 
@@ -79,6 +85,20 @@ public class JunoAlertingAPIUtil {
 				.post("https://services.dtitsupport247.net/TicketService.svc/json/ticket/createticket");*/
 	//	System.out.println(response.getBody().asString());
 
+	}
+	
+	public void getAlertingMSVersionDetails(){
+				//Get Version Number
+			if((SendReport.buildNo==null)){
+				Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get("http://internal-qaplatformalertingservice-1206480811.us-east-1.elb.amazonaws.com/alerting/version").andReturn();
+				JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+				JsonObject  jobject = jelement.getAsJsonObject();
+
+				
+				String versionNumber = jobject.get("Build").getAsString();
+				SendReport.buildNo = versionNumber;
+				System.out.println(versionNumber);
+			}
 	}
 
 }

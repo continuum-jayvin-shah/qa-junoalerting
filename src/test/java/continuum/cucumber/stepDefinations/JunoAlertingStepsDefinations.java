@@ -38,6 +38,8 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 
 	@Before
 	public void readScenario(Scenario scenario) {
+		
+		junoAlertingUtil.getAlertingMSVersionDetails();
 		JunoAlertingStepsDefinations.scenario = scenario;
 		Reporter.log("<b><i><font color='Blue'>====== Scenario Name: ====="+ scenario.getName()+"</font></i></b>");
 		String environment = Utilities.getMavenProperties("Environment").trim();
@@ -1387,19 +1389,4 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 
 	}
 	
-	@Given("^Get Version API Build Number$")
-	public void getVersion() throws Exception {		
-		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get("http://internal-qaplatformalertingservice-1206480811.us-east-1.elb.amazonaws.com/alerting/version").andReturn();
-		
-
-		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
-		JsonObject  jobject = jelement.getAsJsonObject();
-
-		
-		String versionNumber = jobject.get("Build").getAsString();
-		SendReport.buildNo = versionNumber;
-		System.out.println(versionNumber);
-		
-
-	}
 }
