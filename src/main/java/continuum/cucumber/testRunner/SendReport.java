@@ -56,7 +56,7 @@ public class SendReport {
 			properties.put("mail.smtp.auth", "true");
 			properties.put("mail.smtp.starttls.enable", "true");
 			properties.put("mail.smtp.host", Utilities.getMavenProperties("emailHost"));
-			properties.put("mail.smtp.port", Utilities.getMavenProperties("emailHost"));
+			properties.put("mail.smtp.port", Utilities.getMavenProperties("emailPort"));
 
 			/*Session session = Session.getInstance(properties, new javax.mail.Authenticator() {
 				protected PasswordAuthentication getPasswordAuthentication() {
@@ -90,6 +90,7 @@ public class SendReport {
 			
 		      try {
 			         // Create the message part
+		    	  System.out.println("Create Message Part");
 			         BodyPart messageBodyPart = new MimeBodyPart();
 
 			         // Now set the actual message
@@ -97,6 +98,7 @@ public class SendReport {
 			        // messageBodyPart.setText(+addReportBody);
 			         StringWriter writer = new StringWriter();
 			 		try {
+			 			System.out.println("Now set the actual message");
 			 			IOUtils.copy(new FileInputStream(report), writer);
 			 			messageBodyPart.setContent(writer.toString(), "text/html");
 			 		} catch (IOException e) {
@@ -141,7 +143,7 @@ public class SendReport {
 		String absolutePath = new File("").getAbsolutePath();
 		if (Utilities.getMavenProperties("reportMail").equalsIgnoreCase("true")) {
 			String sender = Utilities.getMavenProperties("reportUser");
-			JSONObject buildNumberInfo = Artifactory.getLatestBuildNumberOfRespository();
+			//JSONObject buildNumberInfo = Artifactory.getLatestBuildNumberOfRespository();
 			String subject;
 			/*if (buildNumberInfo == null || buildNumberInfo.isEmpty() || buildNumberInfo.size() < 0) {
 				subject = "Automation Report for " + Utilities.getMavenProperties("ProjectName");
