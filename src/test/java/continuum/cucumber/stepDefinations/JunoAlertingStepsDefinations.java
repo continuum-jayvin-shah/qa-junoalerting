@@ -582,7 +582,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		//Response resp = RestAssured.given().delete(getURL() + "/" + getAlertID()).andReturn();
 		Reporter.log("\n ====================EXECUTING DELETE REQUEST FOR DELETING ALERTS================================= \n");
 		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
-
+		scenario.write("Response Body For DELETE : ===================================================== : " + resp.getBody().asString());
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 		Reporter.log("Send DELETE command");
 		Reporter.log("Status Code \n" + resp.getStatusCode());
@@ -600,7 +600,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 
 		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
-
+		scenario.write("Response Body For PUT : ===================================================== : " + resp.getBody().asString());
 		Reporter.log("Send PUT command");
 		Reporter.log("Status Code \n" + resp.getStatusCode());
 		Reporter.log("Status Body \n" + resp.getBody().asString());
@@ -1370,7 +1370,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		Reporter.log("\n ====================EXECUTING GET REQUEST FOR GETTING ALERTS================================= \n");
 		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get(getURL() + "/" + getAlertID()).andReturn();
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
-		
+		scenario.write("Response Body For GET : ===================================================== : " + resp.getBody().asString());
 		Reporter.log("Send GET command");
 		Reporter.log("Status Code \n" + resp.getStatusCode());
 		Reporter.log("Status Body \n" + resp.getBody().asString());
