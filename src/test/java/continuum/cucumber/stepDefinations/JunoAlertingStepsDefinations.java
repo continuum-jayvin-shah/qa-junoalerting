@@ -764,8 +764,8 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 
 		Reporter.log("Status Code is : " + resp.getStatusCode());
 		Reporter.log("Response Body  is : " + resp.getBody().asString());
-		scenario.write("StatusCode =====================================================" + resp.getStatusCode());
-		scenario.write("Response Body =====================================================" + resp.getBody().asString());
+		//scenario.write("StatusCode =====================================================" + resp.getStatusCode());
+		scenario.write("Response Body For POST : ===================================================== : " + resp.getBody().asString());
 
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 
@@ -773,7 +773,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 
 		//JsonElement jelement2 = new JsonParser().parse.Integer.parseInt(resp.getStatusCode());
 		JsonObject  jobject = jelement.getAsJsonObject();
-		scenario.write("AlertID =====================================================" + jobject.get("alertId").getAsString());
+		//scenario.write("AlertID =====================================================" + jobject.get("alertId").getAsString());
 		Reporter.log("AlertID is : " + jobject.get("alertId").getAsString());
 		//System.out.println("Status =====================================================" + resp.getStatusCode());
 
@@ -804,7 +804,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		//Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 		System.out.println("\n ====================EXECUTING PUT REQUEST FOR UPDATING ALERTS================================= \n");
 		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
-
+		scenario.write("Response Body For PUT : ===================================================== : " + resp.getBody().asString());
 		setStatusCode(resp.getStatusCode());
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 		JsonObject  jobject = jelement.getAsJsonObject();
@@ -817,7 +817,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		//Response resp = RestAssured.given().header("txKey","Automation").delete(getURL() + "/" + getAlertID()).andReturn();
 		System.out.println("\n ====================EXECUTING DELETE REQUEST FOR DELETING ALERTS================================= \n");
 		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
-
+		scenario.write("Response Body For DELETE : ===================================================== : " + resp.getBody().asString());
 		System.out.println("Send DELETE command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
 		setStatusCode(resp.getStatusCode());
