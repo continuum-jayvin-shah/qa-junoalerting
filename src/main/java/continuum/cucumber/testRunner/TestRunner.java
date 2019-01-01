@@ -26,7 +26,7 @@ import cucumber.api.testng.TestNGCucumberRunner;
 				"html:test-report/cucumber",
 				"json:test-report/cucumber.json",
 		"rerun:target/rerun.txt" },
-		tags={"@V2Regression"}
+		tags={"@V211Regression"}
 		)
 
 

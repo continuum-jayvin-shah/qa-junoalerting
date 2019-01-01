@@ -79,3 +79,25 @@ Examples:
 #|Platform004|
 #|Platform005|
 #|Platform006|
+
+
+@V211Regression
+Scenario Outline: Verify Error Code 404 with 203 for delete Alert api response for invalid alert value -C4475876,C4475880,C4475884,C4476566,C4501335,C4501339,C4503375,C4503379,C4503383,C4501343,C4502018,C4502023
+Given "CodesValidationV2" : "<TestCase>" : I trigger delete alert API request with invalid alertID
+Then I verify delete api response code is 203 for invalid alertID
+Then I verify delete api status code is 404 for invalid alertID
+
+Examples:
+|TestCase|
+|ErrorCode103|
+
+@V211Regression
+Scenario Outline: Verify Error Code 404 with 203 for update Alert api response for invalid alert value -C4475876,C4475880,C4475884,C4476566,C4501335,C4501339,C4503375,C4503379,C4503383,C4501343,C4502018,C4502023
+Given "CodesValidationV2" : "<TestCase>" : I trigger update alert API request with invalid alertID
+Then I verify update api response code is 203 for invalid alertID
+Then I verify update api status code is 404 for invalid alertID
+
+Examples:
+|TestCase|
+|ErrorCode103|
+
