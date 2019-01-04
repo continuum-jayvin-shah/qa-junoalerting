@@ -87,17 +87,32 @@ public class JunoAlertingAPIUtil {
 
 	}
 	
-	public void getAlertingMSVersionDetails(){
+	public void getAlertingMSVersionDetails(String environment){
 				//Get Version Number
 			if((SendReport.buildNo==null)){
-				Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get("http://internal-qaplatformalertingservice-1206480811.us-east-1.elb.amazonaws.com/alerting/version").andReturn();
-				JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
-				JsonObject  jobject = jelement.getAsJsonObject();
+				
+				if (environment.equals("QA")){
+					Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get("http://internal-qaplatformalertingservice-1206480811.us-east-1.elb.amazonaws.com/alerting/version").andReturn();
+					JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+					JsonObject  jobject = jelement.getAsJsonObject();
+	
+					
+					String versionNumber = jobject.get("BuildNumber").getAsString();
+					SendReport.buildNo = versionNumber;
+					System.out.println(versionNumber);
+				}
+				else if(environment.equals("INT")){
+					Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get("http://internal-intplatformalertingservice-1115287148.ap-south-1.elb.amazonaws.com/alerting/version").andReturn();
+					JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+					JsonObject  jobject = jelement.getAsJsonObject();
+	
+					
+					String versionNumber = jobject.get("BuildNumber").getAsString();
+					SendReport.buildNo = versionNumber;
+					System.out.println(versionNumber);
+				}
 
 				
-				String versionNumber = jobject.get("Build").getAsString();
-				SendReport.buildNo = versionNumber;
-				System.out.println(versionNumber);
 			}
 	}
 

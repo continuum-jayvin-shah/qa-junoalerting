@@ -39,7 +39,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 	@Before
 	public void readScenario(Scenario scenario) {
 		
-		junoAlertingUtil.getAlertingMSVersionDetails();
+		junoAlertingUtil.getAlertingMSVersionDetails(Utilities.getMavenProperties("Environment"));
 		JunoAlertingStepsDefinations.scenario = scenario;
 		Reporter.log("<b><i><font color='Blue'>====== Scenario Name: ====="+ scenario.getName()+"</font></i></b>");
 		String environment = Utilities.getMavenProperties("Environment").trim();
@@ -776,11 +776,18 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		//JsonElement jelement2 = new JsonParser().parse.Integer.parseInt(resp.getStatusCode());
 		JsonObject  jobject = jelement.getAsJsonObject();
 		//scenario.write("AlertID =====================================================" + jobject.get("alertId").getAsString());
+		
+		if(!jobject.get("status").toString().equalsIgnoreCase("205") || jobject.get("status").toString().equalsIgnoreCase("400")){
+			Reporter.log("AlertID is : " + jobject.get("alertId").getAsString());
+		}
 		//Reporter.log("AlertID is : " + jobject.get("alertId").getAsString());
+		
 		//System.out.println("Status =====================================================" + resp.getStatusCode());
 
 		//System.out.println("Status =====================================================" + jobject.get("status"));
 		setApiStatusID(jobject.get("status").toString());
+		
+		setStatusCode(resp.getStatusCode());
 
 		if(jobject.get("status").toString().equalsIgnoreCase("201") || jobject.get("status").toString().equalsIgnoreCase("202")){
 			setAlertID(jobject.get("alertId").getAsString());
@@ -975,8 +982,8 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 	
 	@Then("^I verify create api status code is (\\d+) for SUSPENDED resources$")
     public void iVerifyCreateApiStatusCodeIs400ForSUSPENDEDResources(int arg1) throws Throwable {
-		String statusCode = getApiStatusID();		
-		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+		//String statusCode = getApiStatusID();		
+		Assert.assertTrue(String.valueOf(getStatusCode()).equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + getStatusCode() );
 	}
 	
 	@Then("^I verify create api response code is (\\d+) for SUSPENDED resource ID$")
