@@ -776,7 +776,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		//JsonElement jelement2 = new JsonParser().parse.Integer.parseInt(resp.getStatusCode());
 		JsonObject  jobject = jelement.getAsJsonObject();
 		//scenario.write("AlertID =====================================================" + jobject.get("alertId").getAsString());
-		Reporter.log("AlertID is : " + jobject.get("alertId").getAsString());
+		//Reporter.log("AlertID is : " + jobject.get("alertId").getAsString());
 		//System.out.println("Status =====================================================" + resp.getStatusCode());
 
 		//System.out.println("Status =====================================================" + jobject.get("status"));
@@ -963,7 +963,27 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 	public void i_verify_create_api_response_code_is_for_incorrect_resource_ID(int arg1) throws Throwable {
 		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
-	}	
+	}
+	
+		
+	//Added by Bilal for 400 Status Code
+	
+	@Given("^\\\"([^\\\"]*)\\\" : \\\"([^\\\"]*)\\\" : I trigger create alert API request with SUSPENDED resource ID$")
+	public void ITriggerCreateAlertAPIRequestWithSUSPENDEDResourceID(String arg1, String arg2) throws Throwable {
+		triggerCreateAlertAPI(arg1, arg2);
+	}
+	
+	@Then("^I verify create api status code is (\\d+) for SUSPENDED resources$")
+    public void iVerifyCreateApiStatusCodeIs400ForSUSPENDEDResources(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
+	
+	@Then("^I verify create api response code is (\\d+) for SUSPENDED resource ID$")
+	public void iVerifyCreateApiResponseCodeIs205ForSUSPENDEDResourceID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
 
 	/* ************************ Update -  Error Code 102**************************** */
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger update alert API request with datatype for partner invalid$")
