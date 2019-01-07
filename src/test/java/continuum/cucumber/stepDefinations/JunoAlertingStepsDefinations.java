@@ -814,6 +814,10 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		System.out.println("\n ====================EXECUTING PUT REQUEST FOR UPDATING ALERTS================================= \n");
 		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 		scenario.write("Response Body For PUT : ===================================================== : " + resp.getBody().asString());
+		
+		Reporter.log("Status Code is : " + resp.getStatusCode());
+		Reporter.log("Response Body  is : " + resp.getBody().asString());
+		
 		setStatusCode(resp.getStatusCode());
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 		JsonObject  jobject = jelement.getAsJsonObject();
@@ -827,6 +831,10 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		System.out.println("\n ====================EXECUTING DELETE REQUEST FOR DELETING ALERTS================================= \n");
 		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
 		scenario.write("Response Body For DELETE : ===================================================== : " + resp.getBody().asString());
+		
+		Reporter.log("Status Code is : " + resp.getStatusCode());
+		Reporter.log("Response Body  is : " + resp.getBody().asString());
+		
 		System.out.println("Send DELETE command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
 		setStatusCode(resp.getStatusCode());
@@ -1163,6 +1171,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 	public void i_verify_delete_api_response_code_is_for_invalid_alertID(int arg1) throws Throwable {
 		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+		
 	}
 
 	@Then("^I verify delete api status code is (\\d+) for invalid alertID$")
