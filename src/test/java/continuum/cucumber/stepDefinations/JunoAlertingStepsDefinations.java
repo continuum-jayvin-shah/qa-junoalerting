@@ -9,6 +9,7 @@ import java.util.HashMap;
 
 import org.json.simple.parser.ParseException;
 import org.testng.Assert;
+import org.testng.Reporter;
 
 import com.continuum.platform.alerting.api.AlertDetailAPITest;
 import com.continuum.utils.DataUtils;
@@ -21,21 +22,26 @@ import com.jayway.restassured.response.Response;
 
 import continuum.cucumber.DatabaseUtility;
 import continuum.cucumber.Utilities;
+import continuum.cucumber.testRunner.SendReport;
 import continuum.noc.pages.AuvikPageFactory;
+import continuum.noc.pages.NewAlertingMSPageFactory;
 import cucumber.api.Scenario;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 
-public class JunoAlertingStepsDefinations extends AuvikPageFactory{
+public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 
 	public static Scenario scenario;
 	long wait = 200;
 
 	@Before
 	public void readScenario(Scenario scenario) {
+		
+		junoAlertingUtil.getAlertingMSVersionDetails(Utilities.getMavenProperties("Environment"));
 		JunoAlertingStepsDefinations.scenario = scenario;
+		Reporter.log("<b><i><font color='Blue'>====== Scenario Name: ====="+ scenario.getName()+"</font></i></b>");
 		String environment = Utilities.getMavenProperties("Environment").trim();
 		setFileName("TestData_" + environment + ".xls");
 		if (environment.equals("QA")) {
@@ -188,18 +194,17 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger create alert API$")
 	public void i_trigger_create_alert_API(String arg1, String arg2) throws Throwable {
-
+		Reporter.log("====================EXECUTING POST REQUEST FOR CREATING ALERTS=================================");
 		triggerCreateAlertAPI(arg1, arg2);
 		Assert.assertEquals(getApiStatusID(), "201", "Create alert API execution failed, the api status ID is " + getApiStatusID() + " and API message body is ");
-		System.out.println("AlertID =====================================================" + getAlertID());
+		Reporter.log("AlertID is :" + getAlertID());
 	}
 
 	// Added by Bilal to validate HashID response
 	@Then("^AlertID should get generated$")
 	public void alertIDShouldGetGenerated() throws Throwable {
-
 		Assert.assertEquals(getApiStatusID(), "201", "Create alert API execution failed, the api status ID is " + getApiStatusID() + " and API message body is ");
-		System.out.println("AlertID =====================================================" + getAlertID());
+		
 	}
 
 	private JsonObject preProcessingCreateAlert(String arg1, String arg2) throws IOException {
@@ -260,7 +265,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		//Log.assertThat(iTSLoginPage.navigateToTicketPortal(), "Navigated to ITS portal page", "Failed to Navigate to ITS portal page", DriverFactory.getDriver());		
 	}
 
-	@When("^I login to ITS portal$")
+	//Commeting Code for New Alerting MS
+	/*@When("^I login to ITS portal$")
 	public void i_login_to_ITS_portal() throws Throwable {
 		iTSLoginPage.loginToTicketPortal();
 	}
@@ -302,7 +308,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	public void i_verify_ticket_details_on_tickt_details_page_of_ITS_portal() throws Throwable {
 		iTSTicketDetailsPage.verifyTicketDetails();
 	}
-
+*/
 	@Given("^I verify create alert api request in PAS_ReqQueue table$")
 	public void i_verify_create_alert_api_request_in_PAS_ReqQueue_table() throws Exception {
 
@@ -574,35 +580,38 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 				.replace("{sites}", currentRow.get("sites"))
 				.replace("{HostUrl}", getHostURL());*/
 		//Response resp = RestAssured.given().delete(getURL() + "/" + getAlertID()).andReturn();
-
-		Response resp = RestAssured.given().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
-
+		Reporter.log("\n ====================EXECUTING DELETE REQUEST FOR DELETING ALERTS================================= \n");
+		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
+		scenario.write("Response Body For DELETE : ===================================================== : " + resp.getBody().asString());
+		scenario.write("StatusCode : ===================================================== : " + resp.getStatusCode());
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
-		System.out.println("Send POST command");
-		System.out.println("Status Code \n" + resp.getStatusCode());
+		Reporter.log("Send DELETE command");
+		Reporter.log("Status Code \n" + resp.getStatusCode());
+		Reporter.log("Status Body \n" + resp.getBody().asString());
 		int apiStatusID = resp.getStatusCode();
-		
 		Assert.assertEquals(apiStatusID, 204, "Delete alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 204");
 	}
 
 	@Given("^I trigger update alert API$")
-	public void i_trigger_update_alert_API() throws Exception {		
+	public void i_trigger_update_alert_API() throws Exception {
+		Reporter.log("\n ====================EXECUTING PUT REQUEST FOR UPDATING ALERTS================================= \n");
 		JsonObject jobj = getJsonData();
 		jobj.add("alertDetails", getalertDetailJson());
 		System.out.println(jobj.toString());
 
-		Response resp = RestAssured.given().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
+		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
-
-		System.out.println("Send PUT command");
-		System.out.println("Status Code \n" + resp.getStatusCode());
-		System.out.println("Status Body \n" + resp.getBody().asString());
-		System.out.println("Time taken to get response is \n" + resp.getTime()+" milli second");
+		scenario.write("Response Body For PUT : ===================================================== : " + resp.getBody().asString());
+		scenario.write("StatusCode : ===================================================== : " + resp.getStatusCode());
+		Reporter.log("Send PUT command");
+		Reporter.log("Status Code \n" + resp.getStatusCode());
+		Reporter.log("Status Body \n" + resp.getBody().asString());
+		Reporter.log("Time taken to get response is \n" + resp.getTime()+" milli second");
 
 		//JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 		//JsonObject  jobject = jelement.getAsJsonObject();
 		int apiStatusID = resp.getStatusCode();
-		System.out.println("Status =====================================================" + resp.getStatusCode());
+		Reporter.log("Status Code is " + resp.getStatusCode());
 		Assert.assertEquals(apiStatusID, 204, "Update alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 204");
 	}
 
@@ -755,8 +764,10 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).post(getURL()).andReturn();
 
-		System.out.println("Status =====================================================" + resp.getStatusCode());
-		scenario.write("StatusCode =====================================================" + resp.getStatusCode());
+		Reporter.log("Status Code is : " + resp.getStatusCode());
+		Reporter.log("Response Body  is : " + resp.getBody().asString());
+		//scenario.write("StatusCode =====================================================" + resp.getStatusCode());
+		scenario.write("Response Body For POST : ===================================================== : " + resp.getBody().asString());
 
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
 
@@ -764,11 +775,19 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 		//JsonElement jelement2 = new JsonParser().parse.Integer.parseInt(resp.getStatusCode());
 		JsonObject  jobject = jelement.getAsJsonObject();
-		scenario.write("AlertID =====================================================" + jobject.get("alertId").getAsString());
-		System.out.println("Status =====================================================" + resp.getStatusCode());
+		//scenario.write("AlertID =====================================================" + jobject.get("alertId").getAsString());
+		
+		if(!jobject.get("status").toString().equalsIgnoreCase("205") || jobject.get("status").toString().equalsIgnoreCase("400")){
+			Reporter.log("AlertID is : " + jobject.get("alertId").getAsString());
+		}
+		//Reporter.log("AlertID is : " + jobject.get("alertId").getAsString());
+		
+		//System.out.println("Status =====================================================" + resp.getStatusCode());
 
-		System.out.println("Status =====================================================" + jobject.get("status"));
+		//System.out.println("Status =====================================================" + jobject.get("status"));
 		setApiStatusID(jobject.get("status").toString());
+		
+		setStatusCode(resp.getStatusCode());
 
 		if(jobject.get("status").toString().equalsIgnoreCase("201") || jobject.get("status").toString().equalsIgnoreCase("202")){
 			setAlertID(jobject.get("alertId").getAsString());
@@ -792,9 +811,9 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	public void triggerUpdateAlertAPI(String arg1, String arg2) throws Exception{
 		JsonObject albums = preProcessingCreateAlert(arg1, arg2);	
 		//Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
-
-		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
-
+		System.out.println("\n ====================EXECUTING PUT REQUEST FOR UPDATING ALERTS================================= \n");
+		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
+		scenario.write("Response Body For PUT : ===================================================== : " + resp.getBody().asString());
 		setStatusCode(resp.getStatusCode());
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 		JsonObject  jobject = jelement.getAsJsonObject();
@@ -805,10 +824,10 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 
 	public void triggerDeleteAlertAPI(){
 		//Response resp = RestAssured.given().header("txKey","Automation").delete(getURL() + "/" + getAlertID()).andReturn();
-
-		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
-
-		System.out.println("Send Delete command");
+		System.out.println("\n ====================EXECUTING DELETE REQUEST FOR DELETING ALERTS================================= \n");
+		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
+		scenario.write("Response Body For DELETE : ===================================================== : " + resp.getBody().asString());
+		System.out.println("Send DELETE command");
 		System.out.println("Status Code \n" + resp.getStatusCode());
 		setStatusCode(resp.getStatusCode());
 		System.out.println("Alert - " + getAlertID() + " deleted.");
@@ -853,7 +872,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		String invalidBody = albums.toString().replace("{", "");
 		//Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(invalidBody).post(getURL()).andReturn();
 
-		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(invalidBody).post(getURL()).andReturn();
+		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(invalidBody).post(getURL()).andReturn();
 
 		System.out.println("Status =====================================================" + resp.getStatusCode());
 
@@ -904,7 +923,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		System.out.println(albums);
 		//Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
 
-		Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).post(getURL()).andReturn();
+		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).post(getURL()).andReturn();
 
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 		JsonObject  jobject = jelement.getAsJsonObject();
@@ -951,7 +970,27 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 	public void i_verify_create_api_response_code_is_for_incorrect_resource_ID(int arg1) throws Throwable {
 		String statusCode = getApiStatusID();		
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
-	}	
+	}
+	
+		
+	//Added by Bilal for 400 Status Code
+	
+	@Given("^\\\"([^\\\"]*)\\\" : \\\"([^\\\"]*)\\\" : I trigger create alert API request with SUSPENDED resource ID$")
+	public void ITriggerCreateAlertAPIRequestWithSUSPENDEDResourceID(String arg1, String arg2) throws Throwable {
+		triggerCreateAlertAPI(arg1, arg2);
+	}
+	
+	@Then("^I verify create api status code is (\\d+) for SUSPENDED resources$")
+    public void iVerifyCreateApiStatusCodeIs400ForSUSPENDEDResources(int arg1) throws Throwable {
+		//String statusCode = getApiStatusID();		
+		Assert.assertTrue(String.valueOf(getStatusCode()).equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + getStatusCode() );
+	}
+	
+	@Then("^I verify create api response code is (\\d+) for SUSPENDED resource ID$")
+	public void iVerifyCreateApiResponseCodeIs205ForSUSPENDEDResourceID(int arg1) throws Throwable {
+		String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+	}
 
 	/* ************************ Update -  Error Code 102**************************** */
 	@Given("^\"([^\"]*)\" : \"([^\"]*)\" : I trigger update alert API request with datatype for partner invalid$")
@@ -978,7 +1017,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		String invalidBody = albums.toString().replace("{", "");
 		//Response resp = RestAssured.given().contentType("application/json").body(invalidBody).put(getURL() + "/" + getAlertID()).andReturn();
 
-		Response resp = RestAssured.given().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(invalidBody).put(getURL() + "/" + getAlertID()).andReturn();
+		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(invalidBody).put(getURL() + "/" + getAlertID()).andReturn();
 
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 		JsonObject  jobject = jelement.getAsJsonObject();
@@ -1036,7 +1075,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		System.out.println(albums);
 		//Response resp = RestAssured.given().contentType("application/json").body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 
-		Response resp = RestAssured.given().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
+		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).put(getURL() + "/" + getAlertID()).andReturn();
 
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 		JsonObject  jobject = jelement.getAsJsonObject();
@@ -1201,7 +1240,8 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
 	}
 
-	public void setEmailTestData(){
+	//Commenting Code for New Alerting MS
+	/*public void setEmailTestData(){
 		HashMap <String, String> testData = DataUtils.getTestRow();
 		System.out.println(testData);
 
@@ -1256,7 +1296,7 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		Thread.sleep(4000);
 		iTSHomePage.deleteNotificationRule();
 	}
-
+*/
 	@Then("^\"([^\"]*)\" : \"([^\"]*)\" I verify the email params in SaazOnline Live table$")
 	public void i_verify_the_email_params_in_SaazOnline_Live_table(String arg1, String arg2) throws Throwable {
 		ResultSet rs 		= null;
@@ -1355,14 +1395,15 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		//JsonObject jobj = getJsonData();
 		//jobj.add("alertDetails", getalertDetailJson());
 		//System.out.println(jobj.toString());
-
+		//System.out.println("\n ====================EXECUTING GET REQUEST FOR GETTING ALERTS================================= \n");
+		Reporter.log("\n ====================EXECUTING GET REQUEST FOR GETTING ALERTS================================= \n");
 		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get(getURL() + "/" + getAlertID()).andReturn();
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
-
-		System.out.println("Send GET command");
-		System.out.println("Status Code \n" + resp.getStatusCode());
-		System.out.println("Status Body \n" + resp.getBody().asString());
-		System.out.println("Time taken to get response is \n" + resp.getTime()+" milli second");
+		scenario.write("Response Body For GET : ===================================================== : " + resp.getBody().asString());
+		Reporter.log("Send GET command");
+		Reporter.log("Status Code \n" + resp.getStatusCode());
+		Reporter.log("Status Body \n" + resp.getBody().asString());
+		Reporter.log("Time taken to get response is \n" + resp.getTime()+" milli second");
 
 		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 		JsonObject  jobject = jelement.getAsJsonObject();
@@ -1370,10 +1411,11 @@ public class JunoAlertingStepsDefinations extends AuvikPageFactory{
 		int apiStatusID = resp.getStatusCode();		
 		//("AlertID =====================================================" + jobject.get("alertId").getAsString());
 		String AlertID = jobject.get("alertId").getAsString();
-		System.out.println("Status =====================================================" + resp.getStatusCode());
+		Reporter.log("Status Code is : " + resp.getStatusCode());
 		Assert.assertEquals(apiStatusID, 200, "GET alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 200");
-		System.out.println("ALertId in GET API =====================================================" + jobject.get("alertId").getAsString());
+		Reporter.log("AlertId in GET API ======= " + jobject.get("alertId").getAsString());
 		Assert.assertEquals(AlertID, getAlertID(), "GET alert API execution failed, the api AlertID is " + AlertID + ", Expected AertID is :"+getAlertID());
 
 	}
+	
 }
