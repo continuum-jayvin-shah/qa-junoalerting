@@ -152,7 +152,7 @@ public class SendReport {
 						+ Artifactory.formTheBuildVersionsForReporting(Artifactory.getLatestBuildNumberOfRespository());
 			}*/
 			
-			subject = Utilities.getMavenProperties("Environment") + "Automation Report for " + Utilities.getMavenProperties("ProjectName") + " on "
+			subject = Utilities.getMavenProperties("Environment") + " Environment : Automation Report for " + Utilities.getMavenProperties("ProjectName") + " on "
 					+ buildNo;
 
 			String message = "Automation Report for " + Utilities.getMavenProperties("ProjectName");
