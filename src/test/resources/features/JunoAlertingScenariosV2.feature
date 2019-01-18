@@ -1,16 +1,16 @@
 Feature: Alerting-JAS-Alignment
 
-@V2Regression
-Scenario Outline: Verify for a create alert api for DM2.0 Conditions-C4105995,C4105996,C4105997,C4429075,C4429076,C4429077,C3998495,C3998496,C3998497,C3994724,C4502020,C3994775
-Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert API
-Then AlertID should get generated
-And I trigger GetAPI to verify alerts exists
-And I trigger update alert API
-And I trigger auto close alert API
+#@V2Regression
+#Scenario Outline: Verify for a create alert api for DM2.0 Conditions-C4105995,C4105996,C4105997,C4429075,C4429076,C4429077,C3998495,C3998496,C3998497,C3994724,C4502020,C3994775
+#Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert API
+#Then AlertID should get generated
+#And I trigger GetAPI to verify alerts exists
+#And I trigger update alert API
+#And I trigger auto close alert API
 
-Examples:
-|TestCase|
-|Platform001|
+#Examples:
+#|TestCase|
+#|Platform001|
 #|Platform002|
 ##|Platform003|
 ##|Platform004|
