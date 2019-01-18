@@ -1,10 +1,8 @@
 package continuum.cucumber.testRunner;
 
-
-
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.testng.annotations.AfterClass;
-
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 
@@ -12,12 +10,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import continuum.cucumber.DriverFactory;
-import continuum.cucumber.SeleniumServerUtility;
-import continuum.cucumber.Utilities;
-import continuum.cucumber.WebDriverInitialization;
 import continuum.cucumber.reporting.GenerateReport;
-import continuum.cucumber.reporting.HtmlEmailSender;
 import continuum.cucumber.reporting.TestRailIntegrator;
 import cucumber.api.CucumberOptions;
 import cucumber.api.testng.CucumberFeatureWrapper;
@@ -44,21 +37,21 @@ public class TestRunner {
 
 	@BeforeClass(alwaysRun = true)
 	public void setUpClass() throws Exception {
-		SeleniumServerUtility.startServer();
+		//SeleniumServerUtility.startServer();
 		testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
 	}
 
 	@BeforeTest(alwaysRun = true)
 	public void beforeTest()
 	{
-		 String browserName= Utilities.getMavenProperties("browser").toUpperCase();
+		/* String browserName= Utilities.getMavenProperties("browser").toUpperCase();
 		  driver=WebDriverInitialization.createInstance(driver,browserName);
 		   
-		    DriverFactory.setWebDriver(driver);
+		    DriverFactory.setWebDriver(driver);*/
 
 	}
 
-	@Test(groups="cucumber", description = "Runs Cucumber Feature", dataProvider = "features")
+	@Test(groups="V2Regression", description = "Runs Cucumber Feature", dataProvider = "features")
 	public void feature(CucumberFeatureWrapper cucumberFeature) {
 
 		scenarioName=cucumberFeature.getCucumberFeature().getPath();
@@ -77,7 +70,7 @@ public class TestRunner {
 
 	@AfterTest(alwaysRun = true)
 	public void afterTest(){
-		DriverFactory.getDriver().quit();
+		/*DriverFactory.getDriver().quit();*/
 	}
 
 
@@ -94,9 +87,17 @@ public class TestRunner {
 	@AfterClass(alwaysRun = true)
 	public void tearDownClass() throws Exception {
 		testNGCucumberRunner.finish();
+		//GenerateReport.generateReport("JunoAlertingAutomation","test-report");
+		
+		//TestRailIntegrator.updateResultToTestRail("test-report");
+		
+	}
+	
+	@AfterSuite(alwaysRun = true)
+	public void AfterSuiteRptGeneration () throws Exception {
+		
 		GenerateReport.generateReport("JunoAlertingAutomation","test-report");
-		HtmlEmailSender.sendReport("test-report");
-
+		SendReport.sendReportWithMail("test-report");
 		TestRailIntegrator.updateResultToTestRail("test-report");
 		
 	}

@@ -154,6 +154,8 @@ public class SendReport {
 			
 			subject = Utilities.getMavenProperties("Environment") + " Environment : Automation Report for " + Utilities.getMavenProperties("ProjectName") + " on "
 					+ buildNo;
+			
+			System.out.println("SUBJECT========"+subject);
 
 			String message = "Automation Report for " + Utilities.getMavenProperties("ProjectName");
 			if (Utilities.getMavenProperties("ProjectName").equalsIgnoreCase("Platform-Alerting")) {
