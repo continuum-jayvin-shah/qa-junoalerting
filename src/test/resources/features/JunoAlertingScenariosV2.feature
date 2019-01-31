@@ -44,11 +44,10 @@ And I trigger auto close alert API
 Examples:
 |TestCase|
 |Platform007|
-#|Platform002|
-#|Platform003|
-#|Platform004|
-#|Platform005|
-#|Platform006|
+|Platform411|
+|Platform412|
+|Platform413|
+|Platform414|
 
 @V2Regression
 Scenario Outline: Verify for a create alert api for VSS Conditions-C4475875,C4475879,C4475883,C4476563,C4501334,C4501338,C4503374,C4503378,C4503382,C4501342,C4502017,C4502022
@@ -60,10 +59,10 @@ And I trigger auto close alert API
 Examples:
 |TestCase|
 |Platform008|
-#|Platform003|
-#|Platform004|
-#|Platform005|
-#|Platform006|
+|Platform416|
+|Platform416|
+|Platform417|
+|Platform418|
 
 @V2Regression
 Scenario Outline: Verify for a create alert api for SQL Conditions-C4475876,C4475880,C4475884,C4476566,C4501335,C4501339,C4503375,C4503379,C4503383,C4501343,C4502018,C4502023
@@ -75,10 +74,10 @@ And I trigger auto close alert API
 Examples:
 |TestCase|
 |Platform009|
-#|Platform003|
-#|Platform004|
-#|Platform005|
-#|Platform006|
+|Platform419|
+|Platform420|
+|Platform421|
+|Platform422|
 
 
 @V2Regression
