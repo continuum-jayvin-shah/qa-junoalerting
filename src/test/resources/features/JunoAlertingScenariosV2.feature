@@ -38,7 +38,7 @@ Examples:
 |Platform018|
 |Platform019|
 |Platform020|
-
+|Platform021|
 
 @V2Regression
 Scenario Outline: Verify for a create alert api for Veritas Conditions-C4475874,C4475878,C4475882,C4476562,C4501333,C4501337,C4503373,C4503377,C4503381,C4501341,C3994725,C4502021
