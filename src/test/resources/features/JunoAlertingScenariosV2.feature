@@ -14,7 +14,7 @@ Examples:
 |Platform002|
 |Platform003|
 |Platform004|
-|Platform005|
+#|Platform005|
 |Platform006|
 
 @V2Regression
