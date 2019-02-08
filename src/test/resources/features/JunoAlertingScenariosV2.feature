@@ -64,11 +64,11 @@ And I trigger update alert API
 And I trigger auto close alert API
 Examples:
 |TestCase|
-|Platform416|
+|Platform008|
+|Platform415|
 |Platform416|
 |Platform417|
 |Platform418|
-|Platform008|
 
 @V2Regression
 Scenario Outline: Verify for a create alert api for SQL Conditions-C4475876,C4475880,C4475884,C4476566,C4501335,C4501339,C4503375,C4503379,C4503383,C4501343,C4502018,C4502023
