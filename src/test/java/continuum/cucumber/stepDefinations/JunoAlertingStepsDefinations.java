@@ -800,10 +800,10 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 
 		if(!getErrorCodeScenario().equalsIgnoreCase("202")){
 			if(getApiStatusID().equals("202")){
-				triggerDeleteAlertAPI();
+				//triggerDeleteAlertAPI();
 				//i_verify_create_alert_api_request_is_deleted_from_pas_reqcons_table();
-				Thread.sleep(60000);
-				triggerCreateAlertAPI(arg1, arg2);
+				//Thread.sleep(6000);
+				//triggerCreateAlertAPI(arg1, arg2);
 			}
 		}
 	}
