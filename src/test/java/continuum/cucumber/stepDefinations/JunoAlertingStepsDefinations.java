@@ -85,6 +85,8 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 	private String databasePassword;
 	private String databaseHost;
 	private String URL;
+	private String RoundRobinURL;
+	private String RoundRobinGETURL;
 	private String fileName;
 	private String hostUrl;
 	private String currentTime;
@@ -132,6 +134,22 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 
 	private String getURL(){
 		return URL;
+	}
+	
+	public String getRoundRobinURL() {
+		return RoundRobinURL;
+	}
+
+	public void setRoundRobinURL(String roundRobinURL) {
+		RoundRobinURL = roundRobinURL;
+	}
+
+	public String getRoundRobinGETURL() {
+		return RoundRobinGETURL;
+	}
+
+	public void setRoundRobinGETURL(String roundRobinGETURL) {
+		RoundRobinGETURL = roundRobinGETURL;
 	}
 
 	private void setHostURL(String hosturl){
@@ -213,13 +231,30 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		DataUtils.setTestRow(excelFilePath, arg1, arg2);
 		HashMap<String, String> currentRow = new HashMap<>();
 
-		currentRow.putAll(DataUtils.getTestRow());		
+		currentRow.putAll(DataUtils.getTestRow());
+		
+		if (currentRow.get("RoundRobin").equalsIgnoreCase("true")) {
+			String createAlertUrl = Utilities.getMavenProperties("PlatformAlertUrlSchemaNode")
+					.replace("{partners}", currentRow.get("partners"))
+					.replace("{sites}", currentRow.get("sites"))
+					.replace("{endpoints}", currentRow.get("endpoints"))
+					.replace("{Node1}", Utilities.getMavenProperties("Node1"));
+			RoundRobinURL = createAlertUrl;
+			setRoundRobinURL(RoundRobinURL);
+			scenario.write(RoundRobinURL);
+		}
+		else {
+		
 		String createAlertUrl = Utilities.getMavenProperties("PlatformAlertUrlSchema")
 				.replace("{partners}", currentRow.get("partners"))
 				.replace("{sites}", currentRow.get("sites"))
 				.replace("{endpoints}", currentRow.get("endpoints"))
 				.replace("{HostUrlV1}", getHostURL());
-
+		URL = createAlertUrl;
+		setURL(URL);		
+		scenario.write(URL);
+		}
+		
 		JsonObject albums = new JsonObject();
 		albums.addProperty("resourceId", Integer.parseInt(currentRow.get("resourceId")));
 		albums.addProperty("conditionId", Integer.parseInt(currentRow.get("conditionId")));
@@ -250,12 +285,10 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		setalertDetailJson(dataset);
 		albums.add("alertDetails", dataset);		
 		setJsonData(albums);
-		URL = createAlertUrl;
-		setURL(URL);		
-		scenario.write(URL);				
+		//URL = createAlertUrl;
+						
 		System.out.println(albums);		
 		scenario.write("Payload =====================================================" + albums);		
-		System.out.println(URL);
 
 		return albums;
 	}
@@ -581,7 +614,17 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 				.replace("{HostUrl}", getHostURL());*/
 		//Response resp = RestAssured.given().delete(getURL() + "/" + getAlertID()).andReturn();
 		Reporter.log("\n ====================EXECUTING DELETE REQUEST FOR DELETING ALERTS================================= \n");
-		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
+		HashMap<String, String> currentRow = new HashMap<>();
+
+		currentRow.putAll(DataUtils.getTestRow());
+		Response resp;
+		if (currentRow.get("RoundRobin").equalsIgnoreCase("true")) {
+			resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getRoundRobinGETURL() + "/" + getAlertID()).andReturn();
+			scenario.write("DELETE URL : ===================================================== : " + getRoundRobinGETURL());
+		}else {
+			resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
+			scenario.write("DELETE URL : ===================================================== : " + getURL());
+		}
 		scenario.write("Response Body For DELETE : ===================================================== : " + resp.getBody().asString());
 		scenario.write("StatusCode : ===================================================== : " + resp.getStatusCode());
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");
@@ -599,7 +642,20 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		jobj.add("alertDetails", getalertDetailJson());
 		System.out.println(jobj.toString());
 
-		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
+		HashMap<String, String> currentRow = new HashMap<>();
+
+		currentRow.putAll(DataUtils.getTestRow());
+		Response resp;
+		if (currentRow.get("RoundRobin").equalsIgnoreCase("true")) {
+			resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(jobj.toString()).put(getRoundRobinGETURL() + "/" + getAlertID()).andReturn();
+			scenario.write("PUT URL : ===================================================== : " + getRoundRobinGETURL());
+		}
+		else {
+		
+			resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
+			scenario.write("PUT URL : ===================================================== : " + getURL());
+		}
+		
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
 		scenario.write("Response Body For PUT : ===================================================== : " + resp.getBody().asString());
 		scenario.write("StatusCode : ===================================================== : " + resp.getStatusCode());
@@ -761,8 +817,18 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		JsonObject albums = preProcessingCreateAlert(arg1,arg2);		
 		//Response resp = RestAssured.given().header("txKey","Automation").contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
 		//Response resp = RestAssured.given().contentType("application/json").body(albums.toString()).post(getURL()).andReturn();
+		
+		HashMap<String, String> currentRow = new HashMap<>();
 
-		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).post(getURL()).andReturn();
+		currentRow.putAll(DataUtils.getTestRow());
+		Response resp;
+		if (currentRow.get("RoundRobin").equalsIgnoreCase("true"))
+		{
+			resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).post(getRoundRobinURL()).andReturn();
+		}
+		else {
+			resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(albums.toString()).post(getURL()).andReturn();
+		}
 
 		Reporter.log("Status Code is : " + resp.getStatusCode());
 		Reporter.log("Response Body  is : " + resp.getBody().asString());
@@ -829,7 +895,17 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 	public void triggerDeleteAlertAPI(){
 		//Response resp = RestAssured.given().header("txKey","Automation").delete(getURL() + "/" + getAlertID()).andReturn();
 		System.out.println("\n ====================EXECUTING DELETE REQUEST FOR DELETING ALERTS================================= \n");
-		Response resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
+		HashMap<String, String> currentRow = new HashMap<>();
+
+		currentRow.putAll(DataUtils.getTestRow());
+		Response resp;
+		if (currentRow.get("RoundRobin").equalsIgnoreCase("true")) {
+			resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getRoundRobinURL() + "/" + getAlertID()).andReturn();
+		}
+		else {
+			resp = RestAssured.given().log().all().header("txKey","Automation").contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).delete(getURL() + "/" + getAlertID()).andReturn();
+		}
+		
 		scenario.write("Response Body For DELETE : ===================================================== : " + resp.getBody().asString());
 		
 		Reporter.log("Status Code is : " + resp.getStatusCode());
@@ -1405,9 +1481,31 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		//jobj.add("alertDetails", getalertDetailJson());
 		//System.out.println(jobj.toString());
 		//System.out.println("\n ====================EXECUTING GET REQUEST FOR GETTING ALERTS================================= \n");
+		
+		HashMap<String, String> currentRow = new HashMap<>();
+
+		currentRow.putAll(DataUtils.getTestRow());
+		Response resp;
+		if (currentRow.get("RoundRobin").equalsIgnoreCase("true")) {
+			String createAlertUrl = Utilities.getMavenProperties("PlatformAlertUrlSchemaNode")
+					.replace("{partners}", currentRow.get("partners"))
+					.replace("{sites}", currentRow.get("sites"))
+					.replace("{endpoints}", currentRow.get("endpoints"))
+					.replace("{Node1}", Utilities.getMavenProperties("Node2"));
+			
+			RoundRobinGETURL = createAlertUrl;
+			setRoundRobinGETURL(RoundRobinGETURL);
+			resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get(getRoundRobinGETURL() + "/" + getAlertID()).andReturn();
+			scenario.write("GET URL : ===================================================== : " + getRoundRobinGETURL());
+		}
+		else {
+			resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get(getURL() + "/" + getAlertID()).andReturn();
+			scenario.write("GET URL : ===================================================== : " + getURL());
+		}
 		Reporter.log("\n ====================EXECUTING GET REQUEST FOR GETTING ALERTS================================= \n");
-		Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get(getURL() + "/" + getAlertID()).andReturn();
+		
 		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
+		
 		scenario.write("Response Body For GET : ===================================================== : " + resp.getBody().asString());
 		Reporter.log("Send GET command");
 		Reporter.log("Status Code \n" + resp.getStatusCode());
