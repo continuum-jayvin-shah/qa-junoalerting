@@ -21,13 +21,13 @@ Feature: Alerting-JAS-Alignment
 Scenario Outline: Verify for a create alert api for Windows Service Conditions-C4475873,C4475877,C4475881,C4476574,C4501336,C4501340,C4503372,C4503376,C4503380,C4501344,C4502019,C4502024
 Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert API
 Then AlertID should get generated
+And I trigger GetAPI to verify alerts exists
 
 And I trigger update alert API for validating snooze
 Then I verify update api status code is 202 for snooze
 Then I verify update api response code is 207 for snooze
 And I wait for snooze to expire
 
-And I trigger GetAPI to verify alerts exists
 And I trigger update alert API
 And I trigger auto close alert API
 
