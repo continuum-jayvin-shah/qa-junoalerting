@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 
 import org.json.simple.parser.ParseException;
+import org.openqa.selenium.support.ui.Sleeper;
 import org.testng.Assert;
 import org.testng.Reporter;
 
@@ -1524,5 +1525,70 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		Assert.assertEquals(AlertID, getAlertID(), "GET alert API execution failed, the api AlertID is " + AlertID + ", Expected AertID is :"+getAlertID());
 
 	}
+	
+	
+	//SNOOZE VALIDATION
+	
+    @Then("^^I verify update api response code is (\\d+) for snooze$")
+    public void i_verify_update_api_response_code_is_207_for_snooze(int arg1) throws Throwable {
+    	String statusCode = getApiStatusID();		
+		Assert.assertTrue(statusCode.equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + statusCode );
+    }
+
+    @Then("^I verify update api status code is (\\d+) for snooze$")
+    public void i_verify_update_api_status_code_is_202_for_snooze(int arg1) throws Throwable {
+    	//String statusCode = getApiStatusID();		
+    	Assert.assertTrue(String.valueOf(getStatusCode()).equals(String.valueOf(arg1)),"API Status code expected " + arg1 + "but actual is " + getStatusCode() );
+    }
+
+    @Given("^I trigger update alert API for validating snooze$")
+    public void i_trigger_update_alert_api_for_validating_snooze() throws Throwable {
+    	Reporter.log("\n ====================EXECUTING PUT REQUEST FOR UPDATING ALERTS TO VALIDATE SNOOZE================================= \n");
+		JsonObject jobj = getJsonData();
+		jobj.add("alertDetails", getalertDetailJson());
+		System.out.println(jobj.toString());
+
+		HashMap<String, String> currentRow = new HashMap<>();
+
+		currentRow.putAll(DataUtils.getTestRow());
+		Response resp;
+		if (currentRow.get("RoundRobin").equalsIgnoreCase("true")) {
+			resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(jobj.toString()).put(getRoundRobinGETURL() + "/" + getAlertID()).andReturn();
+			scenario.write("PUT URL : ===================================================== : " + getRoundRobinGETURL());
+		}
+		else {
+		
+			resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).body(jobj.toString()).put(getURL() + "/" + getAlertID()).andReturn();
+			scenario.write("PUT URL : ===================================================== : " + getURL());
+		}
+		
+		currentTime = JunoAlertingUtils.getCurrentTime("America/Los_Angeles");		//Response resps = RestAssured.given().contentType("application/json").body(jobj.toString()).get("").andReturn();
+		scenario.write("Response Body For PUT : ===================================================== : " + resp.getBody().asString());
+		scenario.write("StatusCode : ===================================================== : " + resp.getStatusCode());
+		Reporter.log("Send PUT command");
+		Reporter.log("Status Code \n" + resp.getStatusCode());
+		Reporter.log("Status Body \n" + resp.getBody().asString());
+		Reporter.log("Time taken to get response is \n" + resp.getTime()+" milli second");
+			
+		setStatusCode(resp.getStatusCode());
+		JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+		JsonObject  jobject = jelement.getAsJsonObject();
+
+		System.out.println("Status =====================================================" + jobject.get("status") );
+		setApiStatusID(jobject.get("status").toString());
+		
+		
+		//JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
+		//JsonObject  jobject = jelement.getAsJsonObject();
+		int apiStatusID = resp.getStatusCode();
+		Reporter.log("Status Code is " + resp.getStatusCode());
+		Assert.assertEquals(apiStatusID, 202, "Update alert API execution failed, the api status ID is " + apiStatusID + ", Expected status ID is 202");
+
+    }
+
+    @Given("^I wait for snooze to expire$")
+    public void i_wait_for_snooze_to_expire() throws Throwable {
+       Thread.sleep(30000);
+    }
 	
 }
