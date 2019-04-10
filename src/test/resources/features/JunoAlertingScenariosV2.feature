@@ -140,3 +140,26 @@ Then I verify create api status code is 400 for SUSPENDED resources
 Examples:
 |TestCase|
 |Sus205|
+
+
+
+@V2PlatformClientSitePartnerAlert
+Scenario Outline: Verify for a create alert api for SQL Conditions -- Partner Level / Site Level / Client Level
+Given "PlatformClientSitePartnerAlert" : "<TestCase>" : I trigger create alert API for PlatformClientSitePartnerAlert level
+Then AlertID should get generated for PlatformClientSitePartnerAlert level
+And I trigger GetAPI to verify alerts exists for PlatformClientSitePartnerAlert level
+
+And I trigger update alert API for validating snooze for PlatformClientSitePartnerAlert level
+Then I verify update api status code is 202 for snooze for PlatformClientSitePartnerAlert level
+Then I verify update api response code is 207 for snooze for PlatformClientSitePartnerAlert level
+And I wait for snooze to expire for PlatformClientSitePartnerAlert level
+
+And I trigger update alert API for PlatformClientSitePartnerAlert level
+And I trigger auto close alert API for PlatformClientSitePartnerAlert level
+Examples:
+|TestCase|
+|Platform009|
+#|Platform419|
+#|Platform420|
+#|Platform421|
+#|Platform422|
