@@ -23,10 +23,10 @@ Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert AP
 Then AlertID should get generated
 And I trigger GetAPI to verify alerts exists
 
-And I trigger update alert API for validating snooze
-Then I verify update api status code is 202 for snooze
-Then I verify update api response code is 207 for snooze
-And I wait for snooze to expire
+#And I trigger update alert API for validating snooze
+#Then I verify update api status code is 202 for snooze
+#Then I verify update api response code is 207 for snooze
+#And I wait for snooze to expire
 
 And I trigger update alert API
 And I trigger auto close alert API
@@ -52,10 +52,10 @@ Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert AP
 Then AlertID should get generated
 And I trigger GetAPI to verify alerts exists
 
-And I trigger update alert API for validating snooze
-Then I verify update api status code is 202 for snooze
-Then I verify update api response code is 207 for snooze
-And I wait for snooze to expire
+#And I trigger update alert API for validating snooze
+#Then I verify update api status code is 202 for snooze
+#Then I verify update api response code is 207 for snooze
+#And I wait for snooze to expire
 
 And I trigger update alert API
 And I trigger auto close alert API
@@ -73,10 +73,10 @@ Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert AP
 Then AlertID should get generated
 And I trigger GetAPI to verify alerts exists
 
-And I trigger update alert API for validating snooze
-Then I verify update api status code is 202 for snooze
-Then I verify update api response code is 207 for snooze
-And I wait for snooze to expire
+#And I trigger update alert API for validating snooze
+#Then I verify update api status code is 202 for snooze
+#Then I verify update api response code is 207 for snooze
+#And I wait for snooze to expire
 
 And I trigger update alert API
 And I trigger auto close alert API
@@ -94,10 +94,10 @@ Given "PlatformAlertingCreateAlertV2" : "<TestCase>" : I trigger create alert AP
 Then AlertID should get generated
 And I trigger GetAPI to verify alerts exists
 
-And I trigger update alert API for validating snooze
-Then I verify update api status code is 202 for snooze
-Then I verify update api response code is 207 for snooze
-And I wait for snooze to expire
+#And I trigger update alert API for validating snooze
+#Then I verify update api status code is 202 for snooze
+#Then I verify update api response code is 207 for snooze
+#And I wait for snooze to expire
 
 And I trigger update alert API
 And I trigger auto close alert API
