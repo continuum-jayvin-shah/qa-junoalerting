@@ -143,7 +143,7 @@ Examples:
 
 
 
-@V2PlatformClientSitePartnerAlert
+@V2Regression
 Scenario Outline: Verify for a create alert api for SQL Conditions -- Partner Level / Site Level / Client Level
 Given "PlatformClientSitePartnerAlert" : "<TestCase>" : I trigger create alert API for PlatformClientSitePartnerAlert level
 Then AlertID should get generated for PlatformClientSitePartnerAlert level
@@ -158,8 +158,8 @@ And I trigger update alert API for PlatformClientSitePartnerAlert level
 And I trigger auto close alert API for PlatformClientSitePartnerAlert level
 Examples:
 |TestCase|
-|Platform009|
-#|Platform419|
-#|Platform420|
+|Platform010|
+|Platform011|
+|Platform012|
 #|Platform421|
 #|Platform422|
