@@ -1831,7 +1831,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 		}
 		
 		JsonObject albums = new JsonObject();
-		albums.addProperty("resourceId", Integer.parseInt(currentRow.get("resourceId")));
+		//albums.addProperty("resourceId", Integer.parseInt(currentRow.get("resourceId")));
 		albums.addProperty("conditionId", Integer.parseInt(currentRow.get("conditionId")));
 
 		if (Integer.parseInt(currentRow.get("conditionId"))==17054) {
