@@ -144,7 +144,7 @@ Examples:
 
 
 @V2Regression
-Scenario Outline: Verify for a create alert api for SQL Conditions -- Partner Level / Site Level / Client Level
+Scenario Outline: Verify for a create alert api for Windows Service Conditions -- Site Level
 Given "PlatformClientSitePartnerAlert" : "<TestCase>" : I trigger create alert API for PlatformClientSitePartnerAlert level
 Then AlertID should get generated for PlatformClientSitePartnerAlert level
 And I trigger GetAPI to verify alerts exists for PlatformClientSitePartnerAlert level
@@ -159,7 +159,37 @@ And I trigger auto close alert API for PlatformClientSitePartnerAlert level
 Examples:
 |TestCase|
 |Platform010|
+
+@V2Regression
+Scenario Outline: Verify for a create alert api for Windows Service Conditions -- Client Level
+Given "PlatformClientSitePartnerAlert" : "<TestCase>" : I trigger create alert API for PlatformClientSitePartnerAlert level
+Then AlertID should get generated for PlatformClientSitePartnerAlert level
+And I trigger GetAPI to verify alerts exists for PlatformClientSitePartnerAlert level
+
+And I trigger update alert API for validating snooze for PlatformClientSitePartnerAlert level
+Then I verify update api status code is 202 for snooze for PlatformClientSitePartnerAlert level
+Then I verify update api response code is 207 for snooze for PlatformClientSitePartnerAlert level
+And I wait for snooze to expire for PlatformClientSitePartnerAlert level
+
+And I trigger update alert API for PlatformClientSitePartnerAlert level
+And I trigger auto close alert API for PlatformClientSitePartnerAlert level
+Examples:
+|TestCase|
 |Platform011|
+
+@V2Regression
+Scenario Outline: Verify for a create alert api for Windows Service Conditions -- Partner Level
+Given "PlatformClientSitePartnerAlert" : "<TestCase>" : I trigger create alert API for PlatformClientSitePartnerAlert level
+Then AlertID should get generated for PlatformClientSitePartnerAlert level
+And I trigger GetAPI to verify alerts exists for PlatformClientSitePartnerAlert level
+
+And I trigger update alert API for validating snooze for PlatformClientSitePartnerAlert level
+Then I verify update api status code is 202 for snooze for PlatformClientSitePartnerAlert level
+Then I verify update api response code is 207 for snooze for PlatformClientSitePartnerAlert level
+And I wait for snooze to expire for PlatformClientSitePartnerAlert level
+
+And I trigger update alert API for PlatformClientSitePartnerAlert level
+And I trigger auto close alert API for PlatformClientSitePartnerAlert level
+Examples:
+|TestCase|
 |Platform012|
-#|Platform421|
-#|Platform422|
