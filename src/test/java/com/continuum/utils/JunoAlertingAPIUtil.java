@@ -101,7 +101,7 @@ public class JunoAlertingAPIUtil {
 					SendReport.buildNo = versionNumber;
 					System.out.println(versionNumber);
 				}
-				else if(environment.equals("DT")){
+				else if(environment.equals("INT")){
 					Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get("http://internal-intplatformalertingservice-1115287148.ap-south-1.elb.amazonaws.com/alerting/version").andReturn();
 					JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
 					JsonObject  jobject = jelement.getAsJsonObject();
