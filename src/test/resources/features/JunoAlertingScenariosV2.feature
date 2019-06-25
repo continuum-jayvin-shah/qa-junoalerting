@@ -131,7 +131,7 @@ Examples:
 |ErrorCode103|
 
 
-@V2Regression
+#@V2Regression
 Scenario Outline: Verify Error Code 400 with 205  for create Alert api response for SUSPENDED resource ID -C4475876,C4475880,C4475884,C4476566,C4501335,C4501339,C4503375,C4503379,C4503383,C4501343,C4502018,C4502023
 Given "CodesValidationV2" : "<TestCase>" : I trigger create alert API request with SUSPENDED resource ID
 Then I verify create api response code is 205 for SUSPENDED resource ID
