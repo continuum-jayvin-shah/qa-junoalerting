@@ -1,8 +1,17 @@
 package com.continuum.utils;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.json.simple.JSONObject;
+import org.testng.Assert;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -13,13 +22,221 @@ import com.google.gson.JsonObject;
 /*import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;*/
 import com.google.gson.JsonParser;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
 
 import continuum.cucumber.testRunner.SendReport;
+import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.ConnectionConfig;
+import io.restassured.config.EncoderConfig;
+import io.restassured.config.RestAssuredConfig;
+import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class JunoAlertingAPIUtil {
 
+	public static Response postWithQueryParameters(String authToken, Map queryParameters, String URI) {
+		Response res = setAuthToken(authToken).params(queryParameters).when().post(URI);
+		return res;
+	}
+
+	public static String generateURIWithPathParameter(String URI, Object param) {
+		String s1 = URI;
+		String s2 = s1.replace("{pathParameter}", param.toString());
+		return s2;
+	}
+
+	public static RequestSpecification setAuthToken(String authToken) {
+		return given().log().all().headers("iPlanetDirectoryPro", authToken);
+	}
+
+	public static void verifyStatusCode(Response res, int expectedStatusCode) {
+		int status = res.getStatusCode();
+		res.then().assertThat().statusCode(expectedStatusCode);
+	}
+
+	public static RequestSpecification setFormParameters(String formParametersJson) {
+
+		String APIBody = formParametersJson;
+		RequestSpecBuilder builder = new RequestSpecBuilder();
+		builder.setBody(APIBody);
+		builder.setContentType(ContentType.JSON);
+		RequestSpecification requestSpec = builder.build();
+		requestSpec.log();
+		return requestSpec;
+
+	}
+
+	public static Response postWithFormParameters(String authToken, String formParametersJson, String URI) {
+		Response res = setAuthToken(authToken).spec(setFormParameters(formParametersJson)).when().post(URI);
+		return res;
+	}
+
+	public static Response postWithFormParameters(String formParametersJson, String URI) {
+		
+		Response res = given().log().all().spec(setFormParameters(formParametersJson)).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().post(URI).andReturn();
+		return res;
+	}
+	
+	public static Response putWithFormParameters(String formParametersJson, String URI) {
+		
+		Response res = given().log().all().spec(setFormParameters(formParametersJson)).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().put(URI).andReturn();
+		return res;
+	}
+
+	public static Response getWithBody(JSONObject formParametersJson, String URI) {
+		ConnectionConfig connectionConfig = new ConnectionConfig();
+		connectionConfig.closeIdleConnectionsAfterEachResponseAfter(5, TimeUnit.MINUTES);
+		System.out.println(formParametersJson);
+		// Response res =
+		// given().spec(setFormParameters(formParametersJson)).when().get("");
+		// Response res =
+		// given().spec(setFormParameters(formParametersJson)).when().get(URI);
+		Response res = given().contentType(ContentType.JSON).body(formParametersJson).when().get(URI);
+
+		return res;
+	}
+
+	public static Response postWithNoBody(String URI) {
+		Response res = given().log().all().header("Content-Type","application/json").log().all().when().post(URI);
+		return res;
+	}
+
+	public static Response postWithNoBody(String URI, String authToken) {
+		Response res = setAuthToken(authToken).contentType(ContentType.JSON).when().post(URI);
+		return res;
+	}
+
+	public static Response getWithQueryparameters(String URI, Map queryParameters) {
+		Response res = given().log().all().params(queryParameters).when().get(URI);
+		return res;
+	}
+
+	public static Response getWithQueryparameters(String URI, String authToken, Map queryParameters) {
+		Response res = setAuthToken(authToken).params(queryParameters).when().get(URI);
+		return res;
+	}
+
+	public static Response putWithQueryparameters(String authToken, Map queryParameters, String URI) {
+		Response res = setAuthToken(authToken).params(queryParameters).when().put(URI);
+		return res;
+	}
+
+	public static Response getWithPathParameters(String authToken, String URI) {
+		Response res = setAuthToken(authToken).when().get(URI);
+		return res;
+	}
+
+	public static Response getWithNoParameters(String URI) {
+		Response res = given().log().all().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().get(URI);
+		return res;
+	}
+
+	public static Response getWithNoParameters(String URI, String authToken) {
+		Response res = setAuthToken(authToken).when().get(URI);
+		return res;
+	}
+
+	public static Response putWithFormParameters(String authToken, String formParametersJson, String URI) {
+		Response res = setAuthToken(authToken).spec(setFormParameters(formParametersJson)).when().put(URI);
+		return res;
+	}
+
+	public static Response putWithPathParameters(String authToken, String URI) {
+		Response res = setAuthToken(authToken).when().put(URI);
+		return res;
+	}
+
+	public static Response deleteWithPathParameters(String authToken, String URI) {
+		Response res = setAuthToken(authToken).when().delete(URI);
+		return res;
+	}
+
+	public static Response deletePathParameters(String URI) {
+		Response res = given().log().all().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().delete(URI);
+		return res;
+	}
+
+	/*
+	 * 
+	 */
+	public static void verifyNodevalue(Response res, String node, Object expectedNodeValue) {
+		res.then().body(node, equalTo(expectedNodeValue));
+
+	}
+
+	public static void verifyNodeExists(Response res, String node) {
+		Assert.assertEquals(isNodePresent(res, node), true);
+	}
+
+	public static boolean VerifyStringContains(String str, String subStr, boolean caseSensitive) {
+		if (caseSensitive) {
+			if (str.contains(subStr)) {
+			}
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public static boolean isNodePresent(Response res, String node) {
+		JsonPath j = new JsonPath(res.asString());
+		if (j.getJsonObject(node) == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	public static void assertNodePresent(Response res, String node) {
+		Assert.assertEquals(isNodePresent(res, node), true);
+	}
+
+	public static void assertNodeNotPresent(String node, Response res) {
+		Assert.assertEquals(isNodePresent(res, node), false);
+	}
+
+	public static Object getNodeValue(Response res, String node) {
+		String json = res.asString();
+		return JsonPath.with(json).get(node);
+	}
+
+	public static List getNodeValues(Response res, String node) {
+		String json = res.asString();
+		return JsonPath.with(json).get(node);
+	}
+
+	public static boolean isInList(List li, Object o) {
+		return li.contains(o);
+	}
+
+	public static RequestSpecification setFormParameters() {
+		RequestSpecBuilder builder = new RequestSpecBuilder();
+		builder.setContentType("application/json; charset=UTF-8");
+		RequestSpecification requestSpec = builder.build();
+		// requestSpec.log().all();
+		return requestSpec;
+	}
+
+	public static Response postWithPathParameters(String authToken, String URI) {
+		Response res = setAuthToken(authToken).spec(setFormParameters()).when().post(URI);
+		return res;
+	}
+
+	public static Response deleteWithQueryParameters(String authToken, Map queryParameters, String URI) {
+		Response res = setAuthToken(authToken).params(queryParameters).when().delete(URI);
+		return res;
+	}
+
+	public static void wait(int timeInSec) throws InterruptedException {
+		Thread.sleep(10 * 1000);
+	}
 
 	public static String getJson(HashMap<String, String> dataObj) {
 		String json = null;
@@ -80,40 +297,50 @@ public class JunoAlertingAPIUtil {
 		currentRow.putAll(DataUtils.getTestRow());
 		inputJson = JunoAlertingAPIUtil.getJson(currentRow);
 		System.out.println(inputJson);
-		/*Response response = RestAssured.with().header("TokenID", "53H48H48H48H49H55H53H51")
-				.header("Integration", "Alert").contentType("application/json").body(inputJson)
-				.post("https://services.dtitsupport247.net/TicketService.svc/json/ticket/createticket");*/
-	//	System.out.println(response.getBody().asString());
+		/*
+		 * Response response = RestAssured.with().header("TokenID",
+		 * "53H48H48H48H49H55H53H51") .header("Integration",
+		 * "Alert").contentType("application/json").body(inputJson) .post(
+		 * "https://services.dtitsupport247.net/TicketService.svc/json/ticket/createticket"
+		 * );
+		 */
+		// System.out.println(response.getBody().asString());
 
 	}
-	
-	public void getAlertingMSVersionDetails(String environment){
-				//Get Version Number
-			if((SendReport.buildNo==null)){
-				
-				if (environment.equals("QA")){
-					Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get("http://internal-qaplatformalertingservice-1206480811.us-east-1.elb.amazonaws.com/alerting/version").andReturn();
-					JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
-					JsonObject  jobject = jelement.getAsJsonObject();
-	
-					
-					String versionNumber = jobject.get("BuildNumber").getAsString();
-					SendReport.buildNo = versionNumber;
-					System.out.println(versionNumber);
-				}
-				else if(environment.equals("INT")){
-					Response resp = RestAssured.given().log().all().contentType("application/json").config(com.jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.config.EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).get("http://internal-intplatformalertingservice-1115287148.ap-south-1.elb.amazonaws.com/alerting/version").andReturn();
-					JsonElement jelement = new JsonParser().parse(resp.getBody().asString());
-					JsonObject  jobject = jelement.getAsJsonObject();
-	
-					
-					String versionNumber = jobject.get("BuildNumber").getAsString();
-					SendReport.buildNo = versionNumber;
-					System.out.println(versionNumber);
-				}
 
-				
-			}
-	}
+	
+	  public void getAlertingMSVersionDetails(String environment){ //Get Version
+	 /* Number if((SendReport.buildNo==null)){
+	  
+	  if (environment.equals("QA")){ Response resp =
+	  RestAssured.given().log().all().contentType("application/json").config(com.
+	  jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.
+	  config.EncoderConfig.encoderConfig().
+	  appendDefaultContentCharsetToContentTypeIfUndefined(false))).get(
+	  "http://internal-qaplatformalertingservice-1206480811.us-east-1.elb.amazonaws.com/alerting/version"
+	  ).andReturn(); JsonElement jelement = new
+	  JsonParser().parse(resp.getBody().asString()); JsonObject jobject =
+	  jelement.getAsJsonObject();
+	  
+	  
+	  String versionNumber = jobject.get("BuildNumber").getAsString();
+	  SendReport.buildNo = versionNumber; System.out.println(versionNumber); } else
+	  if(environment.equals("INT")){ Response resp =
+	  RestAssured.given().log().all().contentType("application/json").config(com.
+	  jayway.restassured.RestAssured.config().encoderConfig(com.jayway.restassured.
+	  config.EncoderConfig.encoderConfig().
+	  appendDefaultContentCharsetToContentTypeIfUndefined(false))).get(
+	  "http://internal-intplatformalertingservice-1115287148.ap-south-1.elb.amazonaws.com/alerting/version"
+	  ).andReturn(); JsonElement jelement = new
+	  JsonParser().parse(resp.getBody().asString()); JsonObject jobject =
+	  jelement.getAsJsonObject();
+	  
+	  
+	  String versionNumber = jobject.get("BuildNumber").getAsString();
+	  SendReport.buildNo = versionNumber; System.out.println(versionNumber); } }*/
+	  
+	  
+	  }
+	 
 
 }
