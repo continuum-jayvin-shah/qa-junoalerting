@@ -174,6 +174,18 @@ public class JunoAlertingSteps{
 		assertTrue(AlertingAPITest.triggerChildDeleteAPIForBothParent());
 	}
 	
+	@Then("^I verify If alert is Created in JAS$")
+	public void i_verify_If_alert_is_Created_in_JAS() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertTrue(AlertingAPITest.verifyAlertCreationInJAS());
+	}
+
+	@Then("^I verify If alert is Deleted in JAS$")
+	public void i_verify_If_alert_is_Deleted_in_JAS() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertTrue(AlertingAPITest.verifyAlertDeletionInJAS());
+	}
+	
 	@After
 	public void completeScenario(Scenario scenario) {
 		

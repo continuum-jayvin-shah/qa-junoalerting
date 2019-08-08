@@ -24,20 +24,15 @@ import com.jayway.restassured.response.Response;*/
 import com.google.gson.JsonParser;
 
 import continuum.cucumber.testRunner.SendReport;
-import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.ConnectionConfig;
 import io.restassured.config.EncoderConfig;
-import io.restassured.config.RestAssuredConfig;
 import io.restassured.http.ContentType;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 
 import static io.restassured.RestAssured.*;
-import static org.hamcrest.Matchers.*;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class JunoAlertingAPIUtil {
 
@@ -80,13 +75,13 @@ public class JunoAlertingAPIUtil {
 
 	public static Response postWithFormParameters(String formParametersJson, String URI) {
 		
-		Response res = given().log().all().spec(setFormParameters(formParametersJson)).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().post(URI).andReturn();
+		Response res = given().log().all().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().post(URI).andReturn();
 		return res;
 	}
 	
 	public static Response putWithFormParameters(String formParametersJson, String URI) {
 		
-		Response res = given().log().all().spec(setFormParameters(formParametersJson)).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().put(URI).andReturn();
+		Response res = given().log().all().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().put(URI).andReturn();
 		return res;
 	}
 

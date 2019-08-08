@@ -35,17 +35,22 @@ import net.sf.json.JSONSerializer;
 
 public class AlertingAPITest {
 
-	private static String alertingUrl, alertDetails, itsmUrl, testName, currentAlert;
+	private static String alertingUrl, alertDetails, itsmUrl, testName, currentAlert, jasUrl;
+	private static Response alertingResponse;
 	private static List<String> alertId = new ArrayList<String>();
-	private static JSONArray filterArray = new JSONArray();public static String getCurrentAlert() {
+	private static JSONArray filterArray = new JSONArray();
+	
+	public AlertingAPITest() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	public static String getCurrentAlert() {
 		return currentAlert;
 	}
 	public static void setCurrentAlert(String currentAlert) {
 		AlertingAPITest.currentAlert = currentAlert;
 	}
-	public AlertingAPITest() {
-		// TODO Auto-generated constructor stub
-	}
+	
 	public static JSONArray getFilterArray() {
 		return filterArray;
 	}
@@ -61,9 +66,6 @@ public class AlertingAPITest {
 	public static void setTestName(String testName) {
 		AlertingAPITest.testName = testName;
 	}
-
-	private static Response alertingResponse;
-	
 	
 	public static List<String> getAlertId() {
 		return alertId;
@@ -95,6 +97,21 @@ public class AlertingAPITest {
 
 	public static void setItsmUrl(String itsmUrl) {
 		AlertingAPITest.itsmUrl = itsmUrl;
+	}
+	
+	public static String getJasUrl() {
+		return jasUrl;
+	}
+	public static void setJasUrl(String jasUrl) {
+		AlertingAPITest.jasUrl = jasUrl;
+	}
+	
+	public Response getAlertDetailsResponse() {
+		return alertingResponse;
+	}
+
+	public static void setAlertDetailsResponse(Response alertingResponse) {
+		AlertingAPITest.alertingResponse = alertingResponse;
 	}
 	
 	public static boolean triggerCreateAPI(String testName){
@@ -267,9 +284,9 @@ public class AlertingAPITest {
 			HashMap<String, String> currentRow = new HashMap<String, String>();
 			
 			currentRow.putAll(DataUtils.getTestRow());
-			System.out.println("Getting Host URL:" + currentRow);
+			System.out.println("Getting Host URL:" + alertingUrl);
 			
-			if(!alertingUrl.contains("alertingservice")) {
+			if(!alertingUrl.contains("partners")) {
 
 			alertingUrl = alertingUrl + Utilities.getMavenProperties("AlertingUrlSchema")
 					.replace("{partners}", currentRow.get("partners"))
@@ -310,6 +327,7 @@ public class AlertingAPITest {
 			triggerDeleteAPI(currentAlert);		
 			if(alertingResponse.getStatusCode() == 204) {
 				alertId.remove(alertId.size()-1);
+				Thread.sleep(5000);
 				triggerCreateAPI(getTestName());
 				verifyCreateAPIResponse();
 				return true;
@@ -481,6 +499,88 @@ public class AlertingAPITest {
 
 	}
 	
+	public static boolean verifyAlertCreationInJAS() throws InterruptedException{
+		Thread.sleep(3000);
+		triggerJASGetAlertAPI();
+		try {
+		if(alertingResponse.getStatusCode() == 200) {
+				JSONObject jasResponse = (JSONObject) JSONSerializer.toJSON(alertingResponse.getBody().asString());
+				if(jasResponse.get("status").equals(1) && jasResponse.get("alertId").equals(currentAlert)) {
+					System.out.println("Alert Id " + currentAlert + " Created in JAS.");
+					return true;
+				}else {
+					System.out.println("ALert Id Not Created in JAS!!");
+					return false;
+				}
+				
+		}else {
+			System.out.println("Request to JAS Failed with Response Code : " + alertingResponse.getStatusCode());
+			return false;
+		}
+		}catch (Exception e) {
+			System.out.println("Failed to save JAS Response : " + e.getMessage());
+			return false;
+		}
+
+	}
+	
+	public static boolean verifyAlertDeletionInJAS() throws InterruptedException{
+		int i = 0;
+		while(i<10) {
+		Thread.sleep(10000);
+		triggerJASGetAlertAPI();
+		try {
+		if(alertingResponse.getStatusCode() == 404) {
+				JSONObject jasResponse = (JSONObject) JSONSerializer.toJSON(alertingResponse.getBody().asString());
+				if(jasResponse.get("status").equals(203)) {
+					System.out.println("Alert Id " + currentAlert + " Deleted from JAS.");
+					return true;
+				}else {
+					System.out.println("Alert Id Not Deleted from JAS!!");
+					return false;
+				}
+				
+		}else {
+			System.out.println("Delete Request Pending with Response Code : " + alertingResponse.getStatusCode());
+			i++;
+			continue;
+		}
+		}catch (Exception e) {
+			System.out.println("Failed to save JAS Response : " + e.getMessage());
+			return false;
+		}
+		}
+		System.out.println("Alert ID "+ currentAlert + " Not Deleted!!");
+		return false;
+	}
+	
+	public static void triggerJASGetAlertAPI(){
+		try {
+		jasPreProcessing();
+		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(jasUrl));
+		}catch(Exception e) {
+			e.printStackTrace();
+			System.out.println("ITSM Simulator API Call Failed With Error : " + e.getMessage());
+		}
+	}
+	
+	public static void jasPreProcessing() throws Exception{
+		
+		HashMap<String, String> currentRow = new HashMap<String, String>();
+		
+		currentRow.putAll(DataUtils.getTestRow());
+		
+		setJasUrl(Utilities.getMavenProperties("DTHostUrl"));		
+		System.out.println("Getting Host URL:" + jasUrl);	
+		
+		jasUrl = jasUrl + Utilities.getMavenProperties("JASUrlSchema")
+			.replace("{partners}", currentRow.get("partners"))
+			.replace("{sites}", currentRow.get("sites"))
+			.replace("{alert}", currentAlert);
+		
+		System.out.println(jasUrl);
+}
+	
 	public static boolean verifyITSMSimulatorResponse() throws InterruptedException{
 		
 		JsonPath filterPath = JsonPath.from(filterArray.toString());
@@ -584,13 +684,6 @@ public static boolean verifyITSMResponseForChildAlert() throws InterruptedExcept
 		//DatabaseUtility.getListByQuery(databaseName, sqlServerURL, username, password, query, column);
 	}*/
 
-	public Response getAlertDetailsResponse() {
-		return alertingResponse;
-	}
-
-	public static void setAlertDetailsResponse(Response alertingResponse) {
-		AlertingAPITest.alertingResponse = alertingResponse;
-	}
 	
 	public static void closeTest() {
 		alertId.clear();

@@ -1,6 +1,6 @@
 Feature: Auto Process Functionalities
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Under Research Windows/SQL Condition 
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -17,7 +17,7 @@ Examples:
 |UnderResearchWindows|
 |UnderResearchSQL|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for JAS Condition 
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -28,15 +28,16 @@ Then I verify If alert is Created in JAS
 Then I trigger DELETE API request on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I verify If alert is Deleted in JAS
-
+Then I get ITSM Simulator Response for Current Alert
+Then I verify If alert not reached till ITSM Simulator
 
 Examples:
 |TestCaseRow|
 |DM 2.0|
-|BDR|
+#|BDR|
 |Security|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Alerting 1.0 Condition 
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -52,7 +53,7 @@ Examples:
 |TestCaseRow|
 |ALerting 1.0|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Alerting 1.0 Condition with LegacyRegID
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -91,7 +92,7 @@ Examples:
 |PartnerLevel|
 
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Partner Level Alert 
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -108,7 +109,7 @@ Examples:
 |UnderResearchWindows|
 |UnderResearchSQL|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Filter Value Functionality
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -128,7 +129,7 @@ Examples:
 |TestCaseRow1|TestCaseRow2|
 |FilterValue1|FilterValue2|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Snooze Functionality
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -147,7 +148,7 @@ Examples:
 |TestCaseRow|
 |Snooze|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Remeditaion/FetchMoreData Functionality
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -180,7 +181,7 @@ Examples:
 |TestCaseRow|
 |Suspension|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Consolidation Functionality with 2 Child and 1 Parent
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -202,7 +203,7 @@ Examples:
 |TestCaseRow1|TestCaseRow2|TestCaseRow3|
 |Child1|Child2|Parent|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Consolidation Functionality with 2 Parent With Same ConditionID
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -231,7 +232,7 @@ Examples:
 |TestCaseRow1|TestCaseRow2|TestCaseRow3|TestCaseRow4|TestCaseRow5|
 |Child1|Child2|FilterChild1|FilterChild2|Parent|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Consolidation Functionality with 3 Child 1 Child Delete and 1 Parent
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
