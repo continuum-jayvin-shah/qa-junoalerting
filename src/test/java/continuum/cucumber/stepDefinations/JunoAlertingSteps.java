@@ -186,6 +186,12 @@ public class JunoAlertingSteps{
 		assertTrue(AlertingAPITest.verifyAlertDeletionInJAS());
 	}
 	
+	@Then("^I verify API response for Suspended Condition from Alert MS$")
+	public void i_verify_API_response_for_Suspended_Condition_from_Alert_MS() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertTrue(AlertingAPITest.verifyAlertSuspension());
+	}
+	
 	@After
 	public void completeScenario(Scenario scenario) {
 		

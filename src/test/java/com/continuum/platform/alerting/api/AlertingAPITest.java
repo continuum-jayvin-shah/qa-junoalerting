@@ -329,8 +329,7 @@ public class AlertingAPITest {
 				alertId.remove(alertId.size()-1);
 				Thread.sleep(5000);
 				triggerCreateAPI(getTestName());
-				verifyCreateAPIResponse();
-				return true;
+				return verifyCreateAPIResponse();
 			}else {
 				System.out.println("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
 				return false;
@@ -343,6 +342,43 @@ public class AlertingAPITest {
 			return true;
 		}else {
 			System.out.println("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
+			return false;
+		}
+		}catch (Exception e) {
+		System.out.println("Alert Verification Failed with Error Message : " + e.getMessage());
+		return false;
+		}
+
+	}
+	
+	public static boolean verifyAlertSuspension(){
+
+		try {
+		if(alertingResponse.getStatusCode() == 409) {
+			System.out.println(alertingResponse.getBody().asString());
+			setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
+			setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
+			triggerDeleteAPI(currentAlert);		
+			if(alertingResponse.getStatusCode() == 204) {
+				alertId.remove(alertId.size()-1);
+				Thread.sleep(5000);
+				triggerCreateAPI(getTestName());
+				return verifyAlertSuspension();
+			}else {
+				System.out.println("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+				return false;
+			}		
+		}else if(alertingResponse.getStatusCode() == 400) {
+			System.out.println(alertingResponse.getBody().asString());
+			JSONObject suspensionResponse = (JSONObject)JSONSerializer.toJSON(alertingResponse.getBody().asString());
+			if(suspensionResponse.getInt("status") == 205) {
+			System.out.println("Alert Not Created because of suspension with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
+			return true;
+			}
+			System.out.println("Alert Not Created with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
+			return false;
+		}else {
+			System.out.println("Alert Created with Response Code : " + alertingResponse.getStatusCode());
 			return false;
 		}
 		}catch (Exception e) {
@@ -454,8 +490,17 @@ public class AlertingAPITest {
 				.replace("{partners}", currentRow.get("partners"))
 				.replace("{clients}", currentRow.get("clients"))
 				.replace("{sites}", currentRow.get("sites"))
-				.replace("{conditionId}", currentRow.get("conditionId"))
-				.replace("//", "/0/");
+				.replace("{conditionId}", currentRow.get("conditionId"));
+			
+			if(currentRow.get("endpoints").isEmpty()) {
+				if(currentRow.get("sites").isEmpty()) {
+					if(currentRow.get("clients").isEmpty()) {
+						itsmUrl = itsmUrl.replace("clients//sites//", "");
+					}else {
+						itsmUrl = itsmUrl.replace("sites//", "");
+					}
+				}
+			}
 		
 		}else {
 			
@@ -472,6 +517,18 @@ public class AlertingAPITest {
 			.replace("{clients}", currentRow.get("clients"))
 			.replace("{sites}", currentRow.get("sites"))
 			.replace("{conditionId}", currentRow.get("conditionId"));
+			
+			if(currentRow.get("endpoints").isEmpty()) {
+				if(currentRow.get("sites").isEmpty()) {
+					if(currentRow.get("clients").isEmpty()) {
+						itsmUrl = itsmUrl.replace("", "");
+					}else {
+						itsmUrl = itsmUrl.replace("", "");
+					}
+				}else {
+					itsmUrl = itsmUrl.replace("", "");
+				}
+			}
 			
 		}
 		
