@@ -1,32 +1,16 @@
 package com.continuum.platform.alerting.api;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
-import javax.sql.rowset.serial.SerialJavaObject;
-
 import org.apache.log4j.Logger;
-import org.testng.Assert;
 
 import com.continuum.utils.DataUtils;
 import com.continuum.utils.JsonRespParserUtility;
 import com.continuum.utils.JunoAlertingAPIUtil;
 
-/*import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
- */
-import continuum.cucumber.DatabaseUtility;
 import continuum.cucumber.Utilities;
-import continuum.cucumber.webservices.RestServicesUtility;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import net.sf.json.JSON;
@@ -631,10 +615,10 @@ public class AlertingAPITest {
 		
 		setJasUrl(Utilities.getMavenProperties("DTHostUrl"));		
 		logger.debug("Getting Host URL:" + jasUrl);	
-		
 		jasUrl = jasUrl + Utilities.getMavenProperties("JASUrlSchema")
 			.replace("{partners}", currentRow.get("partners"))
 			.replace("{sites}", currentRow.get("sites"))
+			.replace("{clients}", currentRow.get("clients"))
 			.replace("{alert}", currentAlert);
 		
 		logger.debug(jasUrl);
