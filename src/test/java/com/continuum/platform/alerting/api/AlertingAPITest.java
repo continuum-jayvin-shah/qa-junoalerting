@@ -627,12 +627,13 @@ public class AlertingAPITest {
 		
 		currentRow.putAll(DataUtils.getTestRow());
 		
-		setJasUrl(Utilities.getMavenProperties("DTHostUrl"));		
+		setJasUrl(Utilities.getMavenProperties("DTHostUrlV1"));		
 		System.out.println("Getting Host URL:" + jasUrl);	
 		
 		jasUrl = jasUrl + Utilities.getMavenProperties("JASUrlSchema")
 			.replace("{partners}", currentRow.get("partners"))
 			.replace("{sites}", currentRow.get("sites"))
+			.replace("{clients}", currentRow.get("clients"))
 			.replace("{alert}", currentAlert);
 		
 		System.out.println(jasUrl);
