@@ -2,49 +2,27 @@ package continuum.cucumber.stepDefinations;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.HashMap;
-
-import org.json.simple.parser.ParseException;
-import org.openqa.selenium.support.ui.Sleeper;
-import org.testng.Assert;
+import org.apache.log4j.Logger;
 import org.testng.Reporter;
 
-import com.continuum.platform.alerting.api.AlertDetailAPITest;
 import com.continuum.platform.alerting.api.AlertingAPITest;
 import com.continuum.utils.DataUtils;
-import com.continuum.utils.JunoAlertingUtils;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import continuum.cucumber.DatabaseUtility;
 import continuum.cucumber.Utilities;
-import continuum.cucumber.testRunner.SendReport;
-import continuum.cucumber.webservices.JSonAssertionUtility;
-import continuum.cucumber.webservices.JsonUtility;
-import continuum.cucumber.webservices.RestAssuredUtility;
-import continuum.noc.pages.AuvikPageFactory;
-import continuum.noc.pages.NewAlertingMSPageFactory;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
-import cucumber.api.java.en.When;
-import io.restassured.RestAssured;
-import io.restassured.response.Response;
 
 public class JunoAlertingSteps{
+	
+	private Logger logger = Logger.getLogger(this.getClass());
 	
 	@Before
 	public void readScenario(Scenario scenario) {
 		
-		System.out.println("Scenario Name :" + scenario.getName());
+		logger.debug("Scenario Name :" + scenario.getName());
 		Reporter.log("<b><i><font color='Blue'>====== Scenario Name: ====="+ scenario.getName()+"</font></i></b>");
 		String environment = Utilities.getMavenProperties("Environment").trim();
 		DataUtils.setFileName("TestData_" + environment + ".xls");
@@ -195,9 +173,8 @@ public class JunoAlertingSteps{
 	@After
 	public void completeScenario(Scenario scenario) {
 		
-		System.out.println("Scenario Name :" + scenario.getName() + "Status :" + scenario.getStatus());
+		logger.debug("Scenario Name :" + scenario.getName() + "Status :" + scenario.getStatus());
 		Reporter.log("<b><i><font color='Blue'>====== Scenario Name: ====="+ scenario.getName()+"</font></i></b>");
 		AlertingAPITest.closeTest();
 	}
-	
 }

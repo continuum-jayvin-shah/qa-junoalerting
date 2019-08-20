@@ -14,6 +14,7 @@ import java.util.List;
 
 import javax.sql.rowset.serial.SerialJavaObject;
 
+import org.apache.log4j.Logger;
 import org.testng.Assert;
 
 import com.continuum.utils.DataUtils;
@@ -35,6 +36,7 @@ import net.sf.json.JSONSerializer;
 
 public class AlertingAPITest {
 
+	private static Logger logger = Logger.getLogger(AlertingAPITest.class);
 	private static String alertingUrl, alertDetails, itsmUrl, testName, currentAlert, jasUrl;
 	private static Response alertingResponse;
 	private static List<String> alertId = new ArrayList<String>();
@@ -118,12 +120,12 @@ public class AlertingAPITest {
 		try {
 		setTestName(testName);
 		preProcessing(getTestName());
-		System.out.println("Alert Details : " + alertDetails);
+		logger.debug("Alert Details : " + alertDetails);
 		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(alertDetails, alertingUrl));
 		return true;
 		}catch(Exception e) {
 			e.printStackTrace();
-			System.out.println("Alert Creation Failed with Error Message : " + e.getMessage());
+			logger.debug("Alert Creation Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 	}
@@ -137,13 +139,13 @@ public class AlertingAPITest {
 		JSONArray alerts = new JSONArray();
 		alerts.addAll(alertId);
 		parentAlertDetails.put("alerts", alerts);
-		System.out.println(parentAlertDetails.toString());
+		logger.debug(parentAlertDetails.toString());
 		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingUrl));
 		Thread.sleep(3000);
 		return true;
 		}catch(Exception e) {
 			e.printStackTrace();
-			System.out.println("Parent Alert Creation Failed with Error Message : " + e.getMessage());
+			logger.debug("Parent Alert Creation Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 	}
@@ -159,27 +161,27 @@ public class AlertingAPITest {
 			alerts.add(alertId.get(i));
 			alerts.add(alertId.get(i+1));
 			parentAlertDetails.put("alerts", alerts);
-			System.out.println(parentAlertDetails.toString());
+			logger.debug(parentAlertDetails.toString());
 			AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingUrl));
 			Thread.sleep(3000);
 			if(alertingResponse.getStatusCode() == 201) {
-				System.out.println(alertingResponse.getBody().asString());
+				logger.debug(alertingResponse.getBody().asString());
 				setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
 				setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
-				System.out.println("Alert Created : " + getCurrentAlert());
+				logger.debug("Alert Created : " + getCurrentAlert());
 				i++;
 			}else if(alertingResponse.getStatusCode() == 409){
-				System.out.println("Parent Alert not Created with Error Conflict");
+				logger.debug("Parent Alert not Created with Error Conflict");
 				return false;
 			}else {
-				System.out.println("Parent Alert no created with Response Code : " + alertingResponse.getStatusCode());
+				logger.debug("Parent Alert no created with Response Code : " + alertingResponse.getStatusCode());
 				return false;
 			}
 		}
 		return true;
 		}catch(Exception e) {
 			e.printStackTrace();
-			System.out.println("Parent Alert Creation Failed with Error Message : " + e.getMessage());
+			logger.debug("Parent Alert Creation Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 	}
@@ -187,12 +189,12 @@ public class AlertingAPITest {
 	public static boolean triggerUpdateAPI(){
 		try {
 		preProcessing(getTestName());
-		System.out.println("Alert Details : " + alertDetails);
+		logger.debug("Alert Details : " + alertDetails);
 		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(alertDetails, alertingUrl + "/" + getCurrentAlert()));
 		return true;
 		}catch(Exception e) {
 			e.printStackTrace();
-			System.out.println("Alert Updation Failed with Error Message : " + e.getMessage());
+			logger.debug("Alert Updation Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 	}
@@ -202,16 +204,16 @@ public class AlertingAPITest {
 		for(int i=0; i<alertId.size();i++) {
 		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingUrl + "/" + alertId.get(i)));
 			if(alertingResponse.getStatusCode() != 204) {
-				System.out.println("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+				logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
 				return false;
 			}
-			System.out.println("Alert Deleted : " + alertId.get(i));
+			logger.debug("Alert Deleted : " + alertId.get(i));
 		}
-		System.out.println("Alerts Deleted!!");
+		logger.debug("Alerts Deleted!!");
 		return true;
 		
 		}catch (Exception e) {
-			System.out.println("Alert Deletion Failed with Error Message : " + e.getMessage());
+			logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 
@@ -222,17 +224,17 @@ public class AlertingAPITest {
 		for(int i=0; i<alertId.size()-1;i++) {
 		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingUrl + "/" + alertId.get(i)));
 			if(alertingResponse.getStatusCode() != 204) {
-				System.out.println("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+				logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
 				return false;
 			}
-			System.out.println("Alert Deleted : " + alertId.get(i));
+			logger.debug("Alert Deleted : " + alertId.get(i));
 			Thread.sleep(2000);
 		}
-		System.out.println("Alerts Deleted!!");
+		logger.debug("Alerts Deleted!!");
 		return true;
 		
 		}catch (Exception e) {
-			System.out.println("Alert Deletion Failed with Error Message : " + e.getMessage());
+			logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 
@@ -243,17 +245,17 @@ public class AlertingAPITest {
 		for(int i=0; i<alertId.size()-2;i++) {
 		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingUrl + "/" + alertId.get(i)));
 			if(alertingResponse.getStatusCode() != 204) {
-				System.out.println("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+				logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
 				return false;
 			}
-			System.out.println("Alert Deleted : " + alertId.get(i));
+			logger.debug("Alert Deleted : " + alertId.get(i));
 			Thread.sleep(2000);
 		}
-		System.out.println("Alerts Deleted!!");
+		logger.debug("Alerts Deleted!!");
 		return true;
 		
 		}catch (Exception e) {
-			System.out.println("Alert Deletion Failed with Error Message : " + e.getMessage());
+			logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 
@@ -263,14 +265,14 @@ public class AlertingAPITest {
 		try {
 		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingUrl + "/" + alertID));
 			if(alertingResponse.getStatusCode() != 204) {
-				System.out.println("Alert ID Deletion Failed for : " + alertID + "with Response Code : " + alertingResponse.getStatusCode());
+				logger.debug("Alert ID Deletion Failed for : " + alertID + "with Response Code : " + alertingResponse.getStatusCode());
 				return false;
 			}
-		System.out.println("Alert Deleted : " + alertID);
+		logger.debug("Alert Deleted : " + alertID);
 		return true;
 		
 		}catch (Exception e) {
-			System.out.println("Alert Deletion Failed with Error Message : " + e.getMessage());
+			logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 
@@ -279,12 +281,12 @@ public class AlertingAPITest {
 	public static void preProcessing(String testName) throws Exception{
 		
 			DataUtils.setTestRow("Test", testName);
-			System.out.println("Test Data Captured.");
+			logger.debug("Test Data Captured.");
 			
 			HashMap<String, String> currentRow = new HashMap<String, String>();
 			
 			currentRow.putAll(DataUtils.getTestRow());
-			System.out.println("Getting Host URL:" + alertingUrl);
+			logger.debug("Getting Host URL:" + alertingUrl);
 			
 			if(!alertingUrl.contains("partners")) {
 
@@ -313,7 +315,7 @@ public class AlertingAPITest {
 			
 			setAlertDetails(currentRow.get("alertDetails"));
 			
-			System.out.println(alertingUrl);
+			logger.debug(alertingUrl);
 		
 	}
 	
@@ -321,7 +323,7 @@ public class AlertingAPITest {
 
 		try {
 		if(alertingResponse.getStatusCode() == 409) {
-			System.out.println(alertingResponse.getBody().asString());
+			logger.debug(alertingResponse.getBody().asString());
 			setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
 			setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
 			triggerDeleteAPI(currentAlert);		
@@ -331,21 +333,21 @@ public class AlertingAPITest {
 				triggerCreateAPI(getTestName());
 				return verifyCreateAPIResponse();
 			}else {
-				System.out.println("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+				logger.debug("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
 				return false;
 			}		
 		}else if(alertingResponse.getStatusCode() == 201) {
-			System.out.println(alertingResponse.getBody().asString());
+			logger.debug(alertingResponse.getBody().asString());
 			setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
 			setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
-			System.out.println("Alert Created : " + getCurrentAlert());
+			logger.debug("Alert Created : " + getCurrentAlert());
 			return true;
 		}else {
-			System.out.println("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
+			logger.debug("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
 			return false;
 		}
 		}catch (Exception e) {
-		System.out.println("Alert Verification Failed with Error Message : " + e.getMessage());
+		logger.debug("Alert Verification Failed with Error Message : " + e.getMessage());
 		return false;
 		}
 
@@ -355,7 +357,7 @@ public class AlertingAPITest {
 
 		try {
 		if(alertingResponse.getStatusCode() == 409) {
-			System.out.println(alertingResponse.getBody().asString());
+			logger.debug(alertingResponse.getBody().asString());
 			setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
 			setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
 			triggerDeleteAPI(currentAlert);		
@@ -365,24 +367,24 @@ public class AlertingAPITest {
 				triggerCreateAPI(getTestName());
 				return verifyAlertSuspension();
 			}else {
-				System.out.println("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+				logger.debug("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
 				return false;
 			}		
 		}else if(alertingResponse.getStatusCode() == 400) {
-			System.out.println(alertingResponse.getBody().asString());
+			logger.debug(alertingResponse.getBody().asString());
 			JSONObject suspensionResponse = (JSONObject)JSONSerializer.toJSON(alertingResponse.getBody().asString());
 			if(suspensionResponse.getInt("status") == 205) {
-			System.out.println("Alert Not Created because of suspension with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
+			logger.debug("Alert Not Created because of suspension with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
 			return true;
 			}
-			System.out.println("Alert Not Created with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
+			logger.debug("Alert Not Created with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
 			return false;
 		}else {
-			System.out.println("Alert Created with Response Code : " + alertingResponse.getStatusCode());
+			logger.debug("Alert Created with Response Code : " + alertingResponse.getStatusCode());
 			return false;
 		}
 		}catch (Exception e) {
-		System.out.println("Alert Verification Failed with Error Message : " + e.getMessage());
+		logger.debug("Alert Verification Failed with Error Message : " + e.getMessage());
 		return false;
 		}
 
@@ -392,21 +394,21 @@ public class AlertingAPITest {
 
 		try {
 		if(alertingResponse.getStatusCode() == 409) {
-			System.out.println(alertingResponse.getBody().asString());
-			System.out.println("New ALert is not getting created, Getting Conflict : " + alertingResponse.getStatusCode());
+			logger.debug(alertingResponse.getBody().asString());
+			logger.debug("New ALert is not getting created, Getting Conflict : " + alertingResponse.getStatusCode());
 			return false;		
 		}else if(alertingResponse.getStatusCode() == 201) {
-			System.out.println(alertingResponse.getBody().asString());
+			logger.debug(alertingResponse.getBody().asString());
 			setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
 			setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
-			System.out.println("Alert Created : " + getCurrentAlert());
+			logger.debug("Alert Created : " + getCurrentAlert());
 			return true;
 		}else {
-			System.out.println("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
+			logger.debug("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
 			return false;
 		}
 		}catch (Exception e) {
-		System.out.println("Alert Verification Failed with Error Message : " + e.getMessage());
+		logger.debug("Alert Verification Failed with Error Message : " + e.getMessage());
 		return false;
 		}
 
@@ -416,15 +418,15 @@ public class AlertingAPITest {
 
 		try {
 		if(alertingResponse.getStatusCode() == 204) {
-				System.out.println("Update of Alert Done with Status Code : " + alertingResponse.getStatusCode());
+				logger.debug("Update of Alert Done with Status Code : " + alertingResponse.getStatusCode());
 				return true;
 		}else {
-			System.out.println("Alert Not Updated with Response Code : " + alertingResponse.getStatusCode());
-			System.out.println("Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+			logger.debug("Alert Not Updated with Response Code : " + alertingResponse.getStatusCode());
+			logger.debug("Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
 			return false;
 		}
 		}catch (Exception e) {
-		System.out.println("Alert Updation Failed with Error Message : " + e.getMessage());
+		logger.debug("Alert Updation Failed with Error Message : " + e.getMessage());
 		return false;
 		}
 
@@ -434,16 +436,16 @@ public class AlertingAPITest {
 
 		try {
 		if(alertingResponse.getStatusCode() == 202) {
-				System.out.println("Update of Alert Snoozed Status Code : " + alertingResponse.getStatusCode());
+				logger.debug("Update of Alert Snoozed Status Code : " + alertingResponse.getStatusCode());
 				return true;
 		}else if (alertingResponse.getStatusCode() == 204){
-			System.out.println("Alert Updated during snooze period with Response Code : " + alertingResponse.getStatusCode());
+			logger.debug("Alert Updated during snooze period with Response Code : " + alertingResponse.getStatusCode());
 			return false;
 		}
-		System.out.println("Alert Update is giving Response Code : " + alertingResponse.getStatusCode());
+		logger.debug("Alert Update is giving Response Code : " + alertingResponse.getStatusCode());
 		return false;
 		}catch (Exception e) {
-		System.out.println("Alert Updation Failed with Error Message : " + e.getMessage());
+		logger.debug("Alert Updation Failed with Error Message : " + e.getMessage());
 		return false;
 		}
 
@@ -453,15 +455,15 @@ public class AlertingAPITest {
 
 		try {
 		if(alertingResponse.getStatusCode() == 204) {
-				System.out.println("Delete of Alert Done with Status Code : " + alertingResponse.getStatusCode());
+				logger.debug("Delete of Alert Done with Status Code : " + alertingResponse.getStatusCode());
 				return true;
 		}else {
-			System.out.println("Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode());
-			System.out.println("Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+			logger.debug("Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode());
+			logger.debug("Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
 			return false;
 		}
 		}catch (Exception e) {
-		System.out.println("Alert Deletion Failed with Error Message : " + e.getMessage());
+		logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
 		return false;
 		}
 
@@ -473,7 +475,7 @@ public class AlertingAPITest {
 		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(itsmUrl));
 		}catch(Exception e) {
 			e.printStackTrace();
-			System.out.println("ITSM Simulator API Call Failed With Error : " + e.getMessage());
+			logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
 		}
 	}
 	
@@ -482,7 +484,7 @@ public class AlertingAPITest {
 		HashMap<String, String> currentRow = new HashMap<String, String>();
 		
 		currentRow.putAll(DataUtils.getTestRow());
-		System.out.println("Getting Host URL:" + currentRow);
+		logger.debug("Getting Host URL:" + currentRow);
 		
 		if(!itsmUrl.contains("itsmsimulator")) {
 		
@@ -532,7 +534,7 @@ public class AlertingAPITest {
 			
 		}
 		
-		System.out.println(itsmUrl);
+		logger.debug(itsmUrl);
 	
 }
 	
@@ -546,11 +548,11 @@ public class AlertingAPITest {
 				setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
 				return true;
 		}else {
-			System.out.println("Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode());
+			logger.debug("Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode());
 			return false;
 		}
 		}catch (Exception e) {
-			System.out.println("Failed to save ITSM Response : " + e.getMessage());
+			logger.debug("Failed to save ITSM Response : " + e.getMessage());
 			return false;
 		}
 
@@ -563,19 +565,19 @@ public class AlertingAPITest {
 		if(alertingResponse.getStatusCode() == 200) {
 				JSONObject jasResponse = (JSONObject) JSONSerializer.toJSON(alertingResponse.getBody().asString());
 				if(jasResponse.get("status").equals(1) && jasResponse.get("alertId").equals(currentAlert)) {
-					System.out.println("Alert Id " + currentAlert + " Created in JAS.");
+					logger.debug("Alert Id " + currentAlert + " Created in JAS.");
 					return true;
 				}else {
-					System.out.println("ALert Id Not Created in JAS!!");
+					logger.debug("ALert Id Not Created in JAS!!");
 					return false;
 				}
 				
 		}else {
-			System.out.println("Request to JAS Failed with Response Code : " + alertingResponse.getStatusCode());
+			logger.debug("Request to JAS Failed with Response Code : " + alertingResponse.getStatusCode());
 			return false;
 		}
 		}catch (Exception e) {
-			System.out.println("Failed to save JAS Response : " + e.getMessage());
+			logger.debug("Failed to save JAS Response : " + e.getMessage());
 			return false;
 		}
 
@@ -590,24 +592,24 @@ public class AlertingAPITest {
 		if(alertingResponse.getStatusCode() == 404) {
 				JSONObject jasResponse = (JSONObject) JSONSerializer.toJSON(alertingResponse.getBody().asString());
 				if(jasResponse.get("status").equals(203)) {
-					System.out.println("Alert Id " + currentAlert + " Deleted from JAS.");
+					logger.debug("Alert Id " + currentAlert + " Deleted from JAS.");
 					return true;
 				}else {
-					System.out.println("Alert Id Not Deleted from JAS!!");
+					logger.debug("Alert Id Not Deleted from JAS!!");
 					return false;
 				}
 				
 		}else {
-			System.out.println("Delete Request Pending with Response Code : " + alertingResponse.getStatusCode());
+			logger.debug("Delete Request Pending with Response Code : " + alertingResponse.getStatusCode());
 			i++;
 			continue;
 		}
 		}catch (Exception e) {
-			System.out.println("Failed to save JAS Response : " + e.getMessage());
+			logger.debug("Failed to save JAS Response : " + e.getMessage());
 			return false;
 		}
 		}
-		System.out.println("Alert ID "+ currentAlert + " Not Deleted!!");
+		logger.debug("Alert ID "+ currentAlert + " Not Deleted!!");
 		return false;
 	}
 	
@@ -617,7 +619,7 @@ public class AlertingAPITest {
 		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(jasUrl));
 		}catch(Exception e) {
 			e.printStackTrace();
-			System.out.println("ITSM Simulator API Call Failed With Error : " + e.getMessage());
+			logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
 		}
 	}
 	
@@ -628,20 +630,20 @@ public class AlertingAPITest {
 		currentRow.putAll(DataUtils.getTestRow());
 		
 		setJasUrl(Utilities.getMavenProperties("DTHostUrl"));		
-		System.out.println("Getting Host URL:" + jasUrl);	
+		logger.debug("Getting Host URL:" + jasUrl);	
 		
 		jasUrl = jasUrl + Utilities.getMavenProperties("JASUrlSchema")
 			.replace("{partners}", currentRow.get("partners"))
 			.replace("{sites}", currentRow.get("sites"))
 			.replace("{alert}", currentAlert);
 		
-		System.out.println(jasUrl);
+		logger.debug(jasUrl);
 }
 	
 	public static boolean verifyITSMSimulatorResponse() throws InterruptedException{
 		
 		JsonPath filterPath = JsonPath.from(filterArray.toString());
-		System.out.println(filterPath.getList("action"));
+		logger.debug(filterPath.getList("action"));
 		int i =0;
 		
 		try {
@@ -650,28 +652,28 @@ public class AlertingAPITest {
 			if(filterArray.getJSONObject(i).get("action").equals("POST")) {
 				if(filterArray.getJSONObject(i+1).get("action").equals("PUT")) {
 					if(filterArray.getJSONObject(i+2).get("action").equals("DELETE")) {
-						System.out.println("All 3 Requests Reached till ITSM");
+						logger.debug("All 3 Requests Reached till ITSM");
 						i = i+3;
 					}else {
-						System.out.println("Delete Requests is not reached till ITSM : ");
+						logger.debug("Delete Requests is not reached till ITSM : ");
 						return false;
 					}
 				}else {
-					System.out.println("Update Requests is not reached till ITSM : ");
+					logger.debug("Update Requests is not reached till ITSM : ");
 					return false;
 				}
 			}else {
-				System.out.println("Create Requests is not reached till ITSM : ");
+				logger.debug("Create Requests is not reached till ITSM : ");
 				return false;
 			}	
 		}
 		return true;
 		}else {
-			System.out.println("No Alerts Reached till ITSM!!");
+			logger.debug("No Alerts Reached till ITSM!!");
 			return false;
 		}
 		}catch (Exception e) {
-			System.out.println("Alert Deletion Failed with Error Message : " + e.getMessage());
+			logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 
@@ -681,14 +683,14 @@ public static boolean verifyITSMResponseForChildAlert() throws InterruptedExcept
 		
 		try {	
 			if(filterArray.isEmpty()) {
-				System.out.println("No Child Alerts Reached Till ITSM.");
+				logger.debug("No Child Alerts Reached Till ITSM.");
 				return true;
 		}else {
-			System.out.println("Child alert reached till ITSM!!");
+			logger.debug("Child alert reached till ITSM!!");
 			return false;
 		}
 		}catch (Exception e) {
-			System.out.println("Alert Deletion Failed with Error Message : " + e.getMessage());
+			logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
 			return false;
 		}
 
@@ -702,17 +704,17 @@ public static boolean verifyITSMResponseForChildAlert() throws InterruptedExcept
 			if(filterObj.get("action").equals("POST")) {
 				JSONObject payloadObj = filterObj.getJSONObject("payload");
 				if(payloadObj.get("remediateurl").equals(null) || payloadObj.get("fetchdataurl").equals(null)) {
-					System.out.println("URL for Remediate or FetchMoreData is Null");
+					logger.debug("URL for Remediate or FetchMoreData is Null");
 					return false;
 				}else {
-					System.out.println("Remediate URL : " + payloadObj.get("remediateurl"));
-					System.out.println("FetchMore URL : " + payloadObj.get("fetchdataurl"));
+					logger.debug("Remediate URL : " + payloadObj.get("remediateurl"));
+					logger.debug("FetchMore URL : " + payloadObj.get("fetchdataurl"));
 					return true;
 				}
 			}
 			i++;
 		}
-		System.out.println("There is No POST Request in ITSM Simulator");
+		logger.debug("There is No POST Request in ITSM Simulator");
 		return false;
 	}
 
