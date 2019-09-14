@@ -28,13 +28,10 @@ public class JunoAlertingSteps{
 		DataUtils.setFileName("TestData_" + environment + ".xls");
 		if (environment.equals("QA")) {
 			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("QAHostUrlV1"));
-			AlertingAPITest.setItsmUrl(Utilities.getMavenProperties("QAHostUrlV1"));
 		} else if (environment.equals("DT")) {
-			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("DTHostUrlV1"));
-			AlertingAPITest.setItsmUrl(Utilities.getMavenProperties("DTHostUrlV1"));
+			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
 		} else if (environment.equals("PROD")) {
 			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("PRODHostUrl"));
-			AlertingAPITest.setItsmUrl(Utilities.getMavenProperties("PRODHostUrl"));
 		}
 	}
 
@@ -92,10 +89,10 @@ public class JunoAlertingSteps{
 		assertTrue(AlertingAPITest.verifyUpdateAPIResponseWithSnooze());
 	}
 	
-	@Then("^Wait for Snooze Period$")
-	public void wait_for_Snooze_Period() throws Throwable {
+	@Then("^Wait for \"([^\"]*)\" Secs$")
+	public void wait_for_Secs(int duration) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(AlertingAPITest.waitForSnooze());
+		assertTrue(AlertingAPITest.waitForSnooze(duration));
 	}
 	
 	@Then("^I verify FetchMore and Remediate URL in ITSM Request$")
@@ -164,10 +161,40 @@ public class JunoAlertingSteps{
 		assertTrue(AlertingAPITest.verifyAlertDeletionInJAS());
 	}
 	
+	@Then("^I verify If alert is Created in AlertingMS$")
+	public void i_verify_If_alert_is_Created_in_AlertingMS() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertTrue(AlertingAPITest.verifyAlertCreationInAlertingMS());
+	}
+
+	@Then("^I verify If alert is Deleted in AlertingMS$")
+	public void i_verify_If_alert_is_Deleted_in_AlertingMS() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertTrue(AlertingAPITest.verifyAlertDeletionInAlertingMS());
+	}
+	
 	@Then("^I verify API response for Suspended Condition from Alert MS$")
 	public void i_verify_API_response_for_Suspended_Condition_from_Alert_MS() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		assertTrue(AlertingAPITest.verifyAlertSuspension());
+	}
+	
+	@Then("^I trigger Manual Closure By Posting on KafkaTopic with MessageType \"([^\"]*)\"$")
+	public void i_trigger_Manual_Closure_By_Posting_on_KafkaTopic_with_MessageType(String kafkaMessageType) throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertTrue(AlertingAPITest.triggerManualClosure(kafkaMessageType));
+	}
+	
+	@Then("^I verify API response as Duplicate Alert Request from Alert MS$")
+	public void i_verify_API_response_as_Duplicate_Alert_Request_from_Alert_MS() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertTrue(AlertingAPITest.verifyDuplicateAlertCreation());
+	}
+	
+	@Then("^I verify API response from Alert MS for Non-Existing Alert$")
+	public void i_verify_API_response_from_Alert_MS_for_Non_Existing_Alert() throws Throwable {
+	    // Write code here that turns the phrase above into concrete actions
+		assertTrue(AlertingAPITest.verifyNonExistingAlertAPIResponse());
 	}
 	
 	@After

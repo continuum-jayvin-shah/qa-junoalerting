@@ -17,7 +17,7 @@ Examples:
 |UnderResearchWindows|
 |UnderResearchSQL|
 
-@Regression
+#@Regression
 Scenario Outline: Alerting API Test for JAS Condition 
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -33,7 +33,7 @@ Then I verify If alert not reached till ITSM Simulator
 
 Examples:
 |TestCaseRow|
-|DM 2.0|
+#|DM 2.0|
 #|BDR|
 |Security|
 
@@ -71,7 +71,7 @@ Then I verify If all requests were sent to ITSM
 
 Examples:
 |TestCaseRow1|TestCaseRow2|
-|Alerting 1.0 with LegacyRegID|Alerting 1.0 with New LegacyRegID|
+|Alerting 1.0 with LegacyAlertID|Alerting 1.0 with New LegacyAlertID|
 
 #@Regression
 Scenario Outline: Alerting API Test for Site/Partner/Client Level Alert 
@@ -91,7 +91,7 @@ Examples:
 |ClientLevel|
 |PartnerLevel|
 
-#@Regression
+@Regression
 Scenario Outline: Alerting API Test for Filter Value Functionality
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -118,7 +118,7 @@ Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
 Then I verify API response from Alert MS for UPDATE Request with Snooze Enabled
-Then Wait for Snooze Period
+Then Wait for "60" Secs
 Then I trigger UPDATE Alert API request on Alert MS
 Then I verify API response from Alert MS for UPDATE Request
 Then I trigger DELETE API request on Alert MS
@@ -236,3 +236,19 @@ Then I verify If alert reached till ITSM Simulator
 Examples:
 |TestCaseRow1|TestCaseRow2|TestCaseRow3|TestCaseRow4|
 |FilterChild1|FilterChild2|FilterChild3|FilterParent|
+
+#@Regression
+Scenario Outline: Alerting Manual Closure Test from ITSM Kafka Topic
+
+Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
+Then I verify API response from Alert MS
+Then I trigger UPDATE Alert API request on Alert MS
+Then I verify API response from Alert MS for UPDATE Request
+Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>"
+Then I get ITSM Simulator Response for Current Alert
+Then I verify If all requests were sent to ITSM
+
+Examples:
+|TestCaseRow|KafkaMessageType|
+|UnderResearchWindows|AlertID|
+#|UnderResearchSQL|MetaData|

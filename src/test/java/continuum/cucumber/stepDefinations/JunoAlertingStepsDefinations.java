@@ -54,7 +54,7 @@ public class JunoAlertingStepsDefinations extends NewAlertingMSPageFactory{
 			setDbUserName(Utilities.getMavenProperties("QADBUserName"));
 			setDbPassword(Utilities.getMavenProperties("QADBPassword"));
 		} else if (environment.equals("DT")) {
-			setHostURL(Utilities.getMavenProperties("DTHostUrlV1"));
+			setHostURL(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
 			setDbHost(Utilities.getMavenProperties("DTDBHost"));
 			setDbUserName(Utilities.getMavenProperties("DTDBUserName"));
 			setDbPassword(Utilities.getMavenProperties("DTDBPassword"));
