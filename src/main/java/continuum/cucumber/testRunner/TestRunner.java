@@ -19,7 +19,7 @@ import cucumber.api.testng.TestNGCucumberRunner;
 //@RunWith(Cucumber.class)
 @CucumberOptions(
 		monochrome = true,
-		features = "src//test//resources//features//AlertsConsolidation.feature",
+		features = "src//test//resources//features",
 		glue="continuum.cucumber.stepDefinations",
 		plugin = {
 				"pretty",
