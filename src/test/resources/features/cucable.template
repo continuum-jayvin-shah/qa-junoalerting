@@ -1,0 +1,90 @@
+package parallel.runners;
+
+import org.junit.runner.RunWith;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Parameters;
+import org.testng.annotations.Test;
+import continuum.cucumber.DriverFactory;
+import continuum.cucumber.reporting.GenerateReport;
+import continuum.cucumber.reporting.HtmlEmailSender;
+import continuum.cucumber.reporting.TestRailIntegrator;
+import continuum.cucumber.WebDriverInitialization;
+import cucumber.api.testng.TestNGCucumberRunner;
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
+import cucumber.api.testng.CucumberFeatureWrapper;
+
+@RunWith(Cucumber.class)
+@CucumberOptions(monochrome = true,
+				features = {"src/test/resources/parallel/features/[CUCABLE:FEATURE].feature"},
+				glue = "continuum.cucumber.stepDefinations", 
+				plugin = {
+							"json:parallelRunReports/reports/[CUCABLE:RUNNER].json",
+							 "html:parallelRunReports/cucumber"
+						  },
+				tags = {
+							"@Functional"
+						}
+				
+				 )
+public class [CUCABLE:RUNNER] {
+
+	private TestNGCucumberRunner testNGCucumberRunner;
+	private static String scenarioName = null;
+	static RemoteWebDriver driver = null;
+	public static SessionId SESSION_ID = null;
+
+	//@Parameters("browserName")
+	@BeforeClass(alwaysRun = true)
+	public void setUpClass() throws Exception {
+		//driver = WebDriverInitialization.createInstance(driver, browserName);
+		//DriverFactory.setWebDriver(driver);
+		//SESSION_ID = driver.getSessionId();
+		testNGCucumberRunner = new TestNGCucumberRunner(this.getClass());
+	}
+
+	//@Parameters("browserName")
+	@BeforeTest(alwaysRun = true)
+	public void beforeTest() {
+
+	}
+
+	@Test(groups = "cucumber", description = "Runs Cucumber Feature", dataProvider = "features")
+	public void feature(CucumberFeatureWrapper cucumberFeature) {
+		scenarioName = cucumberFeature.getCucumberFeature().getPath();
+		System.out.println("*************Executing scenario*********" + scenarioName);
+		testNGCucumberRunner.runCucumber(cucumberFeature.getCucumberFeature());
+	}
+
+	@DataProvider
+	public Object[][] features() {
+		return testNGCucumberRunner.provideFeatures();
+	}
+
+	@AfterTest(alwaysRun = true)
+	public void afterTest() {
+		//DriverFactory.getDriver().quit();
+	/*	GenerateReport.generateReport("Juno-ITS", "chrome-its-topnav-report");
+	
+		HtmlEmailSender.sendReport("chrome-its-topnav-report");
+		TestRailIntegrator.updateResultToTestRail("chrome-its-topnav-report");*/
+	}
+
+	@AfterClass(alwaysRun = true)
+	public void tearDownClass() throws Exception {
+		testNGCucumberRunner.finish();
+		
+	//	DriverFactory.getDriver().quit();
+		
+	}
+
+	public static String getScenarioName() {
+		return scenarioName;
+	}
+}

@@ -53,7 +53,7 @@ public class DataUtils {
 	 * @return testData data
 	 * @throws IOException
 	 */
-	public static void setTestRow(String filePath, String sheetName,
+	public synchronized static void setTestRow(String filePath, String sheetName,
 			String testCaseId) throws IOException {
 		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + filePath;
 		System.out.println("Reading validation points from excel file " + filePath);
@@ -139,7 +139,7 @@ public class DataUtils {
 	 * @return testData data
 	 * @throws IOException
 	 */
-	public static void setTestRow(String sheetName,String testCaseId) throws IOException {
+	public synchronized static HashMap<String, String> getTestRow(String sheetName,String testCaseId) throws IOException {
 		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + fileName;
 		System.out.println("Reading validation points from excel file " + fileName + excelFilePath);
 		
@@ -206,7 +206,7 @@ public class DataUtils {
 				}
 			}
 		}
-
+		return testRow;
 		// matcherList;
 	}
 	

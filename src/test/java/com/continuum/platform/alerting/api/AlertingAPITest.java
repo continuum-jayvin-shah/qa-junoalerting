@@ -28,6 +28,7 @@ public class AlertingAPITest {
 	private static Response alertingResponse;
 	private static List<String> alertId = new ArrayList<String>();
 	private static JSONArray filterArray = new JSONArray();
+	private static HashMap<String, String> currentRow = new HashMap<String, String>();
 	
 	public AlertingAPITest() {
 		// TODO Auto-generated constructor stub
@@ -38,6 +39,13 @@ public class AlertingAPITest {
 	}
 	public static void setCurrentAlert(String currentAlert) {
 		AlertingAPITest.currentAlert = currentAlert;
+	}
+	
+	public static HashMap<String, String> getCurrentRow() {
+		return currentRow;
+	}
+	public static void setCurrentRow(HashMap<String, String> currentRow) {
+		AlertingAPITest.currentRow = currentRow;
 	}
 	
 	public static JSONArray getFilterArray() {
@@ -272,12 +280,9 @@ public class AlertingAPITest {
 	
 	public static void preProcessing(String testName) throws Exception{
 		
-			DataUtils.setTestRow("Test", testName);
+			setCurrentRow(DataUtils.getTestRow("Test", testName));
 			logger.debug("Test Data Captured.");
-			
-			HashMap<String, String> currentRow = new HashMap<String, String>();
-			
-			currentRow.putAll(DataUtils.getTestRow());
+	
 			logger.debug("Getting Host URL:" + alertingUrl);
 
 			alertingAPIUrl = alertingUrl + Utilities.getMavenProperties("AlertingUrlSchema")
@@ -630,9 +635,9 @@ public class AlertingAPITest {
 	
 	public static void jasPreProcessing() throws Exception{
 		
-		HashMap<String, String> currentRow = new HashMap<String, String>();
+		//HashMap<String, String> currentRow = new HashMap<String, String>();
 		
-		currentRow.putAll(DataUtils.getTestRow());
+		//currentRow.putAll(DataUtils.getTestRow());
 		
 		setJasUrl(Utilities.getMavenProperties("DTJASHostUrlV1"));		
 		logger.debug("Getting Host URL:" + jasUrl);	

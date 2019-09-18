@@ -6,6 +6,7 @@ import org.apache.log4j.Logger;
 import org.testng.Reporter;
 
 import com.continuum.platform.alerting.api.AlertingAPITest;
+import com.continuum.platform.alerting.api.ParallelAPITest;
 import com.continuum.utils.DataUtils;
 
 import continuum.cucumber.Utilities;
@@ -18,6 +19,7 @@ import cucumber.api.java.en.Then;
 public class JunoAlertingSteps{
 	
 	private Logger logger = Logger.getLogger(this.getClass());
+	ParallelAPITest pat;
 	
 	@Before
 	public void readScenario(Scenario scenario) {
@@ -29,46 +31,47 @@ public class JunoAlertingSteps{
 		if (environment.equals("QA")) {
 			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("QAHostUrlV1"));
 		} else if (environment.equals("DT")) {
-			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
+			ParallelAPITest.setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
 		} else if (environment.equals("PROD")) {
 			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("PRODHostUrl"));
 		}
+		pat = new ParallelAPITest();
 	}
 
 	@Given("^I trigger CREATE Alert API request on Alert MS for \"([^\"]*)\"$")
 	public void i_trigger_CREATE_Alert_API_request_on_Alert_MS(String testCaseRow) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(AlertingAPITest.triggerCreateAPI(testCaseRow));
+		assertTrue(pat.triggerCreateAPI(testCaseRow));
 	}
 	
 	@Then("^I verify API response from Alert MS$")
 	public void i_verify_API_response_from_Alert_MS() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(AlertingAPITest.verifyCreateAPIResponse());
+		assertTrue(pat.verifyCreateAPIResponse());
 	}
 	
 	@Then("^I trigger UPDATE Alert API request on Alert MS$")
 	public void i_trigger_UPDATE_Alert_API_request_on_Alert_MS() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(AlertingAPITest.triggerUpdateAPI());
+		assertTrue(pat.triggerUpdateAPI());
 	}
 
 	@Then("^I verify API response from Alert MS for UPDATE Request$")
 	public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(AlertingAPITest.verifyUpdateAPIResponse());
+		assertTrue(pat.verifyUpdateAPIResponse());
 	}
 	
 	@Then("^I trigger DELETE API request on Alert MS$")
 	public void i_trigger_DELETE_API_request_on_Alert_MS() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(AlertingAPITest.triggerDeleteAPI());
+		assertTrue(pat.triggerDeleteAPI());
 	}
 	
 	@Then("^I verify API response from Alert MS for DELETE Request$")
 	public void i_verify_API_response_from_Alert_MS_for_DELETE_Request() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(AlertingAPITest.verifyDeleteAPIResponse());
+		assertTrue(pat.verifyDeleteAPIResponse());
 	}
 	
 	@Then("^I verify If alert reached till ITSM Simulator$")
@@ -104,13 +107,13 @@ public class JunoAlertingSteps{
 	@Then("^I get ITSM Simulator Response for Current Alert$")
 	public void i_get_ITSM_Simulator_Response_for_Current_Alert() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(AlertingAPITest.getITSMSimulatorResponse());
+		assertTrue(pat.getITSMSimulatorResponse());
 	}
 	
 	@Then("^I verify If all requests were sent to ITSM$")
 	public void i_verify_If_all_requests_were_sent_to_ITSM() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(AlertingAPITest.verifyITSMSimulatorResponse());
+		assertTrue(pat.verifyITSMSimulatorResponse());
 	}
 	
 	@Then("^I verify If alert not reached till ITSM Simulator$")
