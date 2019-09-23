@@ -379,7 +379,7 @@
 						<!-- process all features in the given directory -->
 						<!--<sourceFeatures>src/test/resources/features</sourceFeatures> -->
 						<!-- process a specific feature file in the given directory -->
-						<sourceFeatures>src/test/resources/features/ParallelTest.feature</sourceFeatures>
+						<sourceFeatures>src/test/resources/features</sourceFeatures>
 
 						<!-- process a specific feature file and specific line numbers in the 
 							given directory -->
@@ -414,7 +414,7 @@
 
 						<!-- optional: generate fixed number of runners and distribute all 
 							features round-robin. -->
-						<desiredNumberOfRunners>2</desiredNumberOfRunners>
+						<desiredNumberOfRunners>33</desiredNumberOfRunners>
 
 						<!-- optional: Cucable log level -->
 						<!--<logLevel>default</logLevel> -->

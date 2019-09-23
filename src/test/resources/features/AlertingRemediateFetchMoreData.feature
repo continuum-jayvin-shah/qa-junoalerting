@@ -1,7 +1,7 @@
-Feature: Auto Process Functionalities
+Feature: Juno Alerting Remediation/FetchMoreData Test
 
 @Functional
-Scenario Outline: Alerting API Test for Remeditaion/FetchMoreData Functionality
+Scenario Outline: Alerting API Test for Remeditaion/FetchMoreData Functionality - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS

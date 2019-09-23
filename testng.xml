@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Cucumber-Report" parallel="classes" thread-count="2" >
+<suite name="Cucumber-Report" parallel="classes" thread-count="33" >
     <test name="Juno-Alerting-AutomationReport">                                             
        <packages>
               <package name="parallel.runners" />              

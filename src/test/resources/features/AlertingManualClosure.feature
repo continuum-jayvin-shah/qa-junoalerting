@@ -1,7 +1,7 @@
-Feature: Auto Process Functionalities
+Feature: Juno Alerting Manual Closure Test
 
 @Functional
-Scenario Outline: Alerting Manual Closure Test from ITSM Kafka Topic
+Scenario Outline: Alerting Manual Closure Test from ITSM Kafka Topic - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
@@ -16,9 +16,9 @@ Then I verify If alert is Deleted in AlertingMS
 
 Examples:
 |TestCaseRow|KafkaMessageType|
-|UnderResearchWindows|AlertID|
-|FilterValue2|AlertID|
-|ALerting 1.0|AlertID|
-#|SiteLevel|AlertID|
-#|ClientLevel|AlertID|
-#|PartnerLevel|AlertID|
+|UnderResearchWindowsManualClosure|AlertID|
+|FilterValueManualClosure|AlertID|
+|Alerting 1.0 ManualClosure|AlertID|
+|SiteLevelManualClosure|AlertID|
+|ClientLevelManualClosure|AlertID|
+|PartnerLevelManualClosure|AlertID|

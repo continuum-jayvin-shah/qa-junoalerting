@@ -1,7 +1,7 @@
-Feature: Auto Process Functionalities
+Feature: Juno Alerting Snooze Tests
 
 @Functional
-Scenario Outline: Alerting API Test for Snooze Functionality on Update Request
+Scenario Outline: Alerting API Test for Snooze Functionality on Update Request - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
@@ -17,10 +17,10 @@ Then I verify If alert reached till ITSM Simulator
 
 Examples:
 |TestCaseRow|
-|Snooze|
+|SnoozeUpdate|
 
 @Functional
-Scenario Outline: Alerting API Test for Snooze Functionality Disabled on Delete Request and Enabled on Multiple Update Request
+Scenario Outline: Alerting API Test for Snooze Functionality Disabled on Delete Request and Enabled on Multiple Update Request - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
@@ -38,10 +38,10 @@ Then I verify If alert reached till ITSM Simulator
 
 Examples:
 |TestCaseRow|
-|Snooze|
+|SnoozeMultipleUpdateNDelete|
 
 @Functional
-Scenario Outline: Alerting API Test for Snooze Functionality Disabled on Duplicate Create Request
+Scenario Outline: Alerting API Test for Snooze Functionality Disabled on Duplicate Create Request - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
@@ -59,7 +59,7 @@ Then I verify If alert reached till ITSM Simulator
 
 Examples:
 |TestCaseRow|
-|Snooze|
+|SnoozeDisabledOnDuplicate|
 
 @Functional
 Scenario Outline: Alerting API Test for Snooze Functionality Disabled If New Alert Req with Different Filter Value Received

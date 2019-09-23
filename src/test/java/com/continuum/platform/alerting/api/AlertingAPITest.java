@@ -23,53 +23,54 @@ import net.sf.json.JSONSerializer;
 
 public class AlertingAPITest {
 
-	private static Logger logger = Logger.getLogger(AlertingAPITest.class);
-	private static String alertingUrl, alertDetails, itsmUrl, testName, currentAlert, jasUrl, alertingAPIUrl = "";
-	private static Response alertingResponse;
-	private static List<String> alertId = new ArrayList<String>();
-	private static JSONArray filterArray = new JSONArray();
-	private static HashMap<String, String> currentRow = new HashMap<String, String>();
+	private Logger logger = Logger.getLogger(AlertingAPITest.class);
+	private String alertDetails, itsmUrl, testName, currentAlert, jasUrl, alertingAPIUrl = "";
+	private static String alertingUrl;
+	private Response alertingResponse;
+	private List<String> alertId = new ArrayList<String>();
+	private JSONArray filterArray = new JSONArray();
+	private HashMap<String, String> currentRow = new HashMap<String, String>();
 	
 	public AlertingAPITest() {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public static String getCurrentAlert() {
+	public String getCurrentAlert() {
 		return currentAlert;
 	}
-	public static void setCurrentAlert(String currentAlert) {
-		AlertingAPITest.currentAlert = currentAlert;
+	public void setCurrentAlert(String currentAlert) {
+		this.currentAlert = currentAlert;
 	}
 	
-	public static HashMap<String, String> getCurrentRow() {
+	public HashMap<String, String> getCurrentRow() {
 		return currentRow;
 	}
-	public static void setCurrentRow(HashMap<String, String> currentRow) {
-		AlertingAPITest.currentRow = currentRow;
+	public void setCurrentRow(HashMap<String, String> currentRow) {
+		this.currentRow = currentRow;
 	}
 	
-	public static JSONArray getFilterArray() {
+	public JSONArray getFilterArray() {
 		return filterArray;
 	}
 
-	public static void setFilterArray(JSONArray filterArray) {
-		AlertingAPITest.filterArray.addAll(filterArray);
+	public void setFilterArray(JSONArray filterArray) {
+		this.filterArray.addAll(filterArray);
 	}
 
-	public static String getTestName() {
+	public String getTestName() {
 		return testName;
 	}
 
-	public static void setTestName(String testName) {
-		AlertingAPITest.testName = testName;
+	public void setTestName(String testName) {
+		this.testName = testName;
 	}
 	
-	public static List<String> getAlertId() {
+	public List<String> getAlertId() {
 		return alertId;
 	}
 
-	public static void setAlertId(String alertId) {
-		AlertingAPITest.alertId.add(alertId);
+	public void setAlertId(String alertId) {
+		this.alertId.add(alertId);
 	}
 	
 	public static String getalertingUrl() {
@@ -80,43 +81,43 @@ public class AlertingAPITest {
 		AlertingAPITest.alertingUrl = alertingUrl;
 	}
 	
-	public static String getAlertDetails() {
+	public String getAlertDetails() {
 		return alertDetails;
 	}
 
-	public static void setAlertDetails(String alertDetails) {
-		AlertingAPITest.alertDetails = alertDetails;
+	public void setAlertDetails(String alertDetails) {
+		this.alertDetails = alertDetails;
 	}
 	
-	public static String getItsmUrl() {
+	public String getItsmUrl() {
 		return itsmUrl;
 	}
 
-	public static void setItsmUrl(String itsmUrl) {
-		AlertingAPITest.itsmUrl = itsmUrl;
+	public void setItsmUrl(String itsmUrl) {
+		this.itsmUrl = itsmUrl;
 	}
 	
-	public static String getJasUrl() {
+	public String getJasUrl() {
 		return jasUrl;
 	}
-	public static void setJasUrl(String jasUrl) {
-		AlertingAPITest.jasUrl = jasUrl;
+	public void setJasUrl(String jasUrl) {
+		this.jasUrl = jasUrl;
 	}
 	
 	public Response getAlertDetailsResponse() {
 		return alertingResponse;
 	}
 
-	public static void setAlertDetailsResponse(Response alertingResponse) {
-		AlertingAPITest.alertingResponse = alertingResponse;
+	public void setAlertDetailsResponse(Response alertingResponse) {
+		this.alertingResponse = alertingResponse;
 	}
 	
-	public static boolean triggerCreateAPI(String testName){
+	public boolean triggerCreateAPI(String testName){
 		try {
 		setTestName(testName);
 		preProcessing(getTestName());
 		logger.debug("Alert Details : " + alertDetails);
-		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(alertDetails, alertingAPIUrl));
+		this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(alertDetails, alertingAPIUrl));
 		return true;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -125,7 +126,7 @@ public class AlertingAPITest {
 		}
 	}
 	
-	public static boolean triggerParentCreateAPI(String testName){
+	public boolean triggerParentCreateAPI(String testName){
 		try {
 		setTestName(testName);
 		preProcessing(getTestName());
@@ -135,7 +136,7 @@ public class AlertingAPITest {
 		alerts.addAll(alertId);
 		parentAlertDetails.put("alerts", alerts);
 		logger.debug(parentAlertDetails.toString());
-		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl));
+		this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl));
 		Thread.sleep(3000);
 		return true;
 		}catch(Exception e) {
@@ -145,7 +146,7 @@ public class AlertingAPITest {
 		}
 	}
 	
-	public static boolean triggerParentWithSameConditionCreateAPI(String testName){
+	public boolean triggerParentWithSameConditionCreateAPI(String testName){
 		try {
 		for(int i=0;i<4;i++) {
 			setTestName(testName);
@@ -157,7 +158,7 @@ public class AlertingAPITest {
 			alerts.add(alertId.get(i+1));
 			parentAlertDetails.put("alerts", alerts);
 			logger.debug(parentAlertDetails.toString());
-			AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl));
+			this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl));
 			Thread.sleep(3000);
 			if(alertingResponse.getStatusCode() == 201) {
 				logger.debug(alertingResponse.getBody().asString());
@@ -181,11 +182,11 @@ public class AlertingAPITest {
 		}
 	}
 	
-	public static boolean triggerUpdateAPI(){
+	public boolean triggerUpdateAPI(){
 		try {
 		preProcessing(getTestName());
 		logger.debug("Alert Details : " + alertDetails);
-		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(alertDetails, alertingAPIUrl + "/" + getCurrentAlert()));
+		this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(alertDetails, alertingAPIUrl + "/" + getCurrentAlert()));
 		return true;
 		}catch(Exception e) {
 			e.printStackTrace();
@@ -194,12 +195,12 @@ public class AlertingAPITest {
 		}
 	}
 	
-	public static boolean triggerDeleteAPI(){
+	public boolean triggerDeleteAPI(){
 		try {
 			int i =0;
 			if(alertId.size()>1) {
 				for(i=0; i<alertId.size();i++) {
-					AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
+					this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
 						if(alertingResponse.getStatusCode() != 204) {
 							logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
 							return false;
@@ -207,7 +208,7 @@ public class AlertingAPITest {
 						logger.debug("Alert Deleted : " + alertId.get(i));
 					}
 			}else {
-				AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
+				this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
 				logger.debug("Alert Deletion Called for AlertID : " + alertId.get(i));
 				return true;
 			}
@@ -219,10 +220,10 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean triggerChildDeleteAPI(){
+	public boolean triggerChildDeleteAPI(){
 		try {
 		for(int i=0; i<alertId.size()-1;i++) {
-		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
+		this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
 			if(alertingResponse.getStatusCode() != 204) {
 				logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
 				return false;
@@ -240,10 +241,10 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean triggerChildDeleteAPIForBothParent(){
+	public boolean triggerChildDeleteAPIForBothParent(){
 		try {
 		for(int i=0; i<alertId.size()-2;i++) {
-		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
+		this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
 			if(alertingResponse.getStatusCode() != 204) {
 				logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
 				return false;
@@ -261,9 +262,9 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean triggerDeleteAPI(String alertID){
+	public boolean triggerDeleteAPI(String alertID){
 		try {
-		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertID));
+		this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertID));
 			if(alertingResponse.getStatusCode() != 204) {
 				logger.debug("Alert ID Deletion Failed for : " + alertID + "with Response Code : " + alertingResponse.getStatusCode());
 				return false;
@@ -278,7 +279,7 @@ public class AlertingAPITest {
 
 	}
 	
-	public static void preProcessing(String testName) throws Exception{
+	public void preProcessing(String testName) throws Exception{
 		
 			setCurrentRow(DataUtils.getTestRow("Test", testName));
 			logger.debug("Test Data Captured.");
@@ -312,7 +313,7 @@ public class AlertingAPITest {
 		
 	}
 	
-	public static boolean verifyCreateAPIResponse(){
+	public boolean verifyCreateAPIResponse(){
 
 		try {
 		if(alertingResponse.getStatusCode() == 409) {
@@ -346,7 +347,7 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyAlertSuspension(){
+	public boolean verifyAlertSuspension(){
 
 		try {
 		if(alertingResponse.getStatusCode() == 409) {
@@ -383,10 +384,11 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyNewAlertCreation(){
+	public boolean verifyNewAlertCreation(){
 
 		try {
 		if(alertingResponse.getStatusCode() == 409) {
+			
 			logger.debug(alertingResponse.getBody().asString());
 			logger.debug("New ALert is not getting created, Getting Conflict : " + alertingResponse.getStatusCode());
 			return false;		
@@ -407,7 +409,7 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyDuplicateAlertCreation(){
+	public boolean verifyDuplicateAlertCreation(){
 
 		try {
 		if(alertingResponse.getStatusCode() == 409) {
@@ -433,7 +435,7 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyUpdateAPIResponse(){
+	public boolean verifyUpdateAPIResponse(){
 
 		try {
 		if(alertingResponse.getStatusCode() == 204) {
@@ -451,7 +453,7 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyNonExistingAlertAPIResponse(){
+	public boolean verifyNonExistingAlertAPIResponse(){
 
 		try {
 		if(alertingResponse.getStatusCode() == 404) {
@@ -473,7 +475,7 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyUpdateAPIResponseWithSnooze(){
+	public boolean verifyUpdateAPIResponseWithSnooze(){
 
 		try {
 		if(alertingResponse.getStatusCode() == 202) {
@@ -492,7 +494,7 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyDeleteAPIResponse(){
+	public boolean verifyDeleteAPIResponse(){
 
 		try {
 		if(alertingResponse.getStatusCode() == 204) {
@@ -510,22 +512,22 @@ public class AlertingAPITest {
 
 	}
 	
-	public static void triggerITSMSimulatorAPI(){
+	public void triggerITSMSimulatorAPI(){
 		try {
 		itsmPreProcessing();
-		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(itsmUrl));
+		this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(itsmUrl));
 		}catch(Exception e) {
 			e.printStackTrace();
 			logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
 		}
 	}
 	
-	public static void itsmPreProcessing() throws Exception{
+	public void itsmPreProcessing() throws Exception{
 				
-		HashMap<String, String> currentRow = new HashMap<String, String>();
+		//HashMap<String, String> currentRow = new HashMap<String, String>();
 		
-		currentRow.putAll(DataUtils.getTestRow());
-		logger.debug("Getting Host URL:" + currentRow);
+		//currentRow.putAll(DataUtils.getTestRow());
+		logger.debug("Getting Host URL:" + alertingUrl);
 		
 	
 		itsmUrl = alertingUrl + Utilities.getMavenProperties("ITSMSimulatorUrlSchema")
@@ -548,7 +550,7 @@ public class AlertingAPITest {
 	
 }
 	
-	public static boolean getITSMSimulatorResponse() throws InterruptedException{
+	public boolean getITSMSimulatorResponse() throws InterruptedException{
 		Thread.sleep(3000);
 		triggerITSMSimulatorAPI();
 		try {
@@ -568,7 +570,7 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyAlertCreationInJAS() throws InterruptedException{
+	public boolean verifyAlertCreationInJAS() throws InterruptedException{
 		Thread.sleep(3000);
 		triggerJASGetAlertAPI();
 		try {
@@ -593,7 +595,7 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyAlertDeletionInJAS() throws InterruptedException{
+	public boolean verifyAlertDeletionInJAS() throws InterruptedException{
 		int i = 0;
 		while(i<10) {
 		Thread.sleep(10000);
@@ -623,17 +625,17 @@ public class AlertingAPITest {
 		return false;
 	}
 	
-	public static void triggerJASGetAlertAPI(){
+	public void triggerJASGetAlertAPI(){
 		try {
 		jasPreProcessing();
-		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(jasUrl));
+		this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(jasUrl));
 		}catch(Exception e) {
 			e.printStackTrace();
 			logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
 		}
 	}
 	
-	public static void jasPreProcessing() throws Exception{
+	public void jasPreProcessing() throws Exception{
 		
 		//HashMap<String, String> currentRow = new HashMap<String, String>();
 		
@@ -650,21 +652,21 @@ public class AlertingAPITest {
 		logger.debug(jasUrl);
 	}
 	
-	public static void triggerAlertingGetAlertAPI(){
+	public void triggerAlertingGetAlertAPI(){
 		try {
 		getAlertPreProcessing();
-		AlertingAPITest.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertingAPIUrl));
+		this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertingAPIUrl));
 		}catch(Exception e) {
 			e.printStackTrace();
 			logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
 		}
 	}
 	
-	public static void getAlertPreProcessing() throws Exception{
+	public void getAlertPreProcessing() throws Exception{
 		
-		HashMap<String, String> currentRow = new HashMap<String, String>();
+		//HashMap<String, String> currentRow = new HashMap<String, String>();
 		
-		currentRow.putAll(DataUtils.getTestRow());
+		//currentRow.putAll(DataUtils.getTestRow());
 		
 		logger.debug("Getting Host URL:" + alertingUrl);	
 		alertingAPIUrl = alertingUrl + Utilities.getMavenProperties("GetAlertUrlSchema")
@@ -686,7 +688,7 @@ public class AlertingAPITest {
 		logger.debug(alertingAPIUrl);
 	}
 	
-	public static boolean verifyAlertCreationInAlertingMS() throws InterruptedException{
+	public boolean verifyAlertCreationInAlertingMS() throws InterruptedException{
 		Thread.sleep(3000);
 		triggerAlertingGetAlertAPI();
 		try {
@@ -711,8 +713,8 @@ public class AlertingAPITest {
 
 	}
 	
-	public static boolean verifyAlertDeletionInAlertingMS() throws InterruptedException{
-		Thread.sleep(3000);
+	public boolean verifyAlertDeletionInAlertingMS() throws InterruptedException{
+		Thread.sleep(5000);
 		triggerAlertingGetAlertAPI();
 		try {
 		if(alertingResponse.getStatusCode() == 404) {
@@ -735,7 +737,7 @@ public class AlertingAPITest {
 		}
 	}
 	
-	public static boolean verifyITSMSimulatorResponse() throws InterruptedException{
+	public boolean verifyITSMSimulatorResponse() throws InterruptedException{
 		
 		JsonPath filterPath = JsonPath.from(filterArray.toString());
 		logger.debug(filterPath.getList("action"));
@@ -774,7 +776,7 @@ public class AlertingAPITest {
 
 	}
 	
-public static boolean verifyITSMResponseForChildAlert() throws InterruptedException{
+public boolean verifyITSMResponseForChildAlert() throws InterruptedException{
 		
 		try {	
 			if(filterArray.isEmpty()) {
@@ -791,7 +793,7 @@ public static boolean verifyITSMResponseForChildAlert() throws InterruptedExcept
 
 	}
 	
-	public static boolean verifyRemediateURLITSMRequest() throws InterruptedException{
+	public boolean verifyRemediateURLITSMRequest() throws InterruptedException{
 		
 		int i = 0;
 		while(i < filterArray.size()) {
@@ -813,7 +815,7 @@ public static boolean verifyITSMResponseForChildAlert() throws InterruptedExcept
 		return false;
 	}
 	
-	public static boolean triggerManualClosure(String kafkaMessageType) {
+	public boolean triggerManualClosure(String kafkaMessageType) {
 		
 		String kafkaMessage;
 		
@@ -835,7 +837,7 @@ public static boolean verifyITSMResponseForChildAlert() throws InterruptedExcept
 		
 	}
 	
-	public static String getManualClosureMetadata() {
+	public String getManualClosureMetadata() {
 		
 		HashMap<String, String> currentRow = new HashMap<String, String>();
 		
@@ -850,7 +852,7 @@ public static boolean verifyITSMResponseForChildAlert() throws InterruptedExcept
 		return manualClosureMessage.toString();
 	}
 
-	public static boolean waitForSnooze(int duration) throws InterruptedException{
+	public boolean waitForSnooze(int duration) throws InterruptedException{
 		
 		TimeUnit.SECONDS.sleep(duration);
 		return true;
@@ -870,13 +872,13 @@ public static boolean verifyITSMResponseForChildAlert() throws InterruptedExcept
 	 */
 
 
-/*	public static ResultSet executeQuery(String databaseName, String sqlServerURL, String username, String password,String query) throws Exception {
+/*	public ResultSet executeQuery(String databaseName, String sqlServerURL, String username, String password,String query) throws Exception {
 
 		//DatabaseUtility.getListByQuery(databaseName, sqlServerURL, username, password, query, column);
 	}*/
 
 	
-	public static void closeTest() {
+	public void closeTest() {
 		alertId.clear();
 		filterArray.clear();
 	}

@@ -1,7 +1,7 @@
-Feature: Auto Process Functionalities
+Feature: Juno Alerting Bridge Test
 
 @Functional
-Scenario Outline: Alerting API Test for Alerting 1.0 Condition 
+Scenario Outline: Alerting API Test for Alerting 1.0 Condition - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
@@ -14,7 +14,7 @@ Then I verify If all requests were sent to ITSM
 
 Examples:
 |TestCaseRow|
-|ALerting 1.0|
+|Alerting 1.0|
 |Alerting 1.0 with ResourceID as EndPointID|
 
 @Functional

@@ -1,7 +1,7 @@
-Feature: Auto Process Functionalities
+Feature: Juno Alerting Filter Field Test
 
 @Functional
-Scenario Outline: Alerting API Test for Filter Value Functionality
+Scenario Outline: Alerting API Test for Filter Value Functionality - "<TestCaseRow1>" And "<TestCaseRow2>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
 Then I verify API response from Alert MS
@@ -18,6 +18,6 @@ Then I verify If alert reached till ITSM Simulator
 
 Examples:
 |TestCaseRow1|TestCaseRow2|
-|FilterValue1|FilterValue2|
-|WithoutFilter|FilterValue1|
-|FilterValue1|WithoutFilter|
+|WithoutFilter1|FilterValue1|
+|FilterValue2|FilterValue3|
+|FilterValue4|WithoutFilter2|
