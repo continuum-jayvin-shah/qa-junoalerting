@@ -387,7 +387,7 @@
 					<!-- process all features in the given directory -->
 					<!--<sourceFeatures>src/test/resources/features</sourceFeatures> -->
 					<!-- process a specific feature file in the given directory -->
-					<sourceFeatures>src/test/resources/features/AlertingCRUDApi.feature</sourceFeatures>
+					<sourceFeatures>src/test/resources/features</sourceFeatures>
 
 					<!-- process a specific feature file and specific line numbers in the 
 						given directory -->
