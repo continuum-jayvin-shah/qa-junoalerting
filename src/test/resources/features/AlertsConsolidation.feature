@@ -86,7 +86,7 @@ Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
 Then I verify API response from Alert MS
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert not reached till ITSM Simulator
-Then Wait for "50" Secs
+Then Wait for "65" Secs
 Then I trigger UPDATE Alert API request on Alert MS
 Then I verify API response from Alert MS for UPDATE Request
 Then I trigger DELETE API request on Alert MS
@@ -115,7 +115,7 @@ Then I trigger CREATE Alert API request for Parent Alert on Alert MS for "<TestC
 Then I verify API response from Alert MS
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert not reached till ITSM Simulator
-Then Wait for "50" Secs
+Then Wait for "65" Secs
 Then I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
 Then I verify API response as Duplicate Alert Request from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
