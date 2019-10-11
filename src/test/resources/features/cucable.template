@@ -15,6 +15,7 @@ import continuum.cucumber.reporting.GenerateReport;
 import continuum.cucumber.reporting.HtmlEmailSender;
 import continuum.cucumber.reporting.TestRailIntegrator;
 import continuum.cucumber.WebDriverInitialization;
+import continuum.cucumber.testRunner.SendReport;
 import cucumber.api.testng.TestNGCucumberRunner;
 import cucumber.api.CucumberOptions;
 import cucumber.api.junit.Cucumber;
@@ -72,7 +73,7 @@ public class [CUCABLE:RUNNER] {
 		//DriverFactory.getDriver().quit();
 	/*	GenerateReport.generateReport("Juno-ITS", "chrome-its-topnav-report");
 		*/
-		HtmlEmailSender.sendReport("test-report");
+		SendReport.sendReportWithMail("reports");
 		/* TestRailIntegrator.updateResultToTestRail("chrome-its-topnav-report");*/
 	}
 

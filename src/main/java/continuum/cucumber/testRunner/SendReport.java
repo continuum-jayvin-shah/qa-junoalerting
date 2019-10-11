@@ -163,7 +163,7 @@ public class SendReport {
 
 			String password = Utilities.getMavenProperties("reportPassword");
 			File cucumberReport = new File(
-					absolutePath + "\\" + folderName + "\\" + "cucumber-results-feature-overview.html");
+					absolutePath + "\\" + folderName + "\\" + "index.html");
 			String reciever = Utilities.getMavenProperties("reportReciever");
 			sendEmailWithAttachment(sender, password, reciever, subject, message, cucumberReport);
 		}
