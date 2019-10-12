@@ -72,9 +72,9 @@ public class [CUCABLE:RUNNER] {
 	public void afterTest() {
 		//DriverFactory.getDriver().quit();
 	/*	GenerateReport.generateReport("Juno-ITS", "chrome-its-topnav-report");
-		*/
+		
 		SendReport.sendReportWithMail("reports");
-		/* TestRailIntegrator.updateResultToTestRail("chrome-its-topnav-report");*/
+		 TestRailIntegrator.updateResultToTestRail("chrome-its-topnav-report");*/
 	}
 
 	@AfterClass(alwaysRun = true)
