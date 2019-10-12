@@ -28,11 +28,14 @@ public class JunoAlertingSteps{
 		String environment = Utilities.getMavenProperties("Environment").trim();
 		DataUtils.setFileName("TestData_" + environment + ".xls");
 		if (environment.equals("QA")) {
-			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("QAHostUrlV1"));
+			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("QAAlertingHostUrlV2"));
+			AlertingAPITest.setKafkaServer("QAKafkaProducerIP");
 		} else if (environment.equals("DT")) {
 			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
+			AlertingAPITest.setKafkaServer("DTKafkaProducerIP");
 		} else if (environment.equals("PROD")) {
 			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("PRODHostUrl"));
+			AlertingAPITest.setKafkaServer("");
 		}
 		apiTest = new AlertingAPITest();
 	}

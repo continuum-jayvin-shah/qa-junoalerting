@@ -25,7 +25,7 @@ public class AlertingAPITest {
 
 	private Logger logger = Logger.getLogger(AlertingAPITest.class);
 	private String alertDetails, itsmUrl, testName, currentAlert, jasUrl, alertingAPIUrl = "";
-	private static String alertingUrl;
+	private static String alertingUrl, kafkaServer;
 	private Response alertingResponse;
 	private List<String> alertId = new ArrayList<String>();
 	private JSONArray filterArray = new JSONArray();
@@ -110,6 +110,14 @@ public class AlertingAPITest {
 
 	public void setAlertDetailsResponse(Response alertingResponse) {
 		this.alertingResponse = alertingResponse;
+	}
+	
+	public static String getKafkaServer() {
+		return kafkaServer;
+	}
+
+	public static void setKafkaServer(String kafkaServer) {
+		AlertingAPITest.kafkaServer = kafkaServer;
 	}
 	
 	public boolean triggerCreateAPI(String testName){
@@ -388,16 +396,32 @@ public class AlertingAPITest {
 
 		try {
 		if(alertingResponse.getStatusCode() == 409) {
-			
-			logger.debug(alertingResponse.getBody().asString());
-			logger.debug("New ALert is not getting created, Getting Conflict : " + alertingResponse.getStatusCode());
-			return false;		
+			if(JsonPath.from(alertingResponse.getBody().asString()).get("alertId").equals(currentAlert)){
+				logger.debug(alertingResponse.getBody().asString());
+				logger.debug("New ALert is not getting created, Getting Conflict : " + alertingResponse.getStatusCode());				
+				return false;
+			} else {
+				logger.debug(alertingResponse.getBody().asString());
+				setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
+				setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
+				triggerDeleteAPI(currentAlert);		
+				if(alertingResponse.getStatusCode() == 204) {
+					alertId.remove(alertId.size()-1);
+					Thread.sleep(5000);
+					triggerCreateAPI(getTestName());
+					return verifyNewAlertCreation();
+				} else {
+					logger.debug("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+					return false;
+				}
+			}		
 		}else if(alertingResponse.getStatusCode() == 201) {
 			logger.debug(alertingResponse.getBody().asString());
 			setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
 			setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
 			logger.debug("Alert Created : " + getCurrentAlert());
 			return true;
+			
 		}else {
 			logger.debug("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
 			return false;
@@ -832,7 +856,7 @@ public boolean verifyITSMResponseForChildAlert() throws InterruptedException{
 		}
 		
 		logger.debug("Posting Kafka Message to Kafka topic : " + kafkaMessage);
-		KafkaProducerUtility.postMessage(Utilities.getMavenProperties("KafkaTopic"), kafkaMessage);
+		KafkaProducerUtility.postMessage(kafkaServer, Utilities.getMavenProperties("KafkaTopic"), kafkaMessage);
 		return true;
 		
 	}
