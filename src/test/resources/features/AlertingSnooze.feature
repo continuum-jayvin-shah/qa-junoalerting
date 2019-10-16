@@ -1,6 +1,6 @@
 Feature: Juno Alerting Snooze Tests
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Snooze Functionality on Update Request - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -19,7 +19,7 @@ Examples:
 |TestCaseRow|
 |SnoozeUpdate|
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Snooze Functionality Disabled on Delete Request and Enabled on Multiple Update Request - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"

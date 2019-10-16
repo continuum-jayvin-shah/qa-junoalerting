@@ -1,6 +1,6 @@
 Feature: Juno Alerting Bridge Test
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Alerting 1.0 Condition - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -17,7 +17,7 @@ Examples:
 |Alerting 1.0|
 |Alerting 1.0 with ResourceID as EndPointID|
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Alerting 1.0 Condition with LegacyAlertID
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"

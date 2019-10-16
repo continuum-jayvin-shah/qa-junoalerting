@@ -1,6 +1,6 @@
 Feature: Juno Alerting Filter Field Test
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Filter Value Functionality - "<TestCaseRow1>" And "<TestCaseRow2>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"

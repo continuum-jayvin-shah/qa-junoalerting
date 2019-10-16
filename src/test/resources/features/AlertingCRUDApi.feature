@@ -1,6 +1,6 @@
 Feature: Juno Alerting Basic Functionality Test
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Under Research Windows/SQL Condition - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -17,7 +17,7 @@ Examples:
 |UnderResearchWindows|
 |UnderResearchSQL|
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for JAS Condition - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -37,7 +37,7 @@ Examples:
 #|BDR|
 |Security|
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Site/Partner/Client Level Alert - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -55,7 +55,7 @@ Examples:
 |ClientLevel|
 |PartnerLevel|
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting CREATE API Test for Duplicate Alert
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -70,7 +70,7 @@ Examples:
 |TestCaseRow|
 |UnderResearchDuplicate|
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting DELETE/UPDATE API Test for Non-Existing Alert
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"

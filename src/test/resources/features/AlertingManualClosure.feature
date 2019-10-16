@@ -1,6 +1,6 @@
 Feature: Juno Alerting Manual Closure Test
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting Manual Closure Test from ITSM Kafka Topic - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -21,7 +21,7 @@ Examples:
 |Alerting 1.0 ManualClosure|AlertID|
 |SiteLevelManualClosure|AlertID|
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting Manual Closure Test for Partner/Client Level Alerts from ITSM Kafka Topic - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"

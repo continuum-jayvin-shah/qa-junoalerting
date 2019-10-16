@@ -1,6 +1,6 @@
 Feature: Juno Alerting Remediation/FetchMoreData Test
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Remeditaion/FetchMoreData Functionality - "<TestCaseRow>"
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"

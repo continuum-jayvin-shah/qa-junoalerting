@@ -1,6 +1,6 @@
 Feature: Juno Alerting Consolidation Test
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Consolidation Functionality with 2 Child and 1 Parent
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -79,7 +79,7 @@ Examples:
 |TestCaseRow1|TestCaseRow2|TestCaseRow3|TestCaseRow4|
 |FilterChild3|FilterChild4|FilterChild5|FilterParent|
 
-@Functional
+@Functional @BVT
 Scenario Outline: Alerting API Test for Consolidation Functionality with 1 Child and No Parent
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"

@@ -21,14 +21,14 @@ import cucumber.api.testng.TestNGCucumberRunner;
 @RunWith(Cucumber.class)
 @CucumberOptions(
 		monochrome = true,
-		features = "src//test//resources//features//ParallelTest.feature",
+		features = "src//test//resources//features",
 		glue="continuum.cucumber.stepDefinations",
 		plugin = {
 				"pretty",
 				"html:test-report/cucumber",
 				"json:test-report/cucumber.json",
 		"rerun:target/rerun.txt" },
-		tags={"@Functional"}
+		tags={"@BVT"}
 		)
 
 
