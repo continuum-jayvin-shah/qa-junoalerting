@@ -23,7 +23,7 @@ import com.google.gson.JsonObject;
 import com.jayway.restassured.response.Response;*/
 import com.google.gson.JsonParser;
 
-import continuum.cucumber.testRunner.SendReport;
+//import continuum.cucumber.testRunner.SendReport;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.ConnectionConfig;
 import io.restassured.config.EncoderConfig;
