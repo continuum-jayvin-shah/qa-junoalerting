@@ -845,7 +845,7 @@ public boolean verifyITSMResponseForChildAlert() throws InterruptedException{
 		
 		switch (kafkaMessageType) {
 		case "AlertID":
-			kafkaMessage = "{\"alertId\":\""+getCurrentAlert()+"\"}";
+			kafkaMessage = "{\"alertId\":\""+getCurrentAlert()+"\",\"transactionId\":\"TEST\"}";
 			break;
 		case "MetaData":
 			kafkaMessage = getManualClosureMetadata();

@@ -50,6 +50,10 @@ public class JunoAlertingAPIUtil {
 	public static RequestSpecification setAuthToken(String authToken) {
 		return given().log().all().headers("iPlanetDirectoryPro", authToken);
 	}
+	
+	public static RequestSpecification setTransactionID() {
+		return given().log().all().headers("X-Request-Id", "TEST");
+	}
 
 	public static void verifyStatusCode(Response res, int expectedStatusCode) {
 		int status = res.getStatusCode();
@@ -75,13 +79,13 @@ public class JunoAlertingAPIUtil {
 
 	public static Response postWithFormParameters(String formParametersJson, String URI) {
 		
-		Response res = given().log().all().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().post(URI).andReturn();
+		Response res = setTransactionID().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().post(URI).andReturn();
 		return res;
 	}
 	
 	public static Response putWithFormParameters(String formParametersJson, String URI) {
 		
-		Response res = given().log().all().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().put(URI).andReturn();
+		Response res = setTransactionID().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().put(URI).andReturn();
 		return res;
 	}
 
@@ -129,7 +133,7 @@ public class JunoAlertingAPIUtil {
 	}
 
 	public static Response getWithNoParameters(String URI) {
-		Response res = given().log().all().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().get(URI);
+		Response res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().get(URI);
 		return res;
 	}
 
@@ -154,7 +158,7 @@ public class JunoAlertingAPIUtil {
 	}
 
 	public static Response deletePathParameters(String URI) {
-		Response res = given().log().all().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().delete(URI);
+		Response res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().delete(URI);
 		return res;
 	}
 
