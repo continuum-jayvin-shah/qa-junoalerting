@@ -81,7 +81,13 @@ public class JunoAlertingSteps{
 	    // Write code here that turns the phrase above into concrete actions
 		assertTrue(apiTest.verifyITSMSimulatorResponse());
 	}
-	
+
+	@Then("^I verify Child alert list in parent Alert response of ITSM Simulator$")
+	public void i_verify_child_alert_list_in_parent_alert_response_of_ITSM_simulator() throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.verifyChildListITSMSimulatorResponse());
+	}
+
 	@Then("^I verify New Alert created for New Request$")
 	public void i_verify_New_Alert_created_for_New_Request() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
