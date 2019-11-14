@@ -29,6 +29,7 @@ public class AlertingAPITest {
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
     private List<String> conditionId = new ArrayList<String>();
+    private HashMap<String, String> actualDataInITSM = new HashMap<String, String>();
     private JSONArray filterArray = new JSONArray();
     private HashMap<String, String> currentRow = new HashMap<String, String>();
 
@@ -66,6 +67,14 @@ public class AlertingAPITest {
 
     public void setTestName(String testName) {
         this.testName = testName;
+    }
+
+    public void setActualDataInITSM(String key, String value) {
+        this.actualDataInITSM.put(key, value);
+    }
+
+    public String getActualDataInITSM(String key) {
+        return this.actualDataInITSM.get(key);
     }
 
     public List<String> getAlertId() {
@@ -856,6 +865,73 @@ public class AlertingAPITest {
             return false;
         } else {
             return false;
+        }
+    }
+
+    public boolean validateActualDataInITSM() throws InterruptedException {
+        getActualDataInITSM();
+        boolean flag = true;
+        try {
+            if (getCurrentAlert().equalsIgnoreCase(actualDataInITSM.get("alertId"))) {
+                flag = false;
+                logger.debug("Data Mismatch in Alert ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId"));
+            }
+            if (!currentRow.get("partners").equalsIgnoreCase(actualDataInITSM.get("partnerId"))) {
+                flag = false;
+                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("partners") + " :: Actual ->" + actualDataInITSM.get("partnerId"));
+            }
+            if (!currentRow.get("clients").equalsIgnoreCase(actualDataInITSM.get("clientId"))) {
+                flag = false;
+                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("clients") + " :: Actual ->" + actualDataInITSM.get("clientId"));
+            }
+            if (!currentRow.get("sites").equalsIgnoreCase(actualDataInITSM.get("siteId"))) {
+                flag = false;
+                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("sites") + " :: Actual ->" + actualDataInITSM.get("siteId"));
+            }
+            if (!currentRow.get("resourceId").equalsIgnoreCase(actualDataInITSM.get("resourceId"))) {
+                flag = false;
+                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("resourceId") + " :: Actual ->" + actualDataInITSM.get("resourceId"));
+            }
+            if (!currentRow.get("endpoints").equalsIgnoreCase(actualDataInITSM.get("endpointId"))) {
+                flag = false;
+                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("endpoints") + " :: Actual ->" + actualDataInITSM.get("endpointId"));
+            }
+            if (!currentRow.get("conditionId").equalsIgnoreCase(actualDataInITSM.get("conditionId"))) {
+                flag = false;
+                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId"));
+            }
+        } catch (Exception e) {
+            logger.debug("Exception Occurred : " + e);
+            flag = false;
+        }
+        return flag;
+    }
+
+    public void getActualDataInITSM() throws InterruptedException {
+        JsonPath filterPath = JsonPath.from(filterArray.toString());
+        logger.debug(filterPath.getList("action"));
+        int i = 0;
+        try {
+            if (filterArray.size() > 0) {
+                while (i < filterArray.size()) {
+                    if (filterArray.getJSONObject(i).get("action").equals("POST")) {
+                        JSONObject jsonObj = filterArray.getJSONObject(i);
+                        JSONObject jsonObjPayload = jsonObj.getJSONObject("payload");
+                        setActualDataInITSM("alertId", jsonObjPayload.getString("alertId"));
+                        setActualDataInITSM("partnerId", jsonObjPayload.getString("partnerId"));
+                        setActualDataInITSM("clientId", jsonObjPayload.getString("clientId"));
+                        setActualDataInITSM("siteId", jsonObjPayload.getString("siteId"));
+                        setActualDataInITSM("resourceId", jsonObjPayload.getString("resourceId"));
+                        setActualDataInITSM("endpointId", jsonObjPayload.getString("endpointId"));
+                        setActualDataInITSM("conditionId", jsonObjPayload.getString("conditionId"));
+                    }
+                    i++;
+                }
+            } else {
+                logger.debug("No Alerts Reached till ITSM!!");
+            }
+        } catch (Exception e) {
+            logger.debug("Child Alert validation failed in ITSM simulator : " + e.getMessage());
         }
     }
 
