@@ -11,6 +11,7 @@ Then I trigger DELETE API request on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If all requests were sent to ITSM
+Then I should verify ITSM payload data as expected
 
 Examples:
 |TestCaseRow|
@@ -48,12 +49,30 @@ Then I trigger DELETE API request on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If all requests were sent to ITSM
+Then I should verify ITSM payload data as expected
 
 Examples:
 |TestCaseRow|
 |SiteLevel|
 |ClientLevel|
 |PartnerLevel|
+
+  @Functional @BVT
+  Scenario Outline: Alerting API Test for Site/Partner/Client Level Alert - "<TestCaseRow>"
+
+    Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
+    Then I verify API response from Alert MS
+    Then I trigger UPDATE Alert API request on Alert MS
+    Then I verify API response from Alert MS for UPDATE Request
+    Then I trigger DELETE API request with body on Alert MS
+    Then I verify API response from Alert MS for DELETE Request
+    Then I get ITSM Simulator Response for Current Alert
+    Then I verify If all requests were sent to ITSM
+    Then I should verify ITSM payload data as expected
+
+    Examples:
+      |TestCaseRow|
+      |SiteLevel1|
 
 @Functional @BVT
 Scenario Outline: Alerting CREATE API Test for Duplicate Alert
