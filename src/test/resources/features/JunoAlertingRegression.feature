@@ -11,6 +11,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If all requests were sent to ITSM
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow          |
@@ -48,6 +49,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If all requests were sent to ITSM
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow  |
@@ -68,6 +70,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If all requests were sent to ITSM
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow1                    | TestCaseRow2                        |
@@ -84,6 +87,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If all requests were sent to ITSM
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow  |
@@ -106,6 +110,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow1 | TestCaseRow2 |
@@ -125,6 +130,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow |
@@ -141,6 +147,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
+    Then I should verify ITSM payload data as expected
     Then I verify FetchMore and Remediate URL in ITSM Request
 
     Examples:
@@ -175,6 +182,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |
@@ -204,6 +212,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 | TestCaseRow4 | TestCaseRow5 |
@@ -232,13 +241,13 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 | TestCaseRow4 |
       | FilterChild1 | FilterChild2 | FilterChild3 | FilterParent |
 
   #@Regression
-  @sanu
   Scenario Outline: Validate correct child list present in parent ITSM response
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -261,6 +270,7 @@ Feature: Auto Process Functionalities
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
+    Then I should verify ITSM payload data as expected
     Then I verify Child alert list in parent Alert response of ITSM Simulator
 
     Examples:
@@ -277,6 +287,7 @@ Feature: Auto Process Functionalities
     Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>"
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If all requests were sent to ITSM
+    Then I should verify ITSM payload data as expected
 
     Examples:
       | TestCaseRow          | KafkaMessageType |

@@ -33,6 +33,7 @@ public class JunoAlertingSteps{
 		} else if (environment.equals("DT")) {
 			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
 			AlertingAPITest.setKafkaServer("DTKafkaProducerIP");
+			AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("DTITSMHostUrlV2"));
 		} else if (environment.equals("PROD")) {
 			AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("PRODHostUrl"));
 			AlertingAPITest.setKafkaServer("");
@@ -69,7 +70,13 @@ public class JunoAlertingSteps{
 	    // Write code here that turns the phrase above into concrete actions
 		assertTrue(apiTest.triggerDeleteAPI());
 	}
-	
+
+	@Then("I trigger DELETE API request with body on Alert MS")
+	public void i_trigger_DELETE_API_request_with_body_on_Alert_MS() throws Throwable{
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.triggerDeleteAPIWithBody());
+	}
+
 	@Then("^I verify API response from Alert MS for DELETE Request$")
 	public void i_verify_API_response_from_Alert_MS_for_DELETE_Request() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
@@ -122,6 +129,12 @@ public class JunoAlertingSteps{
 	public void i_verify_If_all_requests_were_sent_to_ITSM() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		assertTrue(apiTest.verifyITSMSimulatorResponse());
+	}
+
+	@Then("I should verify ITSM payload data as expected")
+	public void i_should_verify_ITSM_payload_data_as_expected() throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.validateActualDataInITSM());
 	}
 	
 	@Then("^I verify If alert not reached till ITSM Simulator$")
@@ -206,6 +219,40 @@ public class JunoAlertingSteps{
 	public void i_verify_API_response_from_Alert_MS_for_Non_Existing_Alert() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		assertTrue(apiTest.verifyNonExistingAlertAPIResponse());
+	}
+
+	@Given("I trigger CREATE Incident API request on ITSM MS for {string}")
+	public void i_trigger_CREATE_Incident_API_request_on_ITSM_MS_for(String testCaseRow) throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.triggerCreateITSM_API(testCaseRow));
+	}
+
+	@Then("I verify API response from ITSM MS")
+	public void i_verify_API_response_from_ITSM_MS() throws Throwable{
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.verifyCreateAPIResponseITSM());
+	}
+
+	@Then("I trigger UPDATE ITSM API request on ITSM MS")
+	public void i_trigger_UPDATE_ITSM_API_request_on_ITSM_MS() throws Throwable{
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.triggerUpdateAPI_ITSM());
+	}
+
+	@Then("I verify API response from ITSM MS for UPDATE Request")
+	public void i_verify_API_response_from_ITSM_MS_for_UPDATE_Request() throws Throwable{
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.verifyUpdateAPIResponseITSM());
+	}
+
+	@Then("I trigger DELETE API request on ITSM MS")
+	public void i_trigger_DELETE_API_request_on_ITSM_MS() throws Throwable{
+		// Write code here that turns the phrase above into concrete actions
+	}
+
+	@Then("I verify API response from ITSM MS for DELETE Request")
+	public void i_verify_API_response_from_ITSM_MS_for_DELETE_Request() throws Throwable{
+		// Write code here that turns the phrase above into concrete actions
 	}
 	
 	@After

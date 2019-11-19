@@ -14,6 +14,7 @@ Then I trigger DELETE API request on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert reached till ITSM Simulator
+Then I should verify ITSM payload data as expected
 
 Examples:
 |TestCaseRow|
@@ -35,6 +36,7 @@ Then I trigger DELETE API request on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert reached till ITSM Simulator
+Then I should verify ITSM payload data as expected
 
 Examples:
 |TestCaseRow|
@@ -56,6 +58,7 @@ Then I trigger DELETE API request on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert reached till ITSM Simulator
+Then I should verify ITSM payload data as expected
 
 Examples:
 |TestCaseRow|
@@ -82,6 +85,7 @@ Then I trigger DELETE API request on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert reached till ITSM Simulator
+Then I should verify ITSM payload data as expected
 
 Examples:
 |TestCaseRow1|TestCaseRow2|
@@ -111,6 +115,7 @@ Then I trigger DELETE API request for Child Alert on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert reached till ITSM Simulator
+Then I should verify ITSM payload data as expected
 
 Examples:
 |TestCaseRow1|TestCaseRow2|TestCaseRow3|
