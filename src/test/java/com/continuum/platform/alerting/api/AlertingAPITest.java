@@ -25,7 +25,7 @@ public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
     private String alertDetails, itsmUrl, testName, currentAlert, jasUrl, alertingAPIUrl = "";
-    private static String alertingUrl, kafkaServer;
+    private static String alertingUrl, kafkaServer, itsmIntegrationUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
     private List<String> conditionId = new ArrayList<String>();
@@ -101,6 +101,10 @@ public class AlertingAPITest {
         AlertingAPITest.alertingUrl = alertingUrl;
     }
 
+    public static void setItsmIntegrationUrl(String itsmUrl){
+        AlertingAPITest.itsmIntegrationUrl = itsmUrl;
+    }
+
     public String getAlertDetails() {
         return alertDetails;
     }
@@ -152,6 +156,21 @@ public class AlertingAPITest {
         } catch (Exception e) {
             e.printStackTrace();
             logger.debug("Alert Creation Failed with Error Message : " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean triggerCreateITSM_API(String testName) {
+        try {
+            setTestName(testName);
+            preProcessingITSM(getTestName());
+            setConditionId(currentRow.get("conditionId"));
+            logger.debug("Incident Details : " + alertDetails);
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(alertDetails, itsmIntegrationUrl));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.debug("Incident Creation Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -225,6 +244,19 @@ public class AlertingAPITest {
         }
     }
 
+    public boolean triggerUpdateAPI_ITSM() {
+        try {
+            preProcessingITSM(getTestName());
+            logger.debug("Incident Details : " + alertDetails);
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(alertDetails, itsmIntegrationUrl + "/" + getCurrentAlert()));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.debug("Incident Updation Failed with Error Message : " + e.getMessage());
+            return false;
+        }
+    }
+
     public boolean triggerDeleteAPI() {
         try {
             int i = 0;
@@ -250,7 +282,32 @@ public class AlertingAPITest {
 
     }
 
-    public boolean triggerChildDeleteAPI() {
+    public boolean triggerDeleteAPIWithBody() {
+        try {
+            int i = 0;
+            if (alertId.size() > 1) {
+                for (i = 0; i < alertId.size(); i++) {
+                    this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails,alertingAPIUrl + "/" + alertId.get(i)));
+                    if (alertingResponse.getStatusCode() != 204) {
+                        logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+                        return false;
+                    }
+                    logger.debug("Alert Deleted : " + alertId.get(i));
+                }
+            } else {
+                this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails,alertingAPIUrl + "/" + alertId.get(i)));
+                logger.debug("Alert Deletion Called for AlertID : " + alertId.get(i));
+                return true;
+            }
+            return true;
+        } catch (Exception e) {
+            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            return false;
+        }
+
+    }
+
+        public boolean triggerChildDeleteAPI() {
         try {
             for (int i = 0; i < alertId.size() - 1; i++) {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
@@ -346,6 +403,40 @@ public class AlertingAPITest {
 
     }
 
+    public void preProcessingITSM(String testName) throws Exception {
+
+        setCurrentRow(DataUtils.getTestRow("Test", testName));
+        logger.debug("Test Data Captured.");
+        AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("DTITSMHostUrlV2"));
+        logger.debug("Getting Host URL itsmIntegrationUrl:" + itsmIntegrationUrl);
+
+        itsmIntegrationUrl = itsmIntegrationUrl + Utilities.getMavenProperties("ITSMUrlSchema")
+                .replace("{partners}", currentRow.get("partners"))
+                .replace("{clients}", currentRow.get("clients"))
+                .replace("{sites}", currentRow.get("sites"))
+                .replace("{endpoints}", currentRow.get("endpoints"));
+
+        if (currentRow.get("endpoints").isEmpty()) {
+            if (currentRow.get("sites").isEmpty()) {
+                if (currentRow.get("clients").isEmpty()) {
+                    itsmIntegrationUrl = itsmIntegrationUrl.replace("clients//sites//endpoints//", "");
+                } else {
+                    itsmIntegrationUrl = itsmIntegrationUrl.replace("endpoints//", "");
+                    itsmIntegrationUrl = itsmIntegrationUrl.replace("sites/", "clients/{clients}");
+                    itsmIntegrationUrl = itsmIntegrationUrl.replace("{clients}", currentRow.get("clients"));
+                }
+            } else {
+                itsmIntegrationUrl = itsmIntegrationUrl.replace("endpoints//", "");
+                itsmIntegrationUrl = itsmIntegrationUrl.replace("sites", "clients/{clients}/sites");
+                itsmIntegrationUrl = itsmIntegrationUrl.replace("{clients}", currentRow.get("clients"));
+            }
+        }
+        setAlertDetails(currentRow.get("alertDetails"));
+
+        logger.debug(itsmIntegrationUrl);
+
+    }
+
     public boolean verifyCreateAPIResponse() {
         try {
             if (alertingResponse.getStatusCode() == 409) {
@@ -378,6 +469,40 @@ public class AlertingAPITest {
         }
 
     }
+
+    public boolean verifyCreateAPIResponseITSM() {
+        try {
+            if (alertingResponse.getStatusCode() == 409) {
+                logger.debug(alertingResponse.getBody().asString());
+                setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
+                setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
+                return false;
+                /*triggerDeleteAPI(currentAlert);
+                if (alertingResponse.getStatusCode() == 204) {
+                    alertId.remove(alertId.size() - 1);
+                    Thread.sleep(5000);
+                    triggerCreateITSM_API(getTestName());
+                    return verifyCreateAPIResponseITSM();
+                } else {
+                    logger.debug("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+                    return false;
+                }*/
+            } else if (alertingResponse.getStatusCode() == 200) {
+                logger.debug(alertingResponse.getBody().asString());
+                setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
+                setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
+                logger.debug("Incident Created in ITSM : " + getCurrentAlert());
+                return true;
+            } else {
+                logger.debug("Incident Not Created with Response Code : " + alertingResponse.getStatusCode());
+                return false;
+            }
+        } catch (Exception e) {
+            logger.debug("Incident Verification Failed with Error Message : " + e.getMessage());
+            return false;
+        }
+    }
+
 
     public boolean verifyAlertSuspension() {
 
@@ -496,6 +621,24 @@ public class AlertingAPITest {
             }
         } catch (Exception e) {
             logger.debug("Alert Updation Failed with Error Message : " + e.getMessage());
+            return false;
+        }
+
+    }
+
+    public boolean verifyUpdateAPIResponseITSM() {
+
+        try {
+            if (alertingResponse.getStatusCode() == 200) {
+                logger.debug("Update of ITSM Alert Done with Status Code : " + alertingResponse.getStatusCode());
+                return true;
+            } else {
+                logger.debug("ITSM Incident Not Updated with Response Code : " + alertingResponse.getStatusCode());
+                logger.debug("ITSM Incident Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+                return false;
+            }
+        } catch (Exception e) {
+            logger.debug("ITSM Incident Updation Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -872,33 +1015,33 @@ public class AlertingAPITest {
         getActualDataInITSM();
         boolean flag = true;
         try {
-            if (getCurrentAlert().equalsIgnoreCase(actualDataInITSM.get("alertId"))) {
+            if (!getCurrentAlert().equalsIgnoreCase(actualDataInITSM.get("alertId"))) {
                 flag = false;
                 logger.debug("Data Mismatch in Alert ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId"));
             }
             if (!currentRow.get("partners").equalsIgnoreCase(actualDataInITSM.get("partnerId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("partners") + " :: Actual ->" + actualDataInITSM.get("partnerId"));
+                logger.debug("Data Mismatch in Patner ID : Expected -> " + currentRow.get("partners") + " :: Actual ->" + actualDataInITSM.get("partnerId"));
             }
             if (!currentRow.get("clients").equalsIgnoreCase(actualDataInITSM.get("clientId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("clients") + " :: Actual ->" + actualDataInITSM.get("clientId"));
+                logger.debug("Data Mismatch in CLient ID : Expected -> " + currentRow.get("clients") + " :: Actual ->" + actualDataInITSM.get("clientId"));
             }
             if (!currentRow.get("sites").equalsIgnoreCase(actualDataInITSM.get("siteId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("sites") + " :: Actual ->" + actualDataInITSM.get("siteId"));
+                logger.debug("Data Mismatch in Sites ID : Expected -> " + currentRow.get("sites") + " :: Actual ->" + actualDataInITSM.get("siteId"));
             }
-            if (!currentRow.get("resourceId").equalsIgnoreCase(actualDataInITSM.get("resourceId"))) {
-                flag = false;
-                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("resourceId") + " :: Actual ->" + actualDataInITSM.get("resourceId"));
-            }
+       //     if (!currentRow.get("resourceId").equalsIgnoreCase(actualDataInITSM.get("resourceId"))) {
+       //         flag = false;
+       //         logger.debug("Data Mismatch in Resource ID : Expected -> " + currentRow.get("resourceId") + " :: Actual ->" + actualDataInITSM.get("resourceId"));
+       //     }
             if (!currentRow.get("endpoints").equalsIgnoreCase(actualDataInITSM.get("endpointId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("endpoints") + " :: Actual ->" + actualDataInITSM.get("endpointId"));
+                logger.debug("Data Mismatch in Endpoint ID : Expected -> " + currentRow.get("endpoints") + " :: Actual ->" + actualDataInITSM.get("endpointId"));
             }
             if (!currentRow.get("conditionId").equalsIgnoreCase(actualDataInITSM.get("conditionId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Alert ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId"));
+                logger.debug("Data Mismatch in Condition ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId"));
             }
         } catch (Exception e) {
             logger.debug("Exception Occurred : " + e);
