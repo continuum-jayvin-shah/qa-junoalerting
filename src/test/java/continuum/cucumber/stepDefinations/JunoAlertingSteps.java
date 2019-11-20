@@ -59,6 +59,19 @@ public class JunoAlertingSteps{
 		assertTrue(apiTest.triggerUpdateAPI());
 	}
 
+	@Then("I trigger UPDATE Alert API request after {string} on Alert MS")
+	public void i_trigger_UPDATE_Alert_API_request_after_on_Alert_MS(String duration) throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		Thread.sleep(Integer.parseInt(duration));
+		assertTrue(apiTest.triggerUpdateAPI());
+	}
+
+	@Then("I verify API response {string} from Alert MS for UPDATE Request")
+	public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request(String responseCode) throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.verifyUpdateAPIResponse(responseCode));
+	}
+
 	@Then("^I verify API response from Alert MS for UPDATE Request$")
 	public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
@@ -136,7 +149,13 @@ public class JunoAlertingSteps{
 		// Write code here that turns the phrase above into concrete actions
 		assertTrue(apiTest.validateActualDataInITSM());
 	}
-	
+
+	@Then("I verify status code {string} in ITSM Simulator Response")
+	public void i_verify_status_code_in_ITSM_Simulator_Response(String statusCode) throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.validateITSMData("statuscode",statusCode));
+	}
+
 	@Then("^I verify If alert not reached till ITSM Simulator$")
 	public void i_verify_If_alert_not_reached_till_ITSM_Simulator() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions

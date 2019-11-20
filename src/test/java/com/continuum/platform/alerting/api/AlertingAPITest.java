@@ -101,7 +101,7 @@ public class AlertingAPITest {
         AlertingAPITest.alertingUrl = alertingUrl;
     }
 
-    public static void setItsmIntegrationUrl(String itsmUrl){
+    public static void setItsmIntegrationUrl(String itsmUrl) {
         AlertingAPITest.itsmIntegrationUrl = itsmUrl;
     }
 
@@ -287,7 +287,7 @@ public class AlertingAPITest {
             int i = 0;
             if (alertId.size() > 1) {
                 for (i = 0; i < alertId.size(); i++) {
-                    this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails,alertingAPIUrl + "/" + alertId.get(i)));
+                    this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
                     if (alertingResponse.getStatusCode() != 204) {
                         logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
                         return false;
@@ -295,7 +295,7 @@ public class AlertingAPITest {
                     logger.debug("Alert Deleted : " + alertId.get(i));
                 }
             } else {
-                this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails,alertingAPIUrl + "/" + alertId.get(i)));
+                this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
                 logger.debug("Alert Deletion Called for AlertID : " + alertId.get(i));
                 return true;
             }
@@ -307,7 +307,7 @@ public class AlertingAPITest {
 
     }
 
-        public boolean triggerChildDeleteAPI() {
+    public boolean triggerChildDeleteAPI() {
         try {
             for (int i = 0; i < alertId.size() - 1; i++) {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
@@ -624,6 +624,24 @@ public class AlertingAPITest {
             return false;
         }
 
+    }
+
+    public boolean verifyUpdateAPIResponse(String responseCode) throws InterruptedException {
+
+        try {
+            if (alertingResponse.getStatusCode() == Integer.parseInt(responseCode)) {
+                logger.debug("Actual Response Code found : " + alertingResponse.getStatusCode());
+                logger.debug("Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+                return true;
+            } else {
+                logger.debug("Expected Response Not Code found. Actual -> " + alertingResponse.getStatusCode());
+                logger.debug("Internal Status Code : " + alertingResponse.toString());
+                return false;
+            }
+        } catch (Exception e) {
+            logger.debug("Alert Updation Failed with Error Message : " + e.getMessage());
+            return false;
+        }
     }
 
     public boolean verifyUpdateAPIResponseITSM() {
@@ -1031,10 +1049,10 @@ public class AlertingAPITest {
                 flag = false;
                 logger.debug("Data Mismatch in Sites ID : Expected -> " + currentRow.get("sites") + " :: Actual ->" + actualDataInITSM.get("siteId"));
             }
-       //     if (!currentRow.get("resourceId").equalsIgnoreCase(actualDataInITSM.get("resourceId"))) {
-       //         flag = false;
-       //         logger.debug("Data Mismatch in Resource ID : Expected -> " + currentRow.get("resourceId") + " :: Actual ->" + actualDataInITSM.get("resourceId"));
-       //     }
+            //     if (!currentRow.get("resourceId").equalsIgnoreCase(actualDataInITSM.get("resourceId"))) {
+            //         flag = false;
+            //         logger.debug("Data Mismatch in Resource ID : Expected -> " + currentRow.get("resourceId") + " :: Actual ->" + actualDataInITSM.get("resourceId"));
+            //     }
             if (!currentRow.get("endpoints").equalsIgnoreCase(actualDataInITSM.get("endpointId"))) {
                 flag = false;
                 logger.debug("Data Mismatch in Endpoint ID : Expected -> " + currentRow.get("endpoints") + " :: Actual ->" + actualDataInITSM.get("endpointId"));
@@ -1046,6 +1064,16 @@ public class AlertingAPITest {
         } catch (Exception e) {
             logger.debug("Exception Occurred : " + e);
             flag = false;
+        }
+        return flag;
+    }
+
+    public boolean validateITSMData(String field, String value) throws InterruptedException {
+        getActualDataInITSM();
+        boolean flag = true;
+        if (!value.equalsIgnoreCase(actualDataInITSM.get(field))) {
+            flag = false;
+            logger.debug("Data Mismatch in " + field + " : Expected -> " + value + " :: Actual ->" + actualDataInITSM.get("field"));
         }
         return flag;
     }
@@ -1067,6 +1095,7 @@ public class AlertingAPITest {
                         setActualDataInITSM("resourceId", jsonObjPayload.getString("resourceId"));
                         setActualDataInITSM("endpointId", jsonObjPayload.getString("endpointId"));
                         setActualDataInITSM("conditionId", jsonObjPayload.getString("conditionId"));
+                        setActualDataInITSM("statuscode", Integer.toString(jsonObj.getInt("statuscode")));
                     }
                     i++;
                 }
@@ -1074,7 +1103,7 @@ public class AlertingAPITest {
                 logger.debug("No Alerts Reached till ITSM!!");
             }
         } catch (Exception e) {
-            logger.debug("Child Alert validation failed in ITSM simulator : " + e.getMessage());
+            logger.debug("Exception Occured : " + e.getMessage());
         }
     }
 
