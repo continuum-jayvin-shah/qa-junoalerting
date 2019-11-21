@@ -77,12 +77,6 @@ public class JunoAlertingSteps{
 		assertTrue(apiTest.triggerDeleteAPIWithBody());
 	}
 
-	@Then("I trigger DELETE API request with body on Alert MS")
-	public void i_trigger_DELETE_API_request_with_body_on_Alert_MS() throws Throwable{
-		// Write code here that turns the phrase above into concrete actions
-		assertTrue(apiTest.triggerDeleteAPIWithBody());
-	}
-
 	@Then("^I verify API response from Alert MS for DELETE Request$")
 	public void i_verify_API_response_from_Alert_MS_for_DELETE_Request() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
