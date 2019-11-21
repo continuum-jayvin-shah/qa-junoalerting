@@ -20,11 +20,12 @@ import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
+import org.json.simple.parser.JSONParser;
 
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, currentAlert, jasUrl, alertingAPIUrl = "";
+    private String alertDetails, itsmUrl, testName, alertFailure, currentAlert, jasUrl, alertingAPIUrl = "";
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
@@ -119,6 +120,14 @@ public class AlertingAPITest {
 
     public void setItsmUrl(String itsmUrl) {
         this.itsmUrl = itsmUrl;
+    }
+
+    public String getAlertFailureUrl() {
+        return alertFailure;
+    }
+
+    public void setAlertFailureUrl(String alertFailureUrl) {
+        this.alertFailure = alertFailureUrl;
     }
 
     public String getJasUrl() {
@@ -758,6 +767,35 @@ public class AlertingAPITest {
 
     }
 
+    public void triggerAlertFailureAPI() {
+        try {
+            alertFailurePreProcessing();
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertFailure));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
+        }
+    }
+
+    public void alertFailurePreProcessing() throws Exception {
+        logger.debug("Getting Host URL:" + alertingUrl);
+        alertFailure = alertingUrl + Utilities.getMavenProperties("AlertFailureUrlSchema")
+                .replace("{partners}", currentRow.get("partners"))
+                .replace("{clients}", currentRow.get("clients"))
+                .replace("{sites}", currentRow.get("sites"))
+                .replace("{conditionId}", currentRow.get("conditionId"));
+        if (currentRow.get("endpoints").isEmpty()) {
+            if (currentRow.get("sites").isEmpty()) {
+                if (currentRow.get("clients").isEmpty()) {
+                    alertFailure = alertFailure.replace("/clients//sites/", "");
+                } else {
+                    alertFailure = alertFailure.replace("/sites/", "");
+                }
+            }
+        }
+        logger.debug("alertFailure : " + alertFailure);
+    }
+
     public boolean getITSMSimulatorResponse() throws InterruptedException {
         Thread.sleep(5000);
         triggerITSMSimulatorAPI();
@@ -773,6 +811,26 @@ public class AlertingAPITest {
             }
         } catch (Exception e) {
             logger.debug("Failed to save ITSM Response : " + e.getMessage());
+            return false;
+        }
+
+    }
+
+    public boolean getAlertFailureResponse() throws InterruptedException {
+        Thread.sleep(5000);
+        triggerAlertFailureAPI();
+        try {
+            if (alertingResponse.getStatusCode() == 200) {
+                JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                for (String alertID : alertId)
+                    setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
+                return true;
+            } else {
+                logger.debug("Request to Alert Failure with Response Code : " + alertingResponse.getStatusCode());
+                return false;
+            }
+        } catch (Exception e) {
+            logger.debug("Failed to save  Alert Failure Response : " + e.getMessage());
             return false;
         }
 
@@ -1061,6 +1119,17 @@ public class AlertingAPITest {
                 flag = false;
                 logger.debug("Data Mismatch in Condition ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId"));
             }
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObj = (JSONObject) parser.parse(currentRow.get("alertDetails"));
+            JSONObject jsonObj1 = jsonObj.getJSONObject("alertDetails");
+            if (!jsonObj1.getString("Test").equalsIgnoreCase(actualDataInITSM.get("Test"))) {
+                flag = false;
+                logger.debug("Data Mismatch in Test : Expected -> " + jsonObj1.getString("Test") + " :: Actual ->" + actualDataInITSM.get("alertId"));
+            }
+            if (!jsonObj1.getString("Type").equalsIgnoreCase(actualDataInITSM.get("Type"))) {
+                flag = false;
+                logger.debug("Data Mismatch in Type : Expected -> " + jsonObj1.getString("Type") + " :: Actual ->" + actualDataInITSM.get("alertId"));
+            }
         } catch (Exception e) {
             logger.debug("Exception Occurred : " + e);
             flag = false;
@@ -1096,6 +1165,10 @@ public class AlertingAPITest {
                         setActualDataInITSM("endpointId", jsonObjPayload.getString("endpointId"));
                         setActualDataInITSM("conditionId", jsonObjPayload.getString("conditionId"));
                         setActualDataInITSM("statuscode", Integer.toString(jsonObj.getInt("statuscode")));
+                        JSONObject jsonObjAlertDetails = jsonObjPayload.getJSONObject("alertdetails");
+                        setActualDataInITSM("Test", jsonObjAlertDetails.getString("Test"));
+                        setActualDataInITSM("Type", jsonObjAlertDetails.getString("Type"));
+                        break;
                     }
                     i++;
                 }

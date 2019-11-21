@@ -59,13 +59,6 @@ public class JunoAlertingSteps{
 		assertTrue(apiTest.triggerUpdateAPI());
 	}
 
-	@Then("I trigger UPDATE Alert API request after {string} on Alert MS")
-	public void i_trigger_UPDATE_Alert_API_request_after_on_Alert_MS(String duration) throws Throwable {
-		// Write code here that turns the phrase above into concrete actions
-		Thread.sleep(Integer.parseInt(duration));
-		assertTrue(apiTest.triggerUpdateAPI());
-	}
-
 	@Then("I verify API response {string} from Alert MS for UPDATE Request")
 	public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request(String responseCode) throws Throwable {
 		// Write code here that turns the phrase above into concrete actions
@@ -81,7 +74,7 @@ public class JunoAlertingSteps{
 	@Then("^I trigger DELETE API request on Alert MS$")
 	public void i_trigger_DELETE_API_request_on_Alert_MS() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
-		assertTrue(apiTest.triggerDeleteAPI());
+		assertTrue(apiTest.triggerDeleteAPIWithBody());
 	}
 
 	@Then("I trigger DELETE API request with body on Alert MS")
@@ -226,6 +219,12 @@ public class JunoAlertingSteps{
 	public void i_trigger_Manual_Closure_By_Posting_on_KafkaTopic_with_MessageType(String kafkaMessageType) throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
 		assertTrue(apiTest.triggerManualClosure(kafkaMessageType));
+	}
+
+	@Then("I verify alert should present in Alert Failure table")
+	public void i_verify_alert_should_present_in_Alert_Failure_table() throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.getAlertFailureResponse());
 	}
 	
 	@Then("^I verify API response as Duplicate Alert Request from Alert MS$")
