@@ -1,6 +1,6 @@
-Feature: Juno Alerting Negative Test
+Feature: Juno Alerting Negative Scenario
 
-  @Functional
+  @Functional @Negative
   Scenario Outline: Alert goes to Failure table for 500 Server Error
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -17,7 +17,7 @@ Feature: Juno Alerting Negative Test
       | 500_ServerError | 404            | 500        | 25       |
 
 
-  @Functional
+  @Functional @Negative
   Scenario Outline: Success in Reprocessing Alert remove alert from Failure table
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
