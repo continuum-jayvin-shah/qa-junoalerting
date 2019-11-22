@@ -169,6 +169,51 @@ public class AlertingAPITest {
         }
     }
 
+    public boolean reprocessAlert(String count) {
+        try {
+            String url = alertingUrl + Utilities.getMavenProperties("ReprocessAlert");
+            String body = "[{\"alertId\" : \"" + alertId.get(0) + "\"}]";
+            logger.debug("Body : " + body);
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(body, url));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.debug("Reprocess Alert Failed with Error Message : " + e.getMessage());
+            return false;
+        }
+    }
+
+    public boolean verifyDuplicateAlertMsgInResponse() {
+        try {
+            if (alertingResponse.getStatusCode() == 200) {
+                logger.debug("Reprocessed of Alert Done with Status Code : " + alertingResponse.getStatusCode());
+                JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                JSONArray respArray = (JSONArray) json;
+                if (respArray == null) {
+                    System.out.println("No Data Present in ITSM Simulator");
+                    return false;
+                }
+                int i = 0;
+                while (i < respArray.size()) {
+                    JSONObject resObject = respArray.getJSONObject(i);
+                    if (alertId.contains((resObject.get("DuplicateAlertId").toString()))) {
+                        return true;
+                    }
+                    i++;
+                }
+                return false;
+            } else {
+                logger.debug("Alert Not Reprocessed with Response Code : " + alertingResponse.getStatusCode());
+                logger.debug("Alert Not Reprocessed with Message : " + alertingResponse);
+                return false;
+            }
+        } catch (Exception e) {
+            logger.debug("Alert Reprocessed Failed with Error Message : " + e.getMessage());
+            return false;
+        }
+    }
+
+
     public boolean triggerCreateITSM_API(String testName) {
         try {
             setTestName(testName);
@@ -308,6 +353,23 @@ public class AlertingAPITest {
                 logger.debug("Alert Deletion Called for AlertID : " + alertId.get(i));
                 return true;
             }
+            return true;
+        } catch (Exception e) {
+            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            return false;
+        }
+
+    }
+
+    public boolean triggerLastAlertDeleteAPIWithBody() {
+        try {
+            int i = alertId.size() - 1;
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
+            if (alertingResponse.getStatusCode() != 204) {
+                logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+                return false;
+            }
+            logger.debug("Alert Deleted : " + alertId.get(i));
             return true;
         } catch (Exception e) {
             logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
@@ -824,6 +886,36 @@ public class AlertingAPITest {
                 JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 for (String alertID : alertId)
                     setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
+                return true;
+            } else {
+                logger.debug("Request to Alert Failure with Response Code : " + alertingResponse.getStatusCode());
+                return false;
+            }
+        } catch (Exception e) {
+            logger.debug("Failed to save  Alert Failure Response : " + e.getMessage());
+            return false;
+        }
+
+    }
+
+    public boolean getAlertFailureResponseNotPresent() throws InterruptedException {
+        Thread.sleep(5000);
+        triggerAlertFailureAPI();
+        JSONArray filterArray1 = new JSONArray();
+        try {
+            if (alertingResponse.getStatusCode() == 200) {
+                JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                for (String alertID : alertId)
+                    filterArray1.add(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
+                int i = 0;
+                while (i < filterArray1.size()) {
+                    JSONArray filterArray2 = (JSONArray) filterArray1.get(i);
+                    if (filterArray2.size() < 1) {
+                        i++;
+                    } else {
+                        return false;
+                    }
+                }
                 return true;
             } else {
                 logger.debug("Request to Alert Failure with Response Code : " + alertingResponse.getStatusCode());

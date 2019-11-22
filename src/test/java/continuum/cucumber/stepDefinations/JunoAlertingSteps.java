@@ -77,6 +77,12 @@ public class JunoAlertingSteps{
 		assertTrue(apiTest.triggerDeleteAPIWithBody());
 	}
 
+	@Then("I trigger DELETE API request for second on Alert MS")
+	public void i_trigger_DELETE_API_request_for_second_on_Alert_MS() throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.triggerLastAlertDeleteAPIWithBody());
+	}
+
 	@Then("^I verify API response from Alert MS for DELETE Request$")
 	public void i_verify_API_response_from_Alert_MS_for_DELETE_Request() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
@@ -220,7 +226,26 @@ public class JunoAlertingSteps{
 		// Write code here that turns the phrase above into concrete actions
 		assertTrue(apiTest.getAlertFailureResponse());
 	}
-	
+
+	@Then("I reprocess the {string} alert")
+	public void i_reprocess_the_alert(String count) throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.reprocessAlert(count));
+	}
+
+	@Then("I verify Duplicate Alert Id message in response")
+	public void i_verify_Duplicate_Alert_Id_message_in_response() throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.verifyDuplicateAlertMsgInResponse());
+	}
+
+	@Then("I verify alert should not present in Alert Failure table")
+	public void i_verify_alert_should_not_present_in_Alert_Failure_table() throws Throwable {
+		// Write code here that turns the phrase above into concrete actions
+		assertTrue(apiTest.getAlertFailureResponseNotPresent());
+	}
+
+
 	@Then("^I verify API response as Duplicate Alert Request from Alert MS$")
 	public void i_verify_API_response_as_Duplicate_Alert_Request_from_Alert_MS() throws Throwable {
 	    // Write code here that turns the phrase above into concrete actions
