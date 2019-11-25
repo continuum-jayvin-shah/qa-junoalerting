@@ -11,6 +11,7 @@ Then I verify If alert is Created in AlertingMS
 Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>"
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If all requests were sent to ITSM
+Then I should verify ITSM payload data as expected
 Then I verify If alert is Deleted in AlertingMS
 
 
@@ -32,6 +33,7 @@ Then I verify If alert is Created in AlertingMS
 Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>"
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If all requests were sent to ITSM
+Then I should verify ITSM payload data as expected
 
 Examples:
 |TestCaseRow|KafkaMessageType|

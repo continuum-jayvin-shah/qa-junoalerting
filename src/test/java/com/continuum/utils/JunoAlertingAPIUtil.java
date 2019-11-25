@@ -154,6 +154,11 @@ public class JunoAlertingAPIUtil {
 		return res;
 	}
 
+	public static Response deleteWithBody(String formParametersJson, String URI) {
+		Response res = setTransactionID().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().delete(URI).andReturn();
+		return res;
+	}
+
 	/*
 	 * 
 	 */
