@@ -159,12 +159,12 @@ public class AlertingAPITest {
             setTestName(testName);
             preProcessing(getTestName());
             setConditionId(currentRow.get("conditionId"));
-            logger.debug("Alert Details : " + alertDetails);
+            logger.info("Alert Details : " + alertDetails);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(alertDetails, alertingAPIUrl));
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("Alert Creation Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Creation Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -383,17 +383,17 @@ public class AlertingAPITest {
             for (int i = 0; i < alertId.size() - 1; i++) {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
                 if (alertingResponse.getStatusCode() != 204) {
-                    logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+                    logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
                     return false;
                 }
-                logger.debug("Alert Deleted : " + alertId.get(i));
+                logger.info("Alert Deleted : " + alertId.get(i));
                 Thread.sleep(2000);
             }
-            logger.debug("Alerts Deleted!!");
+            logger.info("Alerts Deleted!!");
             return true;
 
         } catch (Exception e) {
-            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
             return false;
         }
 

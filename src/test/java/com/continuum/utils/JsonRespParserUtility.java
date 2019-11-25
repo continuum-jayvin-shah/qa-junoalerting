@@ -1,17 +1,5 @@
 package com.continuum.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.commons.collections.CollectionUtils;
-
-
-import com.google.gson.Gson;
-import com.jayway.restassured.path.json.JsonPath;
-
-import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 

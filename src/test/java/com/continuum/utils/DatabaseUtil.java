@@ -1,11 +1,11 @@
 package com.continuum.utils;
 
+import continuum.cucumber.DatabaseUtility;
+
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.HashMap;
-
-import continuum.cucumber.DatabaseUtility;
 
 public class DatabaseUtil {
 

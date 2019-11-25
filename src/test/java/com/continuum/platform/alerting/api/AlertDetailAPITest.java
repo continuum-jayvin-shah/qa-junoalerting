@@ -1,27 +1,20 @@
 package com.continuum.platform.alerting.api;
 
-import java.io.File;
-import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-
+import com.continuum.utils.DataUtils;
+import continuum.cucumber.Utilities;
+import continuum.cucumber.webservices.RestServicesUtility;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.JSONArray;
 import org.json.simple.parser.ParseException;
 import org.testng.Assert;
 
-import com.continuum.utils.DataUtils;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
 
 /*import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
  */
-import continuum.cucumber.DatabaseUtility;
-import continuum.cucumber.Utilities;
-import continuum.cucumber.webservices.RestServicesUtility;
 
 public class AlertDetailAPITest {
 
