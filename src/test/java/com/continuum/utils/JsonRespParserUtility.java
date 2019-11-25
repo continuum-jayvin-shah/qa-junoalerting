@@ -34,7 +34,7 @@ public class JsonRespParserUtility {
 		JSONArray respArray = (JSONArray) jsonResponse.get("outdata");
 		
 		if(respArray==null) {
-			System.out.println("No Data Present in ITSM Simulator");
+			System.out.println("No Data Present in response");
 			return respArray;
 		}
 		

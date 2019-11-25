@@ -25,7 +25,7 @@ import org.json.simple.parser.JSONParser;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, currentAlert, jasUrl, alertingAPIUrl = "";
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, jasUrl, alertingAPIUrl = "";
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
@@ -839,6 +839,16 @@ public class AlertingAPITest {
         }
     }
 
+    public void triggerAlertStateAPI() {
+        try {
+            alertStatePreProcessing();
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertState));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.debug("Alert State API Call Failed With Error : " + e.getMessage());
+        }
+    }
+
     public void alertFailurePreProcessing() throws Exception {
         logger.debug("Getting Host URL:" + alertingUrl);
         alertFailure = alertingUrl + Utilities.getMavenProperties("AlertFailureUrlSchema")
@@ -856,6 +866,25 @@ public class AlertingAPITest {
             }
         }
         logger.debug("alertFailure : " + alertFailure);
+    }
+
+    public void alertStatePreProcessing() throws Exception {
+        logger.debug("Getting Host URL:" + alertingUrl);
+        alertState = alertingUrl + Utilities.getMavenProperties("AlertStateUrlSchema")
+                .replace("{partners}", currentRow.get("partners"))
+                .replace("{clients}", currentRow.get("clients"))
+                .replace("{sites}", currentRow.get("sites"))
+                .replace("{alertId}", getCurrentAlert());
+        if (currentRow.get("sites").isEmpty()) {
+            alertState = alertState.replace("/sites/", "");
+        }
+        if (currentRow.get("clients").isEmpty()) {
+            alertState = alertState.replace("/clients/", "");
+        }
+        if (currentRow.get("partners").isEmpty()) {
+            alertState = alertState.replace("/partners/", "");
+        }
+        logger.debug("alertState API : " + alertState);
     }
 
     public boolean getITSMSimulatorResponse() throws InterruptedException {
@@ -896,6 +925,24 @@ public class AlertingAPITest {
             return false;
         }
 
+    }
+
+    public boolean getAlertStateResponse() throws InterruptedException {
+        Thread.sleep(5000);
+        triggerAlertStateAPI();
+        try {
+            if (alertingResponse.getStatusCode() == 200) {
+                JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, getCurrentAlert()));
+                return true;
+            } else {
+                logger.debug("Request to Alert State with Response Code : " + alertingResponse.getStatusCode());
+                return false;
+            }
+        } catch (Exception e) {
+            logger.debug("Failed to save  Alert State Response : " + e.getMessage());
+            return false;
+        }
     }
 
     public boolean getAlertFailureResponseNotPresent() throws InterruptedException {
@@ -1237,6 +1284,36 @@ public class AlertingAPITest {
             logger.debug("Data Mismatch in " + field + " : Expected -> " + value + " :: Actual ->" + actualDataInITSM.get("field"));
         }
         return flag;
+    }
+
+    public String validateAlertState(List<String> factorList) throws InterruptedException {
+        String errMsg = "";
+        try {
+            if (filterArray.size() > 0) {
+                JSONObject jsonObj = filterArray.getJSONObject(0);
+                for (String factor : factorList) {
+                    switch (factor) {
+                        case "child list":
+                            String expectedChildList = alertId.get(0);
+                            String actualChildList = jsonObj.getString("childlist");
+                            String[] arrActual = actualChildList.split(",");
+                            for (String childAlert : arrActual) {
+                                if (!alertId.contains(childAlert)) {
+                                    errMsg = errMsg + "[Child Alert : " + childAlert + " not present in Alert ID List.]";
+                                }
+                            }
+                            break;
+                    }
+                }
+            } else {
+                logger.debug("No data present in Alert State");
+                errMsg = "[No data present in Alert State. As filterArray size is 0]";
+            }
+        } catch (Exception e) {
+            logger.debug("Exception Occurred " + e);
+            errMsg = "Exception Occured " + e.toString() + "]";
+        }
+        return errMsg;
     }
 
     public void getActualDataInITSM() throws InterruptedException {
