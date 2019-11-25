@@ -13,6 +13,8 @@ Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert not reached till ITSM Simulator
 Then I trigger CREATE Alert API request for Parent Alert on Alert MS for "<TestCaseRow3>"
 Then I verify API response from Alert MS
+Then I trigger GET Alert State API for current alert
+Then I verify "child list" in Alert State API response
 Then I trigger DELETE API request for Child Alert on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
