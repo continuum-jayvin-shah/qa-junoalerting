@@ -62,6 +62,10 @@ public class AlertingAPITest {
         this.filterArray.addAll(filterArray);
     }
 
+    public void clearFilterArray() {
+        this.filterArray.clear();
+    }
+
     public String getTestName() {
         return testName;
     }
@@ -1175,7 +1179,7 @@ public class AlertingAPITest {
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            logger.debug("Exception Occurred : " + e.getMessage());
             return false;
         }
 
@@ -1258,9 +1262,10 @@ public class AlertingAPITest {
                 flag = false;
                 logger.debug("Data Mismatch in Condition ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId"));
             }
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObj = (JSONObject) parser.parse(currentRow.get("alertDetails"));
-            JSONObject jsonObj1 = jsonObj.getJSONObject("alertDetails");
+       //     JSONParser parser = new JSONParser();
+       //     JSONObject jsonObj = (JSONObject) parser.parse(currentRow.get("alertDetails"));
+            org.json.JSONObject jsonObj = new org.json.JSONObject(currentRow.get("alertDetails"));
+            org.json.JSONObject jsonObj1 = jsonObj.getJSONObject("alertDetails");
             if (!jsonObj1.getString("Test").equalsIgnoreCase(actualDataInITSM.get("Test"))) {
                 flag = false;
                 logger.debug("Data Mismatch in Test : Expected -> " + jsonObj1.getString("Test") + " :: Actual ->" + actualDataInITSM.get("alertId"));

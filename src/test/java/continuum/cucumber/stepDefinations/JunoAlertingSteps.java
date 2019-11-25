@@ -135,6 +135,7 @@ public class JunoAlertingSteps {
     @Then("^I get ITSM Simulator Response for Current Alert$")
     public void i_get_ITSM_Simulator_Response_for_Current_Alert() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
+        apiTest.clearFilterArray();
         assertTrue(apiTest.getITSMSimulatorResponse());
     }
 
