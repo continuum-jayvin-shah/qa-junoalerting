@@ -1,24 +1,16 @@
 package publisherservice;
 
-import java.io.IOException;
-
-import java.net.DatagramPacket;
-
-import java.net.DatagramSocket;
-
-import java.net.InetAddress;
-
-import org.apache.log4j.Logger;
-
 import continuum.cucumber.Utilities;
-import continuum.cucumber.webservices.JSonAssertionUtility;
 import continuum.cucumber.webservices.RestAssuredUtility;
 import io.restassured.response.Response;
 import metric.CounterOuterClass.Counter;
-
-import metric.EventOuterClass.Event;
-
 import metric.MessageOuterClass.Message;
+import org.apache.log4j.Logger;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class PrometheusCounter {
 
@@ -72,10 +64,10 @@ public class PrometheusCounter {
 		Response prometheusResp = RestAssuredUtility.getWithNoParameters(Utilities.getMavenProperties("PrometheusGet"));
 		
 		if(prometheusResp.getBody().asString().contains("Count")) {
-			logger.debug("Meassage Reached till Prometheus");
+			logger.info("Meassage Reached till Prometheus");
 			return true;
 		}else {
-			logger.debug("Meassage Not Reached till Prometheus");
+			logger.info("Meassage Not Reached till Prometheus");
 			return false;
 		}
 		

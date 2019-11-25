@@ -1,7 +1,15 @@
 package com.continuum.utils;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
+import com.google.gson.*;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.ConnectionConfig;
+import io.restassured.config.EncoderConfig;
+import io.restassured.http.ContentType;
+import io.restassured.path.json.JsonPath;
+import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import org.json.simple.JSONObject;
+import org.testng.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,29 +18,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import org.json.simple.JSONObject;
-import org.testng.Assert;
+import static io.restassured.RestAssured.config;
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 /*import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;*/
-import com.google.gson.JsonParser;
-
 //import continuum.cucumber.testRunner.SendReport;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.config.ConnectionConfig;
-import io.restassured.config.EncoderConfig;
-import io.restassured.http.ContentType;
-import io.restassured.path.json.JsonPath;
-import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
-
-import static io.restassured.RestAssured.*;
 
 public class JunoAlertingAPIUtil {
 

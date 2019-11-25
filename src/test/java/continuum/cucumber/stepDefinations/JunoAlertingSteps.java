@@ -1,19 +1,17 @@
 package continuum.cucumber.stepDefinations;
 
-import static org.junit.Assert.assertTrue;
-
-import org.apache.log4j.Logger;
-import org.testng.Reporter;
-
 import com.continuum.platform.alerting.api.AlertingAPITest;
 import com.continuum.utils.DataUtils;
-
 import continuum.cucumber.Utilities;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import org.apache.log4j.Logger;
+import org.testng.Reporter;
+
+import static org.junit.Assert.assertTrue;
 
 public class JunoAlertingSteps{
 	
@@ -23,7 +21,7 @@ public class JunoAlertingSteps{
 	@Before
 	public void readScenario(Scenario scenario) {
 		
-		logger.debug("Scenario Name :" + scenario.getName());
+		logger.info("Scenario Name :" + scenario.getName());
 		Reporter.log("<b><i><font color='Blue'>====== Scenario Name: ====="+ scenario.getName()+"</font></i></b>");
 		String environment = Utilities.getMavenProperties("Environment").trim();
 		DataUtils.setFileName("TestData_" + environment + ".xls");
@@ -205,7 +203,7 @@ public class JunoAlertingSteps{
 	@After
 	public void completeScenario(Scenario scenario) {
 		
-		logger.debug("Scenario Name :" + scenario.getName() + "Status :" + scenario.getStatus());
+		logger.info("Scenario Name :" + scenario.getName() + "Status :" + scenario.getStatus());
 		Reporter.log("<b><i><font color='Blue'>====== Scenario Name: ====="+ scenario.getName()+"</font></i></b>");
 		apiTest.closeTest();
 	}

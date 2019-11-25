@@ -1,20 +1,13 @@
 package publisherservice;
 
-import java.io.IOException;
-
-import java.net.DatagramPacket;
-
-import java.net.DatagramSocket;
-
-import java.net.InetAddress;
-
+import metric.CounterOuterClass.Counter;
+import metric.MessageOuterClass.Message;
 import org.apache.log4j.Logger;
 
-import metric.CounterOuterClass.Counter;
-
-import metric.EventOuterClass.Event;
-
-import metric.MessageOuterClass.Message;
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class DynatraceCounter {
 

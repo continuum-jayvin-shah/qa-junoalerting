@@ -1,20 +1,12 @@
 package publisherservice;
 
-import java.io.IOException;
-
-import java.net.DatagramPacket;
-
-import java.net.DatagramSocket;
-
-import java.net.InetAddress;
-
-import metric.CounterOuterClass.Counter;
-
-import metric.EventOuterClass.Event;
-
 import metric.GaugeOuterClass.Gauge;
-
 import metric.MessageOuterClass.Message;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 
 public class DynatraceGauge {
 
