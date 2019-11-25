@@ -8,77 +8,119 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
+import com.continuum.utils.JunoAlertingAPIUtil;
+
+import continuum.cucumber.Utilities;
+import io.restassured.response.Response;
+
 
 public class DynatraceCounter {
 
 	private Logger logger = Logger.getLogger(this.getClass());
 	
-	public static void main(String[] args) throws IOException {
+	public boolean sendDynatraceCounter(){
+
+		try {
 
 		InetAddress localhost = InetAddress.getLocalHost();
+		InetAddress address = InetAddress.getByName("127.0.0.1");
+		DatagramSocket ds;
+		DatagramPacket dp;
+		Counter counter;
+		Message.Metric metric;
+		Message message;
 
-		Counter counter = Counter.newBuilder()
-
+		for(int i=1234; i<=1236; i++) {
+		
+		counter = Counter.newBuilder()
 				.setName("Dynatrace Test for Counter")
-
 				.setDescription("Counter for Dynatrace Test")
-
-				.setValue(100)
-
+				.setValue(i)
 				.putProperties("HostIpAddress", localhost.getHostAddress().trim())
-
 				.build();
 
-		Message.Metric metric = Message.Metric.newBuilder()
-
+		metric = Message.Metric.newBuilder()
 				.setType("Counter")
-
 				.setValue(counter.toByteString())
-
 				.build();
 
-		Message message = Message.newBuilder()
-
+		message = Message.newBuilder()
 				.setNamespace("Dynatrace Test for Counter")
-
 				.setProcessName("Dynatrace Test for Counter")
-
 				.setHostName("Test Machine")
-
-				.setTimestampUnix(System.currentTimeMillis() * 1000000)
-
+				.setTimestampUnix(System.currentTimeMillis() * 1000000 + 2000000)
 				.addAddress("172.28.16.237")
-
 				.putProperties("HostIpAddress", "172.28.16.237")
-
 				.addMetric(metric)
-
 				.build();
 
-		DatagramSocket ds = new DatagramSocket();
-
-		DatagramPacket dp = new DatagramPacket(message.toByteArray(), message.toByteArray().length);
-
-		// connect() method
+		ds = new DatagramSocket();
+		dp = new DatagramPacket(message.toByteArray(), message.toByteArray().length);	
 		
-		byte[] ip = {(byte) 172,28,16,(byte) 237};
-		
-		InetAddress address = InetAddress.getByAddress(ip);
-		
-		System.out.println(address);
-		
-		ds.connect(address, 7000);
+		ds.connect(address, 7000);		
 
-		System.out.println("isConnected : " + ds.isConnected());
-
-		System.out.println("IsBound : " + ds.isBound());
-
+		logger.info("isConnected : " + ds.isConnected());
+		logger.info("IsBound : " + ds.isBound());
+		
 		ds.send(dp);
-
+		
+		try {
+			Thread.sleep(65000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		ds.disconnect();
-
 		ds.close();
+		
+		}	
+		
+		return true;
+		
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 
+			return false;
+		} catch (SocketException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+
+			return false;
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
-
+	
+	public boolean verifyDynatraceCount() {
+		
+		try {
+			Thread.sleep(120000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		Response dynatraceResp = JunoAlertingAPIUtil.getWithAuthorizationNoParameters(Utilities.getMavenProperties("DynatraceGetCounter"));
+		
+		logger.info(dynatraceResp.getBody().asString());
+		
+		if(dynatraceResp.getBody().asString().contains("1234")  
+				&& dynatraceResp.getBody().asString().contains("1235")  
+				&& dynatraceResp.getBody().asString().contains("1236")    
+				&& dynatraceResp.getBody().asString().contains("Counter")) {
+			logger.info("Meassage Reached till Dynatrace");
+			return true;
+		}else {
+			logger.info("Meassage Not Reached till Dynatrace");
+			return false;
+		}
+		
+	}
 }

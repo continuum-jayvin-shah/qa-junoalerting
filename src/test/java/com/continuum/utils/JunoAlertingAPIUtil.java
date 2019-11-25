@@ -44,7 +44,7 @@ public class JunoAlertingAPIUtil {
 	}
 	
 	public static RequestSpecification setTransactionID() {
-		return given().log().all().headers("X-Request-Id", "TEST");
+		return given().log().all().headers("X-Request-Id", "TEST","Authorization","Api-Token 1cNThoj4R_ytjJ1Y9pnim");
 	}
 
 	public static void verifyStatusCode(Response res, int expectedStatusCode) {
@@ -125,6 +125,11 @@ public class JunoAlertingAPIUtil {
 	}
 
 	public static Response getWithNoParameters(String URI) {
+		Response res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().get(URI);
+		return res;
+	}
+	
+	public static Response getWithAuthorizationNoParameters(String URI) {
 		Response res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().get(URI);
 		return res;
 	}
