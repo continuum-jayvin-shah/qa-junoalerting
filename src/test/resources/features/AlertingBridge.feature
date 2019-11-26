@@ -33,7 +33,6 @@ Then I trigger DELETE API request on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If all requests were sent to ITSM
-Then I should verify ITSM payload data as expected
 Examples:
 |TestCaseRow1|TestCaseRow2|
 |Alerting 1.0 with LegacyAlertID|Alerting 1.0 with New LegacyAlertID|

@@ -51,13 +51,17 @@ public class JunoAlertingSteps {
     @Given("^I trigger CREATE Alert API request on Alert MS for \"([^\"]*)\"$")
     public void i_trigger_CREATE_Alert_API_request_on_Alert_MS(String testCaseRow) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerCreateAPI(testCaseRow));
+        //assertTrue(apiTest.triggerCreateAPI(testCaseRow));
+        String msg = apiTest.triggerCreateAPI(testCaseRow);
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify API response from Alert MS$")
     public void i_verify_API_response_from_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyCreateAPIResponse());
+        //assertTrue(apiTest.verifyCreateAPIResponse());
+        String msg = apiTest.verifyCreateAPIResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I trigger UPDATE Alert API request on Alert MS$")
@@ -135,6 +139,7 @@ public class JunoAlertingSteps {
     @Then("^I get ITSM Simulator Response for Current Alert$")
     public void i_get_ITSM_Simulator_Response_for_Current_Alert() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
+        apiTest.clearFilterArray();
         assertTrue(apiTest.getITSMSimulatorResponse());
     }
 
