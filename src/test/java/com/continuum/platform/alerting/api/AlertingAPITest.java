@@ -158,19 +158,20 @@ public class AlertingAPITest {
         AlertingAPITest.kafkaServer = kafkaServer;
     }
 
-    public boolean triggerCreateAPI(String testName) {
+    public String triggerCreateAPI(String testName) {
+        String errMsg = "" ;
         try {
             setTestName(testName);
             preProcessing(getTestName());
             setConditionId(currentRow.get("conditionId"));
             logger.info("Alert Details : " + alertDetails);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(alertDetails, alertingAPIUrl));
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("Alert Creation Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Exception Occurred in Alert Creation Failed " + e.getMessage() + " ]" ;
         }
+        return errMsg;
     }
 
     public boolean reprocessAlert(String count) {
@@ -512,7 +513,8 @@ public class AlertingAPITest {
 
     }
 
-    public boolean verifyCreateAPIResponse() {
+    public String verifyCreateAPIResponse() {
+        String errMsg = "" ;
         try {
             if (alertingResponse.getStatusCode() == 409) {
                 logger.debug(alertingResponse.getBody().asString());
@@ -526,23 +528,22 @@ public class AlertingAPITest {
                     return verifyCreateAPIResponse();
                 } else {
                     logger.debug("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
-                    return false;
+                    errMsg = errMsg + "[Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode() + " ]" ;
                 }
             } else if (alertingResponse.getStatusCode() == 201) {
                 logger.debug(alertingResponse.getBody().asString());
                 setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 logger.debug("Alert Created : " + getCurrentAlert());
-                return true;
             } else {
                 logger.debug("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
-                return false;
+                errMsg = errMsg + "[Alert Not Created with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
             }
         } catch (Exception e) {
             logger.debug("Alert Verification Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Alert Verification Failed with Error Message : " + e.getMessage() + " ]" ;
         }
-
+        return errMsg ;
     }
 
     public boolean verifyCreateAPIResponseITSM() {
