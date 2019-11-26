@@ -178,12 +178,12 @@ public class AlertingAPITest {
         try {
             String url = alertingUrl + Utilities.getMavenProperties("ReprocessAlert");
             String body = "[{\"alertId\" : \"" + alertId.get(0) + "\"}]";
-            logger.debug("Body : " + body);
+            logger.info("Body : " + body);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(body, url));
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("Reprocess Alert Failed with Error Message : " + e.getMessage());
+            logger.info("Reprocess Alert Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -191,7 +191,7 @@ public class AlertingAPITest {
     public boolean verifyDuplicateAlertMsgInResponse() {
         try {
             if (alertingResponse.getStatusCode() == 200) {
-                logger.debug("Reprocessed of Alert Done with Status Code : " + alertingResponse.getStatusCode());
+                logger.info("Reprocessed of Alert Done with Status Code : " + alertingResponse.getStatusCode());
                 JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 JSONArray respArray = (JSONArray) json;
                 if (respArray == null) {
@@ -208,12 +208,12 @@ public class AlertingAPITest {
                 }
                 return false;
             } else {
-                logger.debug("Alert Not Reprocessed with Response Code : " + alertingResponse.getStatusCode());
-                logger.debug("Alert Not Reprocessed with Message : " + alertingResponse);
+                logger.info("Alert Not Reprocessed with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Not Reprocessed with Message : " + alertingResponse);
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Alert Reprocessed Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Reprocessed Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -224,12 +224,12 @@ public class AlertingAPITest {
             setTestName(testName);
             preProcessingITSM(getTestName());
             setConditionId(currentRow.get("conditionId"));
-            logger.debug("Incident Details : " + alertDetails);
+            logger.info("Incident Details : " + alertDetails);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(alertDetails, itsmIntegrationUrl));
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("Incident Creation Failed with Error Message : " + e.getMessage());
+            logger.info("Incident Creation Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -243,13 +243,13 @@ public class AlertingAPITest {
             JSONArray alerts = new JSONArray();
             alerts.addAll(alertId);
             parentAlertDetails.put("alerts", alerts);
-            logger.debug(parentAlertDetails.toString());
+            logger.info(parentAlertDetails.toString());
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl));
             Thread.sleep(3000);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("Parent Alert Creation Failed with Error Message : " + e.getMessage());
+            logger.info("Parent Alert Creation Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -265,27 +265,27 @@ public class AlertingAPITest {
                 alerts.add(alertId.get(i));
                 alerts.add(alertId.get(i + 1));
                 parentAlertDetails.put("alerts", alerts);
-                logger.debug(parentAlertDetails.toString());
+                logger.info(parentAlertDetails.toString());
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl));
                 Thread.sleep(3000);
                 if (alertingResponse.getStatusCode() == 201) {
-                    logger.debug(alertingResponse.getBody().asString());
+                    logger.info(alertingResponse.getBody().asString());
                     setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                     setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
-                    logger.debug("Alert Created : " + getCurrentAlert());
+                    logger.info("Alert Created : " + getCurrentAlert());
                     i++;
                 } else if (alertingResponse.getStatusCode() == 409) {
-                    logger.debug("Parent Alert not Created with Error Conflict");
+                    logger.info("Parent Alert not Created with Error Conflict");
                     return false;
                 } else {
-                    logger.debug("Parent Alert no created with Response Code : " + alertingResponse.getStatusCode());
+                    logger.info("Parent Alert no created with Response Code : " + alertingResponse.getStatusCode());
                     return false;
                 }
             }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("Parent Alert Creation Failed with Error Message : " + e.getMessage());
+            logger.info("Parent Alert Creation Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -293,12 +293,12 @@ public class AlertingAPITest {
     public boolean triggerUpdateAPI() {
         try {
             preProcessing(getTestName());
-            logger.debug("Alert Details : " + alertDetails);
+            logger.info("Alert Details : " + alertDetails);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(alertDetails, alertingAPIUrl + "/" + getCurrentAlert()));
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("Alert Updation Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -306,12 +306,12 @@ public class AlertingAPITest {
     public boolean triggerUpdateAPI_ITSM() {
         try {
             preProcessingITSM(getTestName());
-            logger.debug("Incident Details : " + alertDetails);
+            logger.info("Incident Details : " + alertDetails);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(alertDetails, itsmIntegrationUrl + "/" + getCurrentAlert()));
             return true;
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("Incident Updation Failed with Error Message : " + e.getMessage());
+            logger.info("Incident Updation Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -323,19 +323,19 @@ public class AlertingAPITest {
                 for (i = 0; i < alertId.size(); i++) {
                     this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
                     if (alertingResponse.getStatusCode() != 204) {
-                        logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+                        logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
                         return false;
                     }
-                    logger.debug("Alert Deleted : " + alertId.get(i));
+                    logger.info("Alert Deleted : " + alertId.get(i));
                 }
             } else {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
-                logger.debug("Alert Deletion Called for AlertID : " + alertId.get(i));
+                logger.info("Alert Deletion Called for AlertID : " + alertId.get(i));
                 return true;
             }
             return true;
         } catch (Exception e) {
-            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -348,19 +348,19 @@ public class AlertingAPITest {
                 for (i = 0; i < alertId.size(); i++) {
                     this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
                     if (alertingResponse.getStatusCode() != 204) {
-                        logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+                        logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
                         return false;
                     }
-                    logger.debug("Alert Deleted : " + alertId.get(i));
+                    logger.info("Alert Deleted : " + alertId.get(i));
                 }
             } else {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
-                logger.debug("Alert Deletion Called for AlertID : " + alertId.get(i));
+                logger.info("Alert Deletion Called for AlertID : " + alertId.get(i));
                 return true;
             }
             return true;
         } catch (Exception e) {
-            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -371,13 +371,13 @@ public class AlertingAPITest {
             int i = alertId.size() - 1;
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
             if (alertingResponse.getStatusCode() != 204) {
-                logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
-            logger.debug("Alert Deleted : " + alertId.get(i));
+            logger.info("Alert Deleted : " + alertId.get(i));
             return true;
         } catch (Exception e) {
-            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -409,17 +409,17 @@ public class AlertingAPITest {
             for (int i = 0; i < alertId.size() - 2; i++) {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
                 if (alertingResponse.getStatusCode() != 204) {
-                    logger.debug("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+                    logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
                     return false;
                 }
-                logger.debug("Alert Deleted : " + alertId.get(i));
+                logger.info("Alert Deleted : " + alertId.get(i));
                 Thread.sleep(2000);
             }
-            logger.debug("Alerts Deleted!!");
+            logger.info("Alerts Deleted!!");
             return true;
 
         } catch (Exception e) {
-            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -429,17 +429,17 @@ public class AlertingAPITest {
         try {
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertID));
             if (alertingResponse.getStatusCode() != 204) {
-                logger.debug("Alert ID Deletion Failed for : " + alertID + "with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert ID Deletion Failed for : " + alertID + "with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
-            logger.debug("Alert Deleted : " + alertID);
+            logger.info("Alert Deleted : " + alertID);
             if (conditionId.contains(currentRow.get("conditionId"))) {
                 conditionId.remove(currentRow.get("conditionId"));
             }
             return true;
 
         } catch (Exception e) {
-            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -448,9 +448,9 @@ public class AlertingAPITest {
     public void preProcessing(String testName) throws Exception {
 
         setCurrentRow(DataUtils.getTestRow("Test", testName));
-        logger.debug("Test Data Captured.");
+        logger.info("Test Data Captured.");
 
-        logger.debug("Getting Host URL:" + alertingUrl);
+        logger.info("Getting Host URL:" + alertingUrl);
 
         alertingAPIUrl = alertingUrl + Utilities.getMavenProperties("AlertingUrlSchema")
                 .replace("{partners}", currentRow.get("partners"))
@@ -475,16 +475,16 @@ public class AlertingAPITest {
         }
         setAlertDetails(currentRow.get("alertDetails"));
 
-        logger.debug(alertingAPIUrl);
+        logger.info(alertingAPIUrl);
 
     }
 
     public void preProcessingITSM(String testName) throws Exception {
 
         setCurrentRow(DataUtils.getTestRow("Test", testName));
-        logger.debug("Test Data Captured.");
+        logger.info("Test Data Captured.");
         AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("DTITSMHostUrlV2"));
-        logger.debug("Getting Host URL itsmIntegrationUrl:" + itsmIntegrationUrl);
+        logger.info("Getting Host URL itsmIntegrationUrl:" + itsmIntegrationUrl);
 
         itsmIntegrationUrl = itsmIntegrationUrl + Utilities.getMavenProperties("ITSMUrlSchema")
                 .replace("{partners}", currentRow.get("partners"))
@@ -509,7 +509,7 @@ public class AlertingAPITest {
         }
         setAlertDetails(currentRow.get("alertDetails"));
 
-        logger.debug(itsmIntegrationUrl);
+        logger.info(itsmIntegrationUrl);
 
     }
 
@@ -517,7 +517,7 @@ public class AlertingAPITest {
         String errMsg = "" ;
         try {
             if (alertingResponse.getStatusCode() == 409) {
-                logger.debug(alertingResponse.getBody().asString());
+                logger.info(alertingResponse.getBody().asString());
                 setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 triggerDeleteAPI(currentAlert);
@@ -527,20 +527,20 @@ public class AlertingAPITest {
                     triggerCreateAPI(getTestName());
                     return verifyCreateAPIResponse();
                 } else {
-                    logger.debug("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+                    logger.info("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
                     errMsg = errMsg + "[Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode() + " ]" ;
                 }
             } else if (alertingResponse.getStatusCode() == 201) {
-                logger.debug(alertingResponse.getBody().asString());
+                logger.info(alertingResponse.getBody().asString());
                 setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
-                logger.debug("Alert Created : " + getCurrentAlert());
+                logger.info("Alert Created : " + getCurrentAlert());
             } else {
-                logger.debug("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
                 errMsg = errMsg + "[Alert Not Created with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
             }
         } catch (Exception e) {
-            logger.debug("Alert Verification Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Verification Failed with Error Message : " + e.getMessage());
             errMsg = errMsg + "[Alert Verification Failed with Error Message : " + e.getMessage() + " ]" ;
         }
         return errMsg ;
@@ -549,7 +549,7 @@ public class AlertingAPITest {
     public boolean verifyCreateAPIResponseITSM() {
         try {
             if (alertingResponse.getStatusCode() == 409) {
-                logger.debug(alertingResponse.getBody().asString());
+                logger.info(alertingResponse.getBody().asString());
                 setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
                 setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
                 return false;
@@ -560,21 +560,21 @@ public class AlertingAPITest {
                     triggerCreateITSM_API(getTestName());
                     return verifyCreateAPIResponseITSM();
                 } else {
-                    logger.debug("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+                    logger.info("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
                     return false;
                 }*/
             } else if (alertingResponse.getStatusCode() == 200) {
-                logger.debug(alertingResponse.getBody().asString());
+                logger.info(alertingResponse.getBody().asString());
                 setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
                 setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
-                logger.debug("Incident Created in ITSM : " + getCurrentAlert());
+                logger.info("Incident Created in ITSM : " + getCurrentAlert());
                 return true;
             } else {
-                logger.debug("Incident Not Created with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Incident Not Created with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Incident Verification Failed with Error Message : " + e.getMessage());
+            logger.info("Incident Verification Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -584,7 +584,7 @@ public class AlertingAPITest {
 
         try {
             if (alertingResponse.getStatusCode() == 409) {
-                logger.debug(alertingResponse.getBody().asString());
+                logger.info(alertingResponse.getBody().asString());
                 setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 triggerDeleteAPI(currentAlert);
@@ -594,24 +594,24 @@ public class AlertingAPITest {
                     triggerCreateAPI(getTestName());
                     return verifyAlertSuspension();
                 } else {
-                    logger.debug("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+                    logger.info("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
                     return false;
                 }
             } else if (alertingResponse.getStatusCode() == 400) {
-                logger.debug(alertingResponse.getBody().asString());
+                logger.info(alertingResponse.getBody().asString());
                 JSONObject suspensionResponse = (JSONObject) JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 if (suspensionResponse.getInt("status") == 205) {
-                    logger.debug("Alert Not Created because of suspension with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
+                    logger.info("Alert Not Created because of suspension with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
                     return true;
                 }
-                logger.debug("Alert Not Created with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
+                logger.info("Alert Not Created with Response Code : " + alertingResponse.getStatusCode() + " And Internal Response Code : " + suspensionResponse.get("status"));
                 return false;
             } else {
-                logger.debug("Alert Created with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Created with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Alert Verification Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Verification Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -622,11 +622,11 @@ public class AlertingAPITest {
         try {
             if (alertingResponse.getStatusCode() == 409) {
                 if (JsonPath.from(alertingResponse.getBody().asString()).get("alertId").equals(currentAlert)) {
-                    logger.debug(alertingResponse.getBody().asString());
-                    logger.debug("New ALert is not getting created, Getting Conflict : " + alertingResponse.getStatusCode());
+                    logger.info(alertingResponse.getBody().asString());
+                    logger.info("New ALert is not getting created, Getting Conflict : " + alertingResponse.getStatusCode());
                     return false;
                 } else {
-                    logger.debug(alertingResponse.getBody().asString());
+                    logger.info(alertingResponse.getBody().asString());
                     setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                     setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                     triggerDeleteAPI(currentAlert);
@@ -636,23 +636,23 @@ public class AlertingAPITest {
                         triggerCreateAPI(getTestName());
                         return verifyNewAlertCreation();
                     } else {
-                        logger.debug("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+                        logger.info("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
                         return false;
                     }
                 }
             } else if (alertingResponse.getStatusCode() == 201) {
-                logger.debug(alertingResponse.getBody().asString());
+                logger.info(alertingResponse.getBody().asString());
                 setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
-                logger.debug("Alert Created : " + getCurrentAlert());
+                logger.info("Alert Created : " + getCurrentAlert());
                 return true;
 
             } else {
-                logger.debug("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Alert Verification Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Verification Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -662,23 +662,23 @@ public class AlertingAPITest {
 
         try {
             if (alertingResponse.getStatusCode() == 409) {
-                logger.debug(alertingResponse.getBody().asString());
-                logger.debug("New ALert is not getting created, Getting Conflict : " + alertingResponse.getStatusCode());
+                logger.info(alertingResponse.getBody().asString());
+                logger.info("New ALert is not getting created, Getting Conflict : " + alertingResponse.getStatusCode());
                 //setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 return true;
             } else if (alertingResponse.getStatusCode() == 201) {
-                logger.debug(alertingResponse.getBody().asString());
+                logger.info(alertingResponse.getBody().asString());
                 setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
                 setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
-                logger.debug("Alert Created : " + getCurrentAlert());
+                logger.info("Alert Created : " + getCurrentAlert());
                 return false;
             } else {
-                logger.debug("Alert Not giving Conflict with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Not giving Conflict with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Duplicate Alert Verification Failed with Error Message : " + e.getMessage());
+            logger.info("Duplicate Alert Verification Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -688,15 +688,15 @@ public class AlertingAPITest {
 
         try {
             if (alertingResponse.getStatusCode() == 204) {
-                logger.debug("Update of Alert Done with Status Code : " + alertingResponse.getStatusCode());
+                logger.info("Update of Alert Done with Status Code : " + alertingResponse.getStatusCode());
                 return true;
             } else {
-                logger.debug("Alert Not Updated with Response Code : " + alertingResponse.getStatusCode());
-                logger.debug("Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+                logger.info("Alert Not Updated with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Alert Updation Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -706,16 +706,16 @@ public class AlertingAPITest {
 
         try {
             if (alertingResponse.getStatusCode() == Integer.parseInt(responseCode)) {
-                logger.debug("Actual Response Code found : " + alertingResponse.getStatusCode());
-                logger.debug("Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+                logger.info("Actual Response Code found : " + alertingResponse.getStatusCode());
+                logger.info("Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
                 return true;
             } else {
-                logger.debug("Expected Response Not Code found. Actual -> " + alertingResponse.getStatusCode());
-                logger.debug("Internal Status Code : " + alertingResponse.toString());
+                logger.info("Expected Response Not Code found. Actual -> " + alertingResponse.getStatusCode());
+                logger.info("Internal Status Code : " + alertingResponse.toString());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Alert Updation Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
             return false;
         }
     }
@@ -724,15 +724,15 @@ public class AlertingAPITest {
 
         try {
             if (alertingResponse.getStatusCode() == 200) {
-                logger.debug("Update of ITSM Alert Done with Status Code : " + alertingResponse.getStatusCode());
+                logger.info("Update of ITSM Alert Done with Status Code : " + alertingResponse.getStatusCode());
                 return true;
             } else {
-                logger.debug("ITSM Incident Not Updated with Response Code : " + alertingResponse.getStatusCode());
-                logger.debug("ITSM Incident Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+                logger.info("ITSM Incident Not Updated with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("ITSM Incident Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("ITSM Incident Updation Failed with Error Message : " + e.getMessage());
+            logger.info("ITSM Incident Updation Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -743,17 +743,17 @@ public class AlertingAPITest {
         try {
             if (alertingResponse.getStatusCode() == 404) {
                 if (JsonPath.from(alertingResponse.getBody().asString()).get("status").equals("203"))
-                    logger.debug("Update/Delete of Alert Failed with Status Code : " + alertingResponse.getStatusCode() + " And Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+                    logger.info("Update/Delete of Alert Failed with Status Code : " + alertingResponse.getStatusCode() + " And Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
                 return true;
             } else if (alertingResponse.getStatusCode() == 204) {
-                logger.debug("Alert Updated/Deleted with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Updated/Deleted with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             } else {
-                logger.debug("Alert Updated/Deleted with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Updated/Deleted with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Alert Updation/Deletion Passed : " + e.getMessage());
+            logger.info("Alert Updation/Deletion Passed : " + e.getMessage());
             return false;
         }
 
@@ -763,16 +763,16 @@ public class AlertingAPITest {
 
         try {
             if (alertingResponse.getStatusCode() == 202) {
-                logger.debug("Update of Alert Snoozed Status Code : " + alertingResponse.getStatusCode());
+                logger.info("Update of Alert Snoozed Status Code : " + alertingResponse.getStatusCode());
                 return true;
             } else if (alertingResponse.getStatusCode() == 204) {
-                logger.debug("Alert Updated during snooze period with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Updated during snooze period with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
-            logger.debug("Alert Update is giving Response Code : " + alertingResponse.getStatusCode());
+            logger.info("Alert Update is giving Response Code : " + alertingResponse.getStatusCode());
             return false;
         } catch (Exception e) {
-            logger.debug("Alert Updation Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -782,15 +782,15 @@ public class AlertingAPITest {
 
         try {
             if (alertingResponse.getStatusCode() == 204) {
-                logger.debug("Delete of Alert Done with Status Code : " + alertingResponse.getStatusCode());
+                logger.info("Delete of Alert Done with Status Code : " + alertingResponse.getStatusCode());
                 return true;
             } else {
-                logger.debug("Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode());
-                logger.debug("Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+                logger.info("Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -802,7 +802,7 @@ public class AlertingAPITest {
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(itsmUrl));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
+            logger.info("ITSM Simulator API Call Failed With Error : " + e.getMessage());
         }
     }
 
@@ -811,7 +811,7 @@ public class AlertingAPITest {
         //HashMap<String, String> currentRow = new HashMap<String, String>();
 
         //currentRow.putAll(DataUtils.getTestRow());
-        logger.debug("Getting Host URL:" + alertingUrl);
+        logger.info("Getting Host URL:" + alertingUrl);
 
 
         itsmUrl = alertingUrl + Utilities.getMavenProperties("ITSMSimulatorUrlSchema")
@@ -830,7 +830,7 @@ public class AlertingAPITest {
             }
         }
 
-        logger.debug(itsmUrl);
+        logger.info(itsmUrl);
 
     }
 
@@ -840,7 +840,7 @@ public class AlertingAPITest {
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertFailure));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
+            logger.info("ITSM Simulator API Call Failed With Error : " + e.getMessage());
         }
     }
 
@@ -850,12 +850,12 @@ public class AlertingAPITest {
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertState));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("Alert State API Call Failed With Error : " + e.getMessage());
+            logger.info("Alert State API Call Failed With Error : " + e.getMessage());
         }
     }
 
     public void alertFailurePreProcessing() throws Exception {
-        logger.debug("Getting Host URL:" + alertingUrl);
+        logger.info("Getting Host URL:" + alertingUrl);
         alertFailure = alertingUrl + Utilities.getMavenProperties("AlertFailureUrlSchema")
                 .replace("{partners}", currentRow.get("partners"))
                 .replace("{clients}", currentRow.get("clients"))
@@ -870,11 +870,11 @@ public class AlertingAPITest {
                 }
             }
         }
-        logger.debug("alertFailure : " + alertFailure);
+        logger.info("alertFailure : " + alertFailure);
     }
 
     public void alertStatePreProcessing() throws Exception {
-        logger.debug("Getting Host URL:" + alertingUrl);
+        logger.info("Getting Host URL:" + alertingUrl);
         alertState = alertingUrl + Utilities.getMavenProperties("AlertStateUrlSchema")
                 .replace("{partners}", currentRow.get("partners"))
                 .replace("{clients}", currentRow.get("clients"))
@@ -889,7 +889,7 @@ public class AlertingAPITest {
         if (currentRow.get("partners").isEmpty()) {
             alertState = alertState.replace("/partners/", "");
         }
-        logger.debug("alertState API : " + alertState);
+        logger.info("alertState API : " + alertState);
     }
 
     public boolean getITSMSimulatorResponse() throws InterruptedException {
@@ -902,11 +902,11 @@ public class AlertingAPITest {
                     setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
                 return true;
             } else {
-                logger.debug("Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Failed to save ITSM Response : " + e.getMessage());
+            logger.info("Failed to save ITSM Response : " + e.getMessage());
             return false;
         }
 
@@ -922,11 +922,11 @@ public class AlertingAPITest {
                     setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
                 return true;
             } else {
-                logger.debug("Request to Alert Failure with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Request to Alert Failure with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Failed to save  Alert Failure Response : " + e.getMessage());
+            logger.info("Failed to save  Alert Failure Response : " + e.getMessage());
             return false;
         }
 
@@ -941,11 +941,11 @@ public class AlertingAPITest {
                 setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, getCurrentAlert()));
                 return true;
             } else {
-                logger.debug("Request to Alert State with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Request to Alert State with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Failed to save  Alert State Response : " + e.getMessage());
+            logger.info("Failed to save  Alert State Response : " + e.getMessage());
             return false;
         }
     }
@@ -970,11 +970,11 @@ public class AlertingAPITest {
                 }
                 return true;
             } else {
-                logger.debug("Request to Alert Failure with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Request to Alert Failure with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Failed to save  Alert Failure Response : " + e.getMessage());
+            logger.info("Failed to save  Alert Failure Response : " + e.getMessage());
             return false;
         }
 
@@ -987,19 +987,19 @@ public class AlertingAPITest {
             if (alertingResponse.getStatusCode() == 200) {
                 JSONObject jasResponse = (JSONObject) JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 if (jasResponse.get("status").equals(1) && jasResponse.get("alertId").equals(currentAlert)) {
-                    logger.debug("Alert Id " + currentAlert + " Created in JAS.");
+                    logger.info("Alert Id " + currentAlert + " Created in JAS.");
                     return true;
                 } else {
-                    logger.debug("ALert Id Not Created in JAS!!");
+                    logger.info("ALert Id Not Created in JAS!!");
                     return false;
                 }
 
             } else {
-                logger.debug("Request to JAS Failed with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Request to JAS Failed with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Failed to save JAS Response : " + e.getMessage());
+            logger.info("Failed to save JAS Response : " + e.getMessage());
             return false;
         }
 
@@ -1014,24 +1014,24 @@ public class AlertingAPITest {
                 if (alertingResponse.getStatusCode() == 404) {
                     JSONObject jasResponse = (JSONObject) JSONSerializer.toJSON(alertingResponse.getBody().asString());
                     if (jasResponse.get("status").equals(203)) {
-                        logger.debug("Alert Id " + currentAlert + " Deleted from JAS.");
+                        logger.info("Alert Id " + currentAlert + " Deleted from JAS.");
                         return true;
                     } else {
-                        logger.debug("Alert Id Not Deleted from JAS!!");
+                        logger.info("Alert Id Not Deleted from JAS!!");
                         return false;
                     }
 
                 } else {
-                    logger.debug("Delete Request Pending with Response Code : " + alertingResponse.getStatusCode());
+                    logger.info("Delete Request Pending with Response Code : " + alertingResponse.getStatusCode());
                     i++;
                     continue;
                 }
             } catch (Exception e) {
-                logger.debug("Failed to save JAS Response : " + e.getMessage());
+                logger.info("Failed to save JAS Response : " + e.getMessage());
                 return false;
             }
         }
-        logger.debug("Alert ID " + currentAlert + " Not Deleted!!");
+        logger.info("Alert ID " + currentAlert + " Not Deleted!!");
         return false;
     }
 
@@ -1041,7 +1041,7 @@ public class AlertingAPITest {
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(jasUrl));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
+            logger.info("ITSM Simulator API Call Failed With Error : " + e.getMessage());
         }
     }
 
@@ -1052,14 +1052,14 @@ public class AlertingAPITest {
         //currentRow.putAll(DataUtils.getTestRow());
 
         setJasUrl(Utilities.getMavenProperties("DTJASHostUrlV1"));
-        logger.debug("Getting Host URL:" + jasUrl);
+        logger.info("Getting Host URL:" + jasUrl);
         jasUrl = jasUrl + Utilities.getMavenProperties("GetJASAlertUrlSchema")
                 .replace("{partners}", currentRow.get("partners"))
                 .replace("{sites}", currentRow.get("sites"))
                 .replace("{clients}", currentRow.get("clients"))
                 .replace("{alert}", currentAlert);
 
-        logger.debug(jasUrl);
+        logger.info(jasUrl);
     }
 
     public void triggerAlertingGetAlertAPI() {
@@ -1068,7 +1068,7 @@ public class AlertingAPITest {
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertingAPIUrl));
         } catch (Exception e) {
             e.printStackTrace();
-            logger.debug("ITSM Simulator API Call Failed With Error : " + e.getMessage());
+            logger.info("ITSM Simulator API Call Failed With Error : " + e.getMessage());
         }
     }
 
@@ -1078,7 +1078,7 @@ public class AlertingAPITest {
 
         //currentRow.putAll(DataUtils.getTestRow());
 
-        logger.debug("Getting Host URL:" + alertingUrl);
+        logger.info("Getting Host URL:" + alertingUrl);
         alertingAPIUrl = alertingUrl + Utilities.getMavenProperties("GetAlertUrlSchema")
                 .replace("{partners}", currentRow.get("partners"))
                 .replace("{sites}", currentRow.get("sites"))
@@ -1095,7 +1095,7 @@ public class AlertingAPITest {
             }
         }
 
-        logger.debug(alertingAPIUrl);
+        logger.info(alertingAPIUrl);
     }
 
     public boolean verifyAlertCreationInAlertingMS() throws InterruptedException {
@@ -1105,19 +1105,19 @@ public class AlertingAPITest {
             if (alertingResponse.getStatusCode() == 200) {
                 JSONObject jasResponse = (JSONObject) JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 if (jasResponse.get("status").equals(1) && jasResponse.get("alertId").equals(currentAlert)) {
-                    logger.debug("Alert Id " + currentAlert + " Created in JAS.");
+                    logger.info("Alert Id " + currentAlert + " Created in JAS.");
                     return true;
                 } else {
-                    logger.debug("ALert Id Not Created in JAS!!");
+                    logger.info("ALert Id Not Created in JAS!!");
                     return false;
                 }
 
             } else {
-                logger.debug("Request to JAS Failed with Response Code : " + alertingResponse.getStatusCode());
+                logger.info("Request to JAS Failed with Response Code : " + alertingResponse.getStatusCode());
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Failed to save JAS Response : " + e.getMessage());
+            logger.info("Failed to save JAS Response : " + e.getMessage());
             return false;
         }
 
@@ -1130,19 +1130,19 @@ public class AlertingAPITest {
             if (alertingResponse.getStatusCode() == 404) {
                 JSONObject jasResponse = (JSONObject) JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 if (jasResponse.get("status").equals(203)) {
-                    logger.debug("Alert Id " + currentAlert + " Deleted from JAS.");
+                    logger.info("Alert Id " + currentAlert + " Deleted from JAS.");
                     return true;
                 } else {
-                    logger.debug("Alert Id Not Deleted from JAS!!");
+                    logger.info("Alert Id Not Deleted from JAS!!");
                     return false;
                 }
 
             } else {
-                logger.debug("Alert ID " + currentAlert + " Not Deleted!!");
+                logger.info("Alert ID " + currentAlert + " Not Deleted!!");
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Failed to save JAS Response : " + e.getMessage());
+            logger.info("Failed to save JAS Response : " + e.getMessage());
             return false;
         }
     }
@@ -1150,7 +1150,7 @@ public class AlertingAPITest {
     public boolean verifyITSMSimulatorResponse() throws InterruptedException {
 
         JsonPath filterPath = JsonPath.from(filterArray.toString());
-        logger.debug(filterPath.getList("action"));
+        logger.info(filterPath.getList("action"));
         int i = 0;
 
         try {
@@ -1159,28 +1159,28 @@ public class AlertingAPITest {
                     if (filterArray.getJSONObject(i).get("action").equals("POST")) {
                         if (filterArray.getJSONObject(i + 1).get("action").equals("PUT")) {
                             if (filterArray.getJSONObject(i + 2).get("action").equals("DELETE")) {
-                                logger.debug("All 3 Requests Reached till ITSM");
+                                logger.info("All 3 Requests Reached till ITSM");
                                 i = i + 3;
                             } else {
-                                logger.debug("Delete Requests is not reached till ITSM : ");
+                                logger.info("Delete Requests is not reached till ITSM : ");
                                 return false;
                             }
                         } else {
-                            logger.debug("Update Requests is not reached till ITSM : ");
+                            logger.info("Update Requests is not reached till ITSM : ");
                             return false;
                         }
                     } else {
-                        logger.debug("Create Requests is not reached till ITSM : ");
+                        logger.info("Create Requests is not reached till ITSM : ");
                         return false;
                     }
                 }
                 return true;
             } else {
-                logger.debug("No Alerts Reached till ITSM!!");
+                logger.info("No Alerts Reached till ITSM!!");
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Exception Occurred : " + e.getMessage());
+            logger.info("Exception Occurred : " + e.getMessage());
             return false;
         }
 
@@ -1189,7 +1189,7 @@ public class AlertingAPITest {
     public boolean verifyChildListITSMSimulatorResponse() throws InterruptedException {
         JsonPath filterPath = JsonPath.from(filterArray.toString());
         List actualChildConditionId = new ArrayList<String>();
-        logger.debug(filterPath.getList("action"));
+        logger.info(filterPath.getList("action"));
         int i = 0;
         try {
             if (filterArray.size() > 0) {
@@ -1205,7 +1205,7 @@ public class AlertingAPITest {
                         } else {
                             while (z < jsonObjRootCauseArr.size()) {
                                 JSONObject resObject = jsonObjRootCauseArr.getJSONObject(z);
-                                logger.debug("resObject : " + resObject);
+                                logger.info("resObject : " + resObject);
                                 actualChildConditionId.add(resObject.getString("conditionId"));
                                 z++;
                             }
@@ -1214,11 +1214,11 @@ public class AlertingAPITest {
                     i++;
                 }
             } else {
-                logger.debug("No Alerts Reached till ITSM!!");
+                logger.info("No Alerts Reached till ITSM!!");
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Child Alert validation failed in ITSM simulator : " + e.getMessage());
+            logger.info("Child Alert validation failed in ITSM simulator : " + e.getMessage());
             return false;
         }
         if (conditionId.size() == actualChildConditionId.size()) {
@@ -1237,31 +1237,31 @@ public class AlertingAPITest {
         try {
             if (!getCurrentAlert().equalsIgnoreCase(actualDataInITSM.get("alertId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Alert ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId"));
+                logger.info("Data Mismatch in Alert ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId"));
             }
             if (!currentRow.get("partners").equalsIgnoreCase(actualDataInITSM.get("partnerId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Patner ID : Expected -> " + currentRow.get("partners") + " :: Actual ->" + actualDataInITSM.get("partnerId"));
+                logger.info("Data Mismatch in Patner ID : Expected -> " + currentRow.get("partners") + " :: Actual ->" + actualDataInITSM.get("partnerId"));
             }
             if (!currentRow.get("clients").equalsIgnoreCase(actualDataInITSM.get("clientId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in CLient ID : Expected -> " + currentRow.get("clients") + " :: Actual ->" + actualDataInITSM.get("clientId"));
+                logger.info("Data Mismatch in CLient ID : Expected -> " + currentRow.get("clients") + " :: Actual ->" + actualDataInITSM.get("clientId"));
             }
             if (!currentRow.get("sites").equalsIgnoreCase(actualDataInITSM.get("siteId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Sites ID : Expected -> " + currentRow.get("sites") + " :: Actual ->" + actualDataInITSM.get("siteId"));
+                logger.info("Data Mismatch in Sites ID : Expected -> " + currentRow.get("sites") + " :: Actual ->" + actualDataInITSM.get("siteId"));
             }
             //     if (!currentRow.get("resourceId").equalsIgnoreCase(actualDataInITSM.get("resourceId"))) {
             //         flag = false;
-            //         logger.debug("Data Mismatch in Resource ID : Expected -> " + currentRow.get("resourceId") + " :: Actual ->" + actualDataInITSM.get("resourceId"));
+            //         logger.info("Data Mismatch in Resource ID : Expected -> " + currentRow.get("resourceId") + " :: Actual ->" + actualDataInITSM.get("resourceId"));
             //     }
             if (!currentRow.get("endpoints").equalsIgnoreCase(actualDataInITSM.get("endpointId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Endpoint ID : Expected -> " + currentRow.get("endpoints") + " :: Actual ->" + actualDataInITSM.get("endpointId"));
+                logger.info("Data Mismatch in Endpoint ID : Expected -> " + currentRow.get("endpoints") + " :: Actual ->" + actualDataInITSM.get("endpointId"));
             }
             if (!currentRow.get("conditionId").equalsIgnoreCase(actualDataInITSM.get("conditionId"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Condition ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId"));
+                logger.info("Data Mismatch in Condition ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId"));
             }
        //     JSONParser parser = new JSONParser();
        //     JSONObject jsonObj = (JSONObject) parser.parse(currentRow.get("alertDetails"));
@@ -1269,14 +1269,14 @@ public class AlertingAPITest {
             org.json.JSONObject jsonObj1 = jsonObj.getJSONObject("alertDetails");
             if (!jsonObj1.getString("Test").equalsIgnoreCase(actualDataInITSM.get("Test"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Test : Expected -> " + jsonObj1.getString("Test") + " :: Actual ->" + actualDataInITSM.get("alertId"));
+                logger.info("Data Mismatch in Test : Expected -> " + jsonObj1.getString("Test") + " :: Actual ->" + actualDataInITSM.get("alertId"));
             }
             if (!jsonObj1.getString("Type").equalsIgnoreCase(actualDataInITSM.get("Type"))) {
                 flag = false;
-                logger.debug("Data Mismatch in Type : Expected -> " + jsonObj1.getString("Type") + " :: Actual ->" + actualDataInITSM.get("alertId"));
+                logger.info("Data Mismatch in Type : Expected -> " + jsonObj1.getString("Type") + " :: Actual ->" + actualDataInITSM.get("alertId"));
             }
         } catch (Exception e) {
-            logger.debug("Exception Occurred : " + e);
+            logger.info("Exception Occurred : " + e);
             flag = false;
         }
         return flag;
@@ -1287,7 +1287,7 @@ public class AlertingAPITest {
         boolean flag = true;
         if (!value.equalsIgnoreCase(actualDataInITSM.get(field))) {
             flag = false;
-            logger.debug("Data Mismatch in " + field + " : Expected -> " + value + " :: Actual ->" + actualDataInITSM.get("field"));
+            logger.info("Data Mismatch in " + field + " : Expected -> " + value + " :: Actual ->" + actualDataInITSM.get("field"));
         }
         return flag;
     }
@@ -1312,11 +1312,11 @@ public class AlertingAPITest {
                     }
                 }
             } else {
-                logger.debug("No data present in Alert State");
+                logger.info("No data present in Alert State");
                 errMsg = "[No data present in Alert State. As filterArray size is 0]";
             }
         } catch (Exception e) {
-            logger.debug("Exception Occurred " + e);
+            logger.info("Exception Occurred " + e);
             errMsg = "Exception Occured " + e.toString() + "]";
         }
         return errMsg;
@@ -1324,7 +1324,7 @@ public class AlertingAPITest {
 
     public void getActualDataInITSM() throws InterruptedException {
         JsonPath filterPath = JsonPath.from(filterArray.toString());
-        logger.debug(filterPath.getList("action"));
+        logger.info(filterPath.getList("action"));
         int i = 0;
         try {
             if (filterArray.size() > 0) {
@@ -1348,10 +1348,10 @@ public class AlertingAPITest {
                     i++;
                 }
             } else {
-                logger.debug("No Alerts Reached till ITSM!!");
+                logger.info("No Alerts Reached till ITSM!!");
             }
         } catch (Exception e) {
-            logger.debug("Exception Occured : " + e.getMessage());
+            logger.info("Exception Occured : " + e.getMessage());
         }
     }
 
@@ -1359,14 +1359,14 @@ public class AlertingAPITest {
 
         try {
             if (filterArray.isEmpty()) {
-                logger.debug("No Child Alerts Reached Till ITSM.");
+                logger.info("No Child Alerts Reached Till ITSM.");
                 return true;
             } else {
-                logger.debug("Child alert reached till ITSM!!");
+                logger.info("Child alert reached till ITSM!!");
                 return false;
             }
         } catch (Exception e) {
-            logger.debug("Alert Deletion Failed with Error Message : " + e.getMessage());
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
             return false;
         }
 
@@ -1380,17 +1380,17 @@ public class AlertingAPITest {
             if (filterObj.get("action").equals("POST")) {
                 JSONObject payloadObj = filterObj.getJSONObject("payload");
                 if (payloadObj.get("remediateurl").equals(null) || payloadObj.get("fetchdataurl").equals(null)) {
-                    logger.debug("URL for Remediate or FetchMoreData is Null");
+                    logger.info("URL for Remediate or FetchMoreData is Null");
                     return false;
                 } else {
-                    logger.debug("Remediate URL : " + payloadObj.get("remediateurl"));
-                    logger.debug("FetchMore URL : " + payloadObj.get("fetchdataurl"));
+                    logger.info("Remediate URL : " + payloadObj.get("remediateurl"));
+                    logger.info("FetchMore URL : " + payloadObj.get("fetchdataurl"));
                     return true;
                 }
             }
             i++;
         }
-        logger.debug("There is No POST Request in ITSM Simulator");
+        logger.info("There is No POST Request in ITSM Simulator");
         return false;
     }
 
@@ -1406,11 +1406,11 @@ public class AlertingAPITest {
                 kafkaMessage = getManualClosureMetadata();
                 break;
             default:
-                logger.debug("Message Type is Invalid!!");
+                logger.info("Message Type is Invalid!!");
                 return false;
         }
 
-        logger.debug("Posting Kafka Message to Kafka topic : " + kafkaMessage);
+        logger.info("Posting Kafka Message to Kafka topic : " + kafkaMessage);
         KafkaProducerUtility.postMessage(kafkaServer, Utilities.getMavenProperties("KafkaTopic"), kafkaMessage);
         return true;
 

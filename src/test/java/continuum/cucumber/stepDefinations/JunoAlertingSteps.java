@@ -30,7 +30,7 @@ public class JunoAlertingSteps {
     @Before
     public void readScenario(Scenario scenario) {
 
-        logger.debug("Scenario Name :" + scenario.getName());
+        logger.info("Scenario Name :" + scenario.getName());
         Reporter.log("<b><i><font color='Blue'>====== Scenario Name: =====" + scenario.getName() + "</font></i></b>");
         String environment = Utilities.getMavenProperties("Environment").trim();
         DataUtils.setFileName("TestData_" + environment + ".xls");
@@ -322,7 +322,7 @@ public class JunoAlertingSteps {
     @After
     public void completeScenario(Scenario scenario) {
 
-        logger.debug("Scenario Name :" + scenario.getName() + "Status :" + scenario.getStatus());
+        logger.info("Scenario Name :" + scenario.getName() + "Status :" + scenario.getStatus());
         Reporter.log("<b><i><font color='Blue'>====== Scenario Name: =====" + scenario.getName() + "</font></i></b>");
         apiTest.closeTest();
     }
