@@ -893,7 +893,7 @@ public class AlertingAPITest {
     }
 
     public boolean getITSMSimulatorResponse() throws InterruptedException {
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         triggerITSMSimulatorAPI();
         try {
             if (alertingResponse.getStatusCode() == 200) {

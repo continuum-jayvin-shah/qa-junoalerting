@@ -14,7 +14,7 @@ Feature: Juno Alerting Negative Scenario
 
     Examples:
       | TestCaseRow     | UpdateResponse | StatusCode | duration |
-      | 500_ServerError | 404            | 500        | 25       |
+      | 500_ServerError | 404            | 500        | 45       |
 
 
   @Functional @Negative
