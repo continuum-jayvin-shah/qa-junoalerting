@@ -2,5 +2,7 @@
 *.class
 *.classpath
 /target/
-
+*.idea
 /test-report/
+JunoAlertingAutomation.iml
+/bin/

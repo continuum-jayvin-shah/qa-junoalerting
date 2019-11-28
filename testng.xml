@@ -1,16 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Cucumber-Report">
-    <test name="Juno-Alerting-AutomationReport">             
-       <method-selectors>
-              <method-selector>
-                    <script language="beanshell"> 
-                    <![CDATA[ 
-                           groups.containsKey("V2Regression") 
-                    ]]>
-              </script>
-              </method-selector>
-       </method-selectors>                                
+<suite name="Cucumber-Report" parallel="classes" thread-count="1" >
+    <test name="Juno-Alerting-AutomationReport">                                             
        <packages>
               <package name="continuum.cucumber.testRunner" />              
        </packages>

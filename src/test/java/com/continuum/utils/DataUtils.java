@@ -1,11 +1,5 @@
 package com.continuum.utils;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
-
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -13,9 +7,17 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
 import org.testng.Assert;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Hashtable;
+
 public class DataUtils {
 
 	private static HashMap<String, String> testRow;
+	private static String fileName;
 
 	/*
 	 * public static void main(String[] args) throws IOException { // TODO
@@ -24,6 +26,14 @@ public class DataUtils {
 	 * null, "Auvik", "AUVIKSC001");
 	 * System.out.println(rowData.get("Condition name")); }
 	 */
+
+	public static String getFileName() {
+		return fileName;
+	}
+
+	public static void setFileName(String fileName) {
+		DataUtils.fileName = fileName;
+	}
 
 	public static HashMap<String, String> getTestRow() {
 		return testRow;
@@ -43,13 +53,16 @@ public class DataUtils {
 	 * @return testData data
 	 * @throws IOException
 	 */
-	public static void setTestRow(String filePath, String sheetName,
+	public synchronized static void setTestRow(String filePath, String sheetName,
 			String testCaseId) throws IOException {
+		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + filePath;
+		System.out.println("Reading validation points from excel file " + filePath);
+		
 		HSSFRow row = null;
 		HSSFCell cell = null;
 
 		// Establish connection to work sheet
-		POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(filePath));
+		POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(excelFilePath));
 		HSSFWorkbook wb = new HSSFWorkbook(fs);
 		// System.out.println(wb.getSheetName(1));
 		HSSFSheet sheet = wb.getSheet(sheetName);
@@ -111,6 +124,92 @@ public class DataUtils {
 
 		// matcherList;
 	}
+	
+	/**
+	 * Fetch the test data for a test case based on test case ID
+	 *
+	 * @param filePath
+	 *            test data xls location
+	 * @param workBook
+	 *            name
+	 * @param sheetName
+	 *            name
+	 * @param testCaseId
+	 *            test id
+	 * @return testData data
+	 * @throws IOException
+	 */
+	public synchronized static HashMap<String, String> getTestRow(String sheetName,String testCaseId) throws IOException {
+		String excelFilePath = new File("").getAbsolutePath() + "\\src\\test\\resources\\Data\\" + fileName;
+		System.out.println("Reading validation points from excel file " + fileName + excelFilePath);
+		
+		HSSFRow row = null;
+		HSSFCell cell = null;
+
+		// Establish connection to work sheet
+		POIFSFileSystem fs = new POIFSFileSystem(new FileInputStream(excelFilePath));
+		HSSFWorkbook wb = new HSSFWorkbook(fs);
+		// System.out.println(wb.getSheetName(1));
+		HSSFSheet sheet = wb.getSheet(sheetName);
+		Hashtable<String, Integer> excelrRowColumnCount = new Hashtable();
+		excelrRowColumnCount = findRowColumnCount(sheet, excelrRowColumnCount);
+
+		// function call to find excel header fields
+		Hashtable<String, Integer> excelHeaders = new Hashtable();
+		excelHeaders = readExcelHeaders(sheet, excelHeaders, excelrRowColumnCount);
+		HashMap<String, String> data = null;
+		ArrayList<String> header = new ArrayList();
+		ArrayList<String> matcher = null;
+		// HashMap<String, String> matcherList = new HashMap<>();
+		testRow = new HashMap();
+		int idcounter = 1;
+
+		// Get all header
+		row = sheet.getRow(0);
+		if (row != null) {
+			for (int c = 0; c < excelrRowColumnCount.get("ColumnCount"); c++) {
+				cell = sheet.getRow(0).getCell(c);
+				if (cell != null) {
+					String temp = convertHSSFCellToString(row.getCell(c));
+					header.add(temp);
+				}
+			}
+		}
+
+		// Get test data set
+		for (int r = 1; r < excelrRowColumnCount.get("RowCount"); r++) {
+			row = sheet.getRow(r);
+			if (row != null) {
+				HSSFCell tempCell = sheet.getRow(r).getCell(0);
+				if (tempCell != null) {
+					String tcID = convertHSSFCellToString(row.getCell(0));
+					if (tcID.equalsIgnoreCase(testCaseId)) {
+						if (idcounter > 1) {
+							Assert.fail("Please check the workBook' file's '" + sheetName
+									+ "' sheet, its mapped with more than one id: " + testCaseId);
+						}
+						data = new HashMap();
+						matcher = new ArrayList();
+						matcher.add(tcID);
+						for (int c = 1; c < excelrRowColumnCount.get("ColumnCount"); c++) {
+							cell = sheet.getRow(r).getCell(c);
+							String temp = convertHSSFCellToString(row.getCell(c));
+							matcher.add(temp);
+						}
+						// Add all the test data to a Map
+						for (int i = 0; i < matcher.size(); i++) {
+							data.put(header.get(i), matcher.get(i));
+						}
+						testRow.putAll(data);
+						idcounter++;
+					}
+				}
+			}
+		}
+		return testRow;
+		// matcherList;
+	}
+	
 
 	/**
 	 * findRowColumnCount method to get total no of row and column count in a
