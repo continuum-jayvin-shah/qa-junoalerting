@@ -23,6 +23,7 @@ public class Hooks {
 
     @Before
     public void readScenario(Scenario scenario) {
+        logger.info("============================================================================================================================================");
         logger.info("Scenario Name :" + scenario.getName());
         Reporter.log("<b><i><font color='Blue'>====== Scenario Name: =====" + scenario.getName() + "</font></i></b>");
         String environment = Utilities.getMavenProperties("Environment").trim();
@@ -46,6 +47,7 @@ public class Hooks {
     public void completeScenario(Scenario scenario) {
         logger.info("Scenario Name :" + scenario.getName() + "Status :" + scenario.getStatus());
         Reporter.log("<b><i><font color='Blue'>====== Scenario Name: =====" + scenario.getName() + "</font></i></b>");
+        logger.info("============================================================================================================================================");
         apiTest.closeTest();
     }
 }
