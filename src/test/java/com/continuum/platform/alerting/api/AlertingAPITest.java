@@ -174,17 +174,21 @@ public class AlertingAPITest {
         return errMsg;
     }
 
-    public boolean reprocessAlert(String count) {
+    public String reprocessAlert(String count) {
+        String errMsg = "" ;
         try {
             String url = alertingUrl + Utilities.getMavenProperties("ReprocessAlert");
             String body = "[{\"alertId\" : \"" + alertId.get(0) + "\"}]";
             logger.info("Body : " + body);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(body, url));
-            return true;
+            return errMsg ;
+            //return true;
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("Reprocess Alert Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Reprocess Alert Failed with Error Message : " + e.getMessage() + " ]" ;
+            return errMsg ;
+          //  return false;
         }
     }
 
@@ -995,24 +999,29 @@ public class AlertingAPITest {
         }
     }
 
-    public boolean getAlertFailureResponse() throws InterruptedException {
+    public String getAlertFailureResponse() throws InterruptedException {
         Thread.sleep(5000);
         triggerAlertFailureAPI();
+        String errMsg = "" ;
         try {
             if (alertingResponse.getStatusCode() == 200) {
                 JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 for (String alertID : alertId)
                     setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
-                return true;
+                //return true;
+                return errMsg ;
             } else {
                 logger.info("Request to Alert Failure with Response Code : " + alertingResponse.getStatusCode());
-                return false;
+                //return false;
+                errMsg = errMsg + "[Request to Alert Failure with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
+                return errMsg ;
             }
         } catch (Exception e) {
             logger.info("Failed to save  Alert Failure Response : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Failed to save  Alert Failure Response : " + e.getMessage() + " ]" ;
+            return errMsg ;
+            //return false;
         }
-
     }
 
     public String getAlertStateResponse() throws InterruptedException {
@@ -1558,10 +1567,9 @@ public class AlertingAPITest {
         return errMsg ;
     }
 
-    public boolean triggerManualClosure(String kafkaMessageType) {
-
+    public String triggerManualClosure(String kafkaMessageType) {
         String kafkaMessage;
-
+        String errMsg = "" ;
         switch (kafkaMessageType) {
             case "AlertID":
                 kafkaMessage = "{\"alertId\":\"" + getCurrentAlert() + "\",\"transactionId\":\"TEST\"}";
@@ -1571,13 +1579,14 @@ public class AlertingAPITest {
                 break;
             default:
                 logger.info("Message Type is Invalid!!");
-                return false;
+                errMsg = "[Message Type is Invalid!!]";
+                return errMsg ;
+                //return false;
         }
-
         logger.info("Posting Kafka Message to Kafka topic : " + kafkaMessage);
         KafkaProducerUtility.postMessage(kafkaServer, Utilities.getMavenProperties("KafkaTopic"), kafkaMessage);
-        return true;
-
+       // return true;
+        return errMsg ;
     }
 
     public String getManualClosureMetadata() {

@@ -278,19 +278,25 @@ public class JunoAlertingSteps {
     @Then("^I trigger Manual Closure By Posting on KafkaTopic with MessageType \"([^\"]*)\"$")
     public void i_trigger_Manual_Closure_By_Posting_on_KafkaTopic_with_MessageType(String kafkaMessageType) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerManualClosure(kafkaMessageType));
+        //assertTrue(apiTest.triggerManualClosure(kafkaMessageType));
+        String msg = apiTest.triggerManualClosure(kafkaMessageType);
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I verify alert should present in Alert Failure table")
     public void i_verify_alert_should_present_in_Alert_Failure_table() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.getAlertFailureResponse());
+        //assertTrue(apiTest.getAlertFailureResponse());
+        String msg = apiTest.getAlertFailureResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I reprocess the {string} alert")
     public void i_reprocess_the_alert(String count) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.reprocessAlert(count));
+        //assertTrue(apiTest.reprocessAlert(count));
+        String msg = apiTest.reprocessAlert(count);
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I verify Duplicate Alert Id message in response")
