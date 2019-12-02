@@ -197,7 +197,9 @@ public class JunoAlertingSteps {
     @Then("I trigger GET Alert State API for current alert")
     public void i_trigger_GET_Alert_State_API_for_current_alert() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.getAlertStateResponse());
+        //assertTrue(apiTest.getAlertStateResponse());
+        String msg = apiTest.getAlertStateResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I verify {string} in Alert State API response")
@@ -212,49 +214,65 @@ public class JunoAlertingSteps {
     @Then("^I trigger DELETE API for One Child Alert on Alert MS$")
     public void i_trigger_DELETE_API_for_One_Child_Alert_on_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerDeleteAPI(apiTest.getCurrentAlert()));
+        //assertTrue(apiTest.triggerDeleteAPI(apiTest.getCurrentAlert()));
+        String msg = apiTest.triggerDeleteAPI(apiTest.getCurrentAlert());
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I trigger CREATE Alert API request for Two Parent Alert with Same ConditionID on Alert MS for \"([^\"]*)\"$")
     public void i_trigger_CREATE_Alert_API_request_for_Two_Parent_Alert_with_Same_ConditionID_on_Alert_MS_for(String testCaseRow) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerParentWithSameConditionCreateAPI(testCaseRow));
+        //assertTrue(apiTest.triggerParentWithSameConditionCreateAPI(testCaseRow));
+        String msg = apiTest.triggerParentWithSameConditionCreateAPI(testCaseRow);
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I trigger DELETE API request for Child Alert for Both Parent on Alert MS$")
     public void i_trigger_DELETE_API_request_for_Child_Alert_for_Both_Parent_on_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerChildDeleteAPIForBothParent());
+        //assertTrue(apiTest.triggerChildDeleteAPIForBothParent());
+        String msg = apiTest.triggerChildDeleteAPIForBothParent();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify If alert is Created in JAS$")
     public void i_verify_If_alert_is_Created_in_JAS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyAlertCreationInJAS());
+        //assertTrue(apiTest.verifyAlertCreationInJAS());
+        String msg = apiTest.verifyAlertCreationInJAS();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify If alert is Deleted in JAS$")
     public void i_verify_If_alert_is_Deleted_in_JAS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyAlertDeletionInJAS());
+        //assertTrue(apiTest.verifyAlertDeletionInJAS());
+        String msg = apiTest.verifyAlertDeletionInJAS();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify If alert is Created in AlertingMS$")
     public void i_verify_If_alert_is_Created_in_AlertingMS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyAlertCreationInAlertingMS());
+        //assertTrue(apiTest.verifyAlertCreationInAlertingMS());
+        String msg = apiTest.verifyAlertCreationInAlertingMS();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify If alert is Deleted in AlertingMS$")
     public void i_verify_If_alert_is_Deleted_in_AlertingMS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyAlertDeletionInAlertingMS());
+        //assertTrue(apiTest.verifyAlertDeletionInAlertingMS());
+        String msg = apiTest.verifyAlertDeletionInAlertingMS();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify API response for Suspended Condition from Alert MS$")
     public void i_verify_API_response_for_Suspended_Condition_from_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyAlertSuspension());
+        //assertTrue(apiTest.verifyAlertSuspension());
+        String msg = apiTest.verifyAlertSuspension();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I trigger Manual Closure By Posting on KafkaTopic with MessageType \"([^\"]*)\"$")
