@@ -341,7 +341,8 @@ public class AlertingAPITest {
 
     }
 
-    public boolean triggerDeleteAPIWithBody() {
+    public String triggerDeleteAPIWithBody() {
+        String errMsg = "" ;
         try {
             int i = 0;
             if (alertId.size() > 1) {
@@ -349,21 +350,21 @@ public class AlertingAPITest {
                     this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
                     if (alertingResponse.getStatusCode() != 204) {
                         logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
-                        return false;
+                        errMsg = "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + "]" ;
                     }
                     logger.info("Alert Deleted : " + alertId.get(i));
                 }
             } else {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
                 logger.info("Alert Deletion Called for AlertID : " + alertId.get(i));
-                return true;
+              //  return true;
             }
-            return true;
+           // return true;
         } catch (Exception e) {
             logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = "[Alert Deletion Failed with Error Message : " + e.getMessage() + "]" ;
         }
-
+        return errMsg ;
     }
 
     public boolean triggerLastAlertDeleteAPIWithBody() {
@@ -684,22 +685,24 @@ public class AlertingAPITest {
 
     }
 
-    public boolean verifyUpdateAPIResponse() {
-
+    public String verifyUpdateAPIResponse() {
+        String errMsg = "" ;
         try {
             if (alertingResponse.getStatusCode() == 204) {
                 logger.info("Update of Alert Done with Status Code : " + alertingResponse.getStatusCode());
-                return true;
+              //  return true;
             } else {
                 logger.info("Alert Not Updated with Response Code : " + alertingResponse.getStatusCode());
                 logger.info("Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
-                return false;
+                errMsg = "[Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status")  + "]";
+             //   return false;
             }
         } catch (Exception e) {
             logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = "[Alert Updation Failed with Error Message : " + e.getMessage() + "]" ;
+          //  return false;
         }
-
+        return errMsg ;
     }
 
     public boolean verifyUpdateAPIResponse(String responseCode) throws InterruptedException {
