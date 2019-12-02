@@ -86,19 +86,25 @@ public class JunoAlertingSteps {
     @Then("^I verify API response from Alert MS for DELETE Request$")
     public void i_verify_API_response_from_Alert_MS_for_DELETE_Request() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyDeleteAPIResponse());
+        //assertTrue(apiTest.verifyDeleteAPIResponse());
+        String msg = apiTest.verifyDeleteAPIResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify If alert reached till ITSM Simulator$")
     public void i_verify_If_alert_reached_till_ITSM_Simulator() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyITSMSimulatorResponse());
+        //assertTrue(apiTest.verifyITSMSimulatorResponse());
+        String msg = apiTest.verifyITSMSimulatorResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify Child alert list in parent Alert response of ITSM Simulator$")
     public void i_verify_child_alert_list_in_parent_alert_response_of_ITSM_simulator() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyChildListITSMSimulatorResponse());
+        //assertTrue(apiTest.verifyChildListITSMSimulatorResponse());
+        String msg = apiTest.verifyChildListITSMSimulatorResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify New Alert created for New Request$")
@@ -135,7 +141,9 @@ public class JunoAlertingSteps {
     @Then("^I verify If all requests were sent to ITSM$")
     public void i_verify_If_all_requests_were_sent_to_ITSM() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyITSMSimulatorResponse());
+        //assertTrue(apiTest.verifyITSMSimulatorResponse());
+        String msg = apiTest.verifyITSMSimulatorResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I should verify ITSM payload data as expected")

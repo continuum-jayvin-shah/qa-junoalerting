@@ -791,22 +791,25 @@ public class AlertingAPITest {
 
     }
 
-    public boolean verifyDeleteAPIResponse() {
-
+    public String verifyDeleteAPIResponse() {
+        String errMsg = "" ;
         try {
             if (alertingResponse.getStatusCode() == 204) {
                 logger.info("Delete of Alert Done with Status Code : " + alertingResponse.getStatusCode());
-                return true;
+                //return true;
             } else {
                 logger.info("Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode());
                 logger.info("Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
-                return false;
+                errMsg = errMsg + "[Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
+                errMsg = errMsg + "[Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status") + " ]" ;
+                //return false;
             }
         } catch (Exception e) {
             logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Alert Deletion Failed with Error Message : " + e.getMessage() + " ]" ;
+            //return false;
         }
-
+        return errMsg;
     }
 
     public void triggerITSMSimulatorAPI() {
@@ -1160,12 +1163,11 @@ public class AlertingAPITest {
         }
     }
 
-    public boolean verifyITSMSimulatorResponse() throws InterruptedException {
-
+    public String verifyITSMSimulatorResponse() throws InterruptedException {
+        String errMsg = "" ;
         JsonPath filterPath = JsonPath.from(filterArray.toString());
         logger.info(filterPath.getList("action"));
         int i = 0;
-
         try {
             if (filterArray.size() > 0) {
                 while (i < filterArray.size()) {
@@ -1175,31 +1177,37 @@ public class AlertingAPITest {
                                 logger.info("All 3 Requests Reached till ITSM");
                                 i = i + 3;
                             } else {
-                                logger.info("Delete Requests is not reached till ITSM : ");
-                                return false;
+                                logger.info("Delete Requests is not reached till ITSM");
+                                errMsg = errMsg + "[Delete Requests is not reached till ITSM]" ;
+                                //return false;
                             }
                         } else {
-                            logger.info("Update Requests is not reached till ITSM : ");
-                            return false;
+                            logger.info("Update Requests is not reached till ITSM");
+                            errMsg = errMsg + "[Update Requests is not reached till ITSM]" ;
+                            //return false;
                         }
                     } else {
-                        logger.info("Create Requests is not reached till ITSM : ");
-                        return false;
+                        logger.info("Create Requests is not reached till ITSM");
+                        errMsg = errMsg + "[Create Requests is not reached till ITSM]" ;
+                        //return false;
                     }
                 }
-                return true;
+                //return true;
             } else {
                 logger.info("No Alerts Reached till ITSM!!");
-                return false;
+                errMsg = errMsg + "[No Alerts Reached till ITSM]" ;
+                //return false;
             }
         } catch (Exception e) {
             logger.info("Exception Occurred : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]" ;
+            //return false;
         }
-
+        return errMsg;
     }
 
-    public boolean verifyChildListITSMSimulatorResponse() throws InterruptedException {
+    public String verifyChildListITSMSimulatorResponse() throws InterruptedException {
+        String errMsg = "" ;
         JsonPath filterPath = JsonPath.from(filterArray.toString());
         List actualChildConditionId = new ArrayList<String>();
         logger.info(filterPath.getList("action"));
@@ -1213,8 +1221,9 @@ public class AlertingAPITest {
                         JSONArray jsonObjRootCauseArr = (JSONArray) jsonObjPayload.get("rootcause");
                         int z = 0;
                         if (jsonObjRootCauseArr == null) {
-                            System.out.println("No Data Present in ITSM Simulator");
-                            return false;
+                            logger.info("No Data Present in ITSM Simulator");
+                            errMsg = errMsg + "[No Data Present in ITSM Simulator]" ;
+                            //return false;
                         } else {
                             while (z < jsonObjRootCauseArr.size()) {
                                 JSONObject resObject = jsonObjRootCauseArr.getJSONObject(z);
@@ -1228,20 +1237,25 @@ public class AlertingAPITest {
                 }
             } else {
                 logger.info("No Alerts Reached till ITSM!!");
-                return false;
+                errMsg = errMsg + "[No Alerts Reached till ITSM]" ;
+                //return false;
             }
         } catch (Exception e) {
             logger.info("Child Alert validation failed in ITSM simulator : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Child Alert validation failed in ITSM simulator : " +e.getMessage()+ "]" ;
+            //return false;
         }
         if (conditionId.size() == actualChildConditionId.size()) {
             if (conditionId.containsAll(actualChildConditionId)) {
-                return true;
+               // return true;
             }
-            return false;
+            errMsg = errMsg + "[Parent not contains all Child. Excepted -> "+ conditionId + ". Actual -> "+ actualChildConditionId+ ".]" ;
+            //return false;
         } else {
-            return false;
+            errMsg = errMsg + "[Child count is not same. Excepted -> "+ conditionId.size() + ". Actual -> "+ actualChildConditionId.size() + ".]" ;
+            //return false;
         }
+        return errMsg ;
     }
 
     public boolean validateActualDataInITSM() throws InterruptedException {
