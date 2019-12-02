@@ -290,17 +290,20 @@ public class AlertingAPITest {
         }
     }
 
-    public boolean triggerUpdateAPI() {
+    public String triggerUpdateAPI() {
+        String errMsg = "" ;
         try {
             preProcessing(getTestName());
             logger.info("Alert Details : " + alertDetails);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(alertDetails, alertingAPIUrl + "/" + getCurrentAlert()));
-            return true;
+            //return true;
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Alert Updation Failed with Error Message : "+ e.getMessage() +" ]" ;
+            //return false;
         }
+        return errMsg;
     }
 
     public boolean triggerUpdateAPI_ITSM() {
@@ -350,7 +353,7 @@ public class AlertingAPITest {
                     this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
                     if (alertingResponse.getStatusCode() != 204) {
                         logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
-                        errMsg = "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + "]" ;
+                        errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
                     }
                     logger.info("Alert Deleted : " + alertId.get(i));
                 }
@@ -362,26 +365,29 @@ public class AlertingAPITest {
            // return true;
         } catch (Exception e) {
             logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
-            errMsg = "[Alert Deletion Failed with Error Message : " + e.getMessage() + "]" ;
+            errMsg = errMsg + "[Alert Deletion Failed with Error Message : " + e.getMessage() + " ]" ;
         }
         return errMsg ;
     }
 
-    public boolean triggerLastAlertDeleteAPIWithBody() {
+    public String triggerLastAlertDeleteAPIWithBody() {
+        String errMsg = "" ;
         try {
             int i = alertId.size() - 1;
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
             if (alertingResponse.getStatusCode() != 204) {
                 logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
-                return false;
+                errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
+                //return false;
             }
             logger.info("Alert Deleted : " + alertId.get(i));
-            return true;
+            //return true;
         } catch (Exception e) {
             logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Alert Deletion Failed with Error Message : " + e.getMessage() + " ]" ;
+            //return false;
         }
-
+        return errMsg ;
     }
 
     public boolean triggerChildDeleteAPI() {
@@ -694,33 +700,37 @@ public class AlertingAPITest {
             } else {
                 logger.info("Alert Not Updated with Response Code : " + alertingResponse.getStatusCode());
                 logger.info("Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
-                errMsg = "[Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status")  + "]";
+                errMsg = errMsg + "[Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status")  + " ]";
              //   return false;
             }
         } catch (Exception e) {
             logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
-            errMsg = "[Alert Updation Failed with Error Message : " + e.getMessage() + "]" ;
+            errMsg = errMsg + "[Alert Updation Failed with Error Message : " + e.getMessage() + " ]" ;
           //  return false;
         }
         return errMsg ;
     }
 
-    public boolean verifyUpdateAPIResponse(String responseCode) throws InterruptedException {
-
+    public String verifyUpdateAPIResponse(String responseCode) throws InterruptedException {
+        String errMsg = "";
         try {
             if (alertingResponse.getStatusCode() == Integer.parseInt(responseCode)) {
                 logger.info("Actual Response Code found : " + alertingResponse.getStatusCode());
                 logger.info("Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
-                return true;
+                //return true;
             } else {
                 logger.info("Expected Response Not Code found. Actual -> " + alertingResponse.getStatusCode());
                 logger.info("Internal Status Code : " + alertingResponse.toString());
-                return false;
+                errMsg = errMsg + "[Expected Response Not Code found. Actual -> "+ alertingResponse.getStatusCode()+" ]" ;
+                errMsg = errMsg + "[Internal Status Code : "+ alertingResponse.toString()+" ]" ;
+                //return false;
             }
         } catch (Exception e) {
             logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "[Alert Updation Failed with Error Message : "+  e.getMessage() +" ]" ;
+            //return false;
         }
+        return errMsg ;
     }
 
     public boolean verifyUpdateAPIResponseITSM() {
@@ -1316,11 +1326,11 @@ public class AlertingAPITest {
                 }
             } else {
                 logger.info("No data present in Alert State");
-                errMsg = "[No data present in Alert State. As filterArray size is 0]";
+                errMsg = errMsg + "[No data present in Alert State. As filterArray size is 0]";
             }
         } catch (Exception e) {
             logger.info("Exception Occurred " + e);
-            errMsg = "Exception Occured " + e.toString() + "]";
+            errMsg = errMsg + "Exception Occured " + e.toString() + " ]";
         }
         return errMsg;
     }

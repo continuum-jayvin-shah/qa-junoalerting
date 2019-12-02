@@ -46,13 +46,17 @@ public class JunoAlertingSteps {
     @Then("^I trigger UPDATE Alert API request on Alert MS$")
     public void i_trigger_UPDATE_Alert_API_request_on_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerUpdateAPI());
+        //assertTrue(apiTest.triggerUpdateAPI());
+        String msg = apiTest.triggerUpdateAPI();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I verify API response {string} from Alert MS for UPDATE Request")
     public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request(String responseCode) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyUpdateAPIResponse(responseCode));
+        //assertTrue(apiTest.verifyUpdateAPIResponse(responseCode));
+        String msg = apiTest.verifyUpdateAPIResponse(responseCode);
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify API response from Alert MS for UPDATE Request$")
@@ -74,7 +78,9 @@ public class JunoAlertingSteps {
     @Then("I trigger DELETE API request for second on Alert MS")
     public void i_trigger_DELETE_API_request_for_second_on_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerLastAlertDeleteAPIWithBody());
+        //assertTrue(apiTest.triggerLastAlertDeleteAPIWithBody());
+        String msg = apiTest.triggerLastAlertDeleteAPIWithBody();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify API response from Alert MS for DELETE Request$")

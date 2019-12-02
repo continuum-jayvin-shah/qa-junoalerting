@@ -27,6 +27,7 @@ public class Hooks {
         Reporter.log("<b><i><font color='Blue'>====== Scenario Name: =====" + scenario.getName() + "</font></i></b>");
         String environment = Utilities.getMavenProperties("Environment").trim();
         DataUtils.setFileName("TestData_" + environment + ".xls");
+        logger.info("Environment Used : " + environment);
         if (environment.equals("QA")) {
             AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("QAAlertingHostUrlV2"));
             AlertingAPITest.setKafkaServer("QAKafkaProducerIP");
