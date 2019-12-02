@@ -1299,25 +1299,30 @@ public class AlertingAPITest {
         }
     }
 
-    public boolean validateActualDataInITSM() throws InterruptedException {
+    public String validateActualDataInITSM() throws InterruptedException {
+        String errMsg = "" ;
         getActualDataInITSM();
         boolean flag = true;
         try {
             if (!getCurrentAlert().equalsIgnoreCase(actualDataInITSM.get("alertId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Alert ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId"));
+                errMsg = errMsg + "[Data Mismatch in Alert ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]" ;
             }
             if (!currentRow.get("partners").equalsIgnoreCase(actualDataInITSM.get("partnerId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Patner ID : Expected -> " + currentRow.get("partners") + " :: Actual ->" + actualDataInITSM.get("partnerId"));
+                errMsg = errMsg + "[Data Mismatch in Patner ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]" ;
             }
             if (!currentRow.get("clients").equalsIgnoreCase(actualDataInITSM.get("clientId"))) {
                 flag = false;
-                logger.info("Data Mismatch in CLient ID : Expected -> " + currentRow.get("clients") + " :: Actual ->" + actualDataInITSM.get("clientId"));
+                logger.info("Data Mismatch in Client ID : Expected -> " + currentRow.get("clients") + " :: Actual ->" + actualDataInITSM.get("clientId"));
+                errMsg = errMsg + "[Data Mismatch in Client ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]" ;
             }
             if (!currentRow.get("sites").equalsIgnoreCase(actualDataInITSM.get("siteId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Sites ID : Expected -> " + currentRow.get("sites") + " :: Actual ->" + actualDataInITSM.get("siteId"));
+                errMsg = errMsg + "[Data Mismatch in Sites ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]" ;
             }
             //     if (!currentRow.get("resourceId").equalsIgnoreCase(actualDataInITSM.get("resourceId"))) {
             //         flag = false;
@@ -1326,10 +1331,12 @@ public class AlertingAPITest {
             if (!currentRow.get("endpoints").equalsIgnoreCase(actualDataInITSM.get("endpointId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Endpoint ID : Expected -> " + currentRow.get("endpoints") + " :: Actual ->" + actualDataInITSM.get("endpointId"));
+                errMsg = errMsg + "[Data Mismatch in Endpoint ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]" ;
             }
             if (!currentRow.get("conditionId").equalsIgnoreCase(actualDataInITSM.get("conditionId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Condition ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId"));
+                errMsg = errMsg + "[Data Mismatch in Condition ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]" ;
             }
        //     JSONParser parser = new JSONParser();
        //     JSONObject jsonObj = (JSONObject) parser.parse(currentRow.get("alertDetails"));
@@ -1338,26 +1345,32 @@ public class AlertingAPITest {
             if (!jsonObj1.getString("Test").equalsIgnoreCase(actualDataInITSM.get("Test"))) {
                 flag = false;
                 logger.info("Data Mismatch in Test : Expected -> " + jsonObj1.getString("Test") + " :: Actual ->" + actualDataInITSM.get("alertId"));
+                errMsg = errMsg + "[Data Mismatch in Test : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]" ;
             }
             if (!jsonObj1.getString("Type").equalsIgnoreCase(actualDataInITSM.get("Type"))) {
                 flag = false;
                 logger.info("Data Mismatch in Type : Expected -> " + jsonObj1.getString("Type") + " :: Actual ->" + actualDataInITSM.get("alertId"));
+                errMsg = errMsg + "[Data Mismatch in Type : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]" ;
             }
         } catch (Exception e) {
             logger.info("Exception Occurred : " + e);
+            errMsg = errMsg + "[Exception Occurred : " + e + " ]" ;
             flag = false;
         }
-        return flag;
+        //return flag;
+        return errMsg;
     }
 
-    public boolean validateITSMData(String field, String value) throws InterruptedException {
+    public String validateITSMData(String field, String value) throws InterruptedException {
         getActualDataInITSM();
         boolean flag = true;
+        String errMsg = "" ;
         if (!value.equalsIgnoreCase(actualDataInITSM.get(field))) {
             flag = false;
             logger.info("Data Mismatch in " + field + " : Expected -> " + value + " :: Actual ->" + actualDataInITSM.get("field"));
+            errMsg = errMsg + "[Data Mismatch in " + field + " : Expected -> " + value + " :: Actual ->" + actualDataInITSM.get("field") + " ]" ;
         }
-        return flag;
+        return errMsg;
     }
 
     public String validateAlertState(List<String> factorList) throws InterruptedException {
@@ -1423,19 +1436,24 @@ public class AlertingAPITest {
         }
     }
 
-    public boolean verifyITSMResponseForChildAlert() throws InterruptedException {
-
+    public String verifyITSMResponseForChildAlert() throws InterruptedException {
+        String errMsg = "" ;
         try {
             if (filterArray.isEmpty()) {
                 logger.info("No Child Alerts Reached Till ITSM.");
-                return true;
+                //return true;
+                return errMsg ;
             } else {
                 logger.info("Child alert reached till ITSM!!");
-                return false;
+                errMsg = errMsg + "[Child alert reached till ITSM!!]" ;
+                //return false;
+                return errMsg ;
             }
         } catch (Exception e) {
             logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
-            return false;
+            errMsg = errMsg + "Alert Deletion Failed with Error Message : " + e.getMessage() + " ]" ;
+            return errMsg ;
+            //return false;
         }
 
     }

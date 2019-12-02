@@ -157,19 +157,25 @@ public class JunoAlertingSteps {
     @Then("I should verify ITSM payload data as expected")
     public void i_should_verify_ITSM_payload_data_as_expected() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.validateActualDataInITSM());
+        //assertTrue(apiTest.validateActualDataInITSM());
+        String msg = apiTest.validateActualDataInITSM();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I verify status code {string} in ITSM Simulator Response")
     public void i_verify_status_code_in_ITSM_Simulator_Response(String statusCode) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.validateITSMData("statuscode", statusCode));
+        //assertTrue(apiTest.validateITSMData("statuscode", statusCode));
+        String msg = apiTest.validateITSMData("statuscode", statusCode);
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify If alert not reached till ITSM Simulator$")
     public void i_verify_If_alert_not_reached_till_ITSM_Simulator() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyITSMResponseForChildAlert());
+        //assertTrue(apiTest.verifyITSMResponseForChildAlert());
+        String msg = apiTest.verifyITSMResponseForChildAlert();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I trigger CREATE Alert API request for Parent Alert on Alert MS for \"([^\"]*)\"$")
