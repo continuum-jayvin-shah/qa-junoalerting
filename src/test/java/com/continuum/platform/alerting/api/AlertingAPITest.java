@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.continuum.utils.JunoAlertingUtils;
 import org.apache.log4j.Logger;
 
 import com.continuum.utils.DataUtils;
@@ -1400,7 +1401,8 @@ public class AlertingAPITest {
 
         switch (kafkaMessageType) {
             case "AlertID":
-                kafkaMessage = "{\"alertId\":\"" + getCurrentAlert() + "\",\"transactionId\":\"TEST\"}";
+                String transactionID = "TEST_" + JunoAlertingUtils.timeStamp() ;
+                kafkaMessage = "{\"alertId\":\"" + getCurrentAlert() + "\",\"transactionId\":" + transactionID + "}";
                 break;
             case "MetaData":
                 kafkaMessage = getManualClosureMetadata();
