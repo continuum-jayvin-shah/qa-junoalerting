@@ -789,6 +789,7 @@ public class AlertingAPITest {
                 logger.info("Alert Not Updated with Response Code : " + alertingResponse.getStatusCode());
                 logger.info("Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
                 errMsg = errMsg + "[Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status")  + " ]";
+                errMsg = errMsg + "[Alert Not Updated with Response Code : " + alertingResponse.getStatusCode()  + " ]";
                 return errMsg ;
              //   return false;
             }
