@@ -44,7 +44,8 @@ public class JunoAlertingAPIUtil {
 	}
 	
 	public static RequestSpecification setTransactionID() {
-		return given().log().all().headers("X-Request-Id", "TEST","Authorization","Api-Token 1cNThoj4R_ytjJ1Y9pnim");
+		String transactionID = "TEST_" + JunoAlertingUtils.timeStamp() ;
+		return given().log().all().headers("X-Request-Id", transactionID ,"Authorization","Api-Token 1cNThoj4R_ytjJ1Y9pnim");
 	}
 
 	public static void verifyStatusCode(Response res, int expectedStatusCode) {

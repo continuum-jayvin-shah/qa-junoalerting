@@ -9,6 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.sql.Timestamp;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -64,6 +65,15 @@ public class JunoAlertingUtils {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String currentTime = sdf.format(new Date());
 		return currentTime;
+	}
+
+	public static String timeStamp(){
+		String timeStamp = "";
+		Date date= new Date();
+		long time = date.getTime();
+		Timestamp ts = new Timestamp(time);
+		timeStamp = ts.toString() ;
+		return timeStamp;
 	}
 	
 	/**
