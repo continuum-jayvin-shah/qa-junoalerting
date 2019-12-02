@@ -234,7 +234,8 @@ public class AlertingAPITest {
         }
     }
 
-    public boolean triggerParentCreateAPI(String testName) {
+    public String triggerParentCreateAPI(String testName) {
+        String errMsg = "" ;
         try {
             setTestName(testName);
             preProcessing(getTestName());
@@ -246,11 +247,14 @@ public class AlertingAPITest {
             logger.info(parentAlertDetails.toString());
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl));
             Thread.sleep(3000);
-            return true;
+            return errMsg ;
+           // return true;
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("Parent Alert Creation Failed with Error Message : " + e.getMessage());
-            return false;
+            //return false;
+            errMsg = errMsg + "[Parent Alert Creation Failed with Error Message : " + e.getMessage() + "]" ;
+            return errMsg ;
         }
     }
 

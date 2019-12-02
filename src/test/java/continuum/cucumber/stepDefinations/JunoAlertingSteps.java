@@ -181,7 +181,9 @@ public class JunoAlertingSteps {
     @Then("^I trigger CREATE Alert API request for Parent Alert on Alert MS for \"([^\"]*)\"$")
     public void i_trigger_CREATE_Alert_API_request_for_Parent_Alert_on_Alert_MS_for(String testCaseRow) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerParentCreateAPI(testCaseRow));
+        //assertTrue(apiTest.triggerParentCreateAPI(testCaseRow));
+        String msg = apiTest.triggerParentCreateAPI(testCaseRow);
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I trigger DELETE API request for Child Alert on Alert MS$")
