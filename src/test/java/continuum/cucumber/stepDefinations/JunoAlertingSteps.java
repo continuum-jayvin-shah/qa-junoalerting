@@ -25,28 +25,7 @@ import java.util.List;
 public class JunoAlertingSteps {
 
     private Logger logger = Logger.getLogger(this.getClass());
-    AlertingAPITest apiTest;
-
-    @Before
-    public void readScenario(Scenario scenario) {
-
-        logger.info("Scenario Name :" + scenario.getName());
-        Reporter.log("<b><i><font color='Blue'>====== Scenario Name: =====" + scenario.getName() + "</font></i></b>");
-        String environment = Utilities.getMavenProperties("Environment").trim();
-        DataUtils.setFileName("TestData_" + environment + ".xls");
-        if (environment.equals("QA")) {
-            AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("QAAlertingHostUrlV2"));
-            AlertingAPITest.setKafkaServer("QAKafkaProducerIP");
-        } else if (environment.equals("DT")) {
-            AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
-            AlertingAPITest.setKafkaServer("DTKafkaProducerIP");
-            AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("DTITSMHostUrlV2"));
-        } else if (environment.equals("PROD")) {
-            AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("PRODHostUrl"));
-            AlertingAPITest.setKafkaServer("");
-        }
-        apiTest = new AlertingAPITest();
-    }
+    AlertingAPITest apiTest = Hooks.apiTest ;
 
     @Given("^I trigger CREATE Alert API request on Alert MS for \"([^\"]*)\"$")
     public void i_trigger_CREATE_Alert_API_request_on_Alert_MS(String testCaseRow) throws Throwable {
@@ -323,11 +302,4 @@ public class JunoAlertingSteps {
         // Write code here that turns the phrase above into concrete actions
     }
 
-    @After
-    public void completeScenario(Scenario scenario) {
-
-        logger.info("Scenario Name :" + scenario.getName() + "Status :" + scenario.getStatus());
-        Reporter.log("<b><i><font color='Blue'>====== Scenario Name: =====" + scenario.getName() + "</font></i></b>");
-        apiTest.closeTest();
-    }
 }
