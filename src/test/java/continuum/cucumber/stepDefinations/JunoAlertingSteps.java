@@ -110,13 +110,17 @@ public class JunoAlertingSteps {
     @Then("^I verify New Alert created for New Request$")
     public void i_verify_New_Alert_created_for_New_Request() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyNewAlertCreation());
+        //assertTrue(apiTest.verifyNewAlertCreation());
+        String msg = apiTest.verifyNewAlertCreation();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify API response from Alert MS for UPDATE Request with Snooze Enabled$")
     public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request_with_Snooze_Enabled() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyUpdateAPIResponseWithSnooze());
+        //assertTrue(apiTest.verifyUpdateAPIResponseWithSnooze());
+        String msg = apiTest.verifyUpdateAPIResponseWithSnooze();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^Wait for \"([^\"]*)\" Secs$")
@@ -128,14 +132,18 @@ public class JunoAlertingSteps {
     @Then("^I verify FetchMore and Remediate URL in ITSM Request$")
     public void i_verify_FetchMore_and_Remediate_URL_in_ITSM_Request() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyRemediateURLITSMRequest());
+        //assertTrue(apiTest.verifyRemediateURLITSMRequest());
+        String msg = apiTest.verifyRemediateURLITSMRequest();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I get ITSM Simulator Response for Current Alert$")
     public void i_get_ITSM_Simulator_Response_for_Current_Alert() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         apiTest.clearFilterArray();
-        assertTrue(apiTest.getITSMSimulatorResponse());
+        //assertTrue(apiTest.getITSMSimulatorResponse());
+        String msg = apiTest.getITSMSimulatorResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify If all requests were sent to ITSM$")
