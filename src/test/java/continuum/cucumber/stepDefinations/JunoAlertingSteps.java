@@ -302,50 +302,66 @@ public class JunoAlertingSteps {
     @Then("I verify Duplicate Alert Id message in response")
     public void i_verify_Duplicate_Alert_Id_message_in_response() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyDuplicateAlertMsgInResponse());
+        //assertTrue(apiTest.verifyDuplicateAlertMsgInResponse());
+        String msg = apiTest.verifyDuplicateAlertMsgInResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I verify alert should not present in Alert Failure table")
     public void i_verify_alert_should_not_present_in_Alert_Failure_table() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.getAlertFailureResponseNotPresent());
+        //assertTrue(apiTest.getAlertFailureResponseNotPresent());
+        String msg = apiTest.getAlertFailureResponseNotPresent();
+        assertTrue(msg, msg.length() < 2);
     }
 
 
     @Then("^I verify API response as Duplicate Alert Request from Alert MS$")
     public void i_verify_API_response_as_Duplicate_Alert_Request_from_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyDuplicateAlertCreation());
+        //assertTrue(apiTest.verifyDuplicateAlertCreation());
+        String msg = apiTest.verifyDuplicateAlertCreation();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("^I verify API response from Alert MS for Non-Existing Alert$")
     public void i_verify_API_response_from_Alert_MS_for_Non_Existing_Alert() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyNonExistingAlertAPIResponse());
+        //assertTrue(apiTest.verifyNonExistingAlertAPIResponse());
+        String msg = apiTest.verifyNonExistingAlertAPIResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Given("I trigger CREATE Incident API request on ITSM MS for {string}")
     public void i_trigger_CREATE_Incident_API_request_on_ITSM_MS_for(String testCaseRow) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerCreateITSM_API(testCaseRow));
+        //assertTrue(apiTest.triggerCreateITSM_API(testCaseRow));
+        String msg = apiTest.triggerCreateITSM_API(testCaseRow);
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I verify API response from ITSM MS")
     public void i_verify_API_response_from_ITSM_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyCreateAPIResponseITSM());
+        //assertTrue(apiTest.verifyCreateAPIResponseITSM());
+        String msg = apiTest.verifyCreateAPIResponseITSM();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I trigger UPDATE ITSM API request on ITSM MS")
     public void i_trigger_UPDATE_ITSM_API_request_on_ITSM_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.triggerUpdateAPI_ITSM());
+        //assertTrue(apiTest.triggerUpdateAPI_ITSM());
+        String msg = apiTest.triggerUpdateAPI_ITSM();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I verify API response from ITSM MS for UPDATE Request")
     public void i_verify_API_response_from_ITSM_MS_for_UPDATE_Request() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        assertTrue(apiTest.verifyUpdateAPIResponseITSM());
+       // assertTrue(apiTest.verifyUpdateAPIResponseITSM());
+        String msg = apiTest.verifyUpdateAPIResponseITSM();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I trigger DELETE API request on ITSM MS")
