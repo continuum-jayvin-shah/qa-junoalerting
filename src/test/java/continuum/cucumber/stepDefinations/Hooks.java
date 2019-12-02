@@ -6,15 +6,8 @@ import continuum.cucumber.Utilities;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.Given;
-import cucumber.api.java.en.Then;
 import org.apache.log4j.Logger;
 import org.testng.Reporter;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertTrue;
 
 public class Hooks {
 
