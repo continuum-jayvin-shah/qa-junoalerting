@@ -69,10 +69,9 @@ public class JunoAlertingUtils {
 
 	public static String timeStamp(){
 		String timeStamp = "";
-		Date date= new Date();
-		long time = date.getTime();
-		Timestamp ts = new Timestamp(time);
-		timeStamp = ts.toString() ;
+		Date date = new Date();
+		long timeMilli = date.getTime();
+		timeStamp = String. valueOf(timeMilli) ;
 		return timeStamp;
 	}
 	
