@@ -388,8 +388,8 @@ public class AlertingAPITest {
                 for (i = 0; i < alertId.size(); i++) {
                     this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
                     if (alertingResponse.getStatusCode() != 204) {
-                        logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
-                        errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
+                        logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode());
+                        errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
                         return errMsg ;
                     }
                     logger.info("Alert Deleted : " + alertId.get(i));
@@ -415,8 +415,8 @@ public class AlertingAPITest {
             int i = alertId.size() - 1;
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
             if (alertingResponse.getStatusCode() != 204) {
-                logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
-                errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
+                logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode());
+                errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
                 return errMsg ;
                 //return false;
             }
@@ -437,8 +437,8 @@ public class AlertingAPITest {
             for (int i = 0; i < alertId.size() - 1; i++) {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
                 if (alertingResponse.getStatusCode() != 204) {
-                    logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
-                    errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
+                    logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
                     return errMsg ;
                     //return false;
                 }
@@ -464,8 +464,8 @@ public class AlertingAPITest {
             for (int i = 0; i < alertId.size() - 2; i++) {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
                 if (alertingResponse.getStatusCode() != 204) {
-                    logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
-                    errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
+                    logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
                     return errMsg ;
                     //return false;
                 }
@@ -488,8 +488,8 @@ public class AlertingAPITest {
         try {
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertID));
             if (alertingResponse.getStatusCode() != 204) {
-                logger.info("Alert ID Deletion Failed for : " + alertID + "with Response Code : " + alertingResponse.getStatusCode());
-                errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertID + "with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
+                logger.info("Alert ID Deletion Failed for : " + alertID + " with Response Code : " + alertingResponse.getStatusCode());
+                errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertID + " with Response Code : " + alertingResponse.getStatusCode() + " ]" ;
                 return errMsg ;
                // return false;
             }
