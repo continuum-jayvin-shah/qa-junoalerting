@@ -12,7 +12,7 @@ import org.testng.Reporter;
 public class Hooks {
 
     private Logger logger = Logger.getLogger(this.getClass());
-    static AlertingAPITest apiTest;
+    private AlertingAPITest apiTest;
 
     @Before
     public void readScenario(Scenario scenario) {
@@ -34,6 +34,10 @@ public class Hooks {
             AlertingAPITest.setKafkaServer("");
         }
         apiTest = new AlertingAPITest();
+    }
+
+    public AlertingAPITest getApiTest(){
+        return apiTest ;
     }
 
     @After
