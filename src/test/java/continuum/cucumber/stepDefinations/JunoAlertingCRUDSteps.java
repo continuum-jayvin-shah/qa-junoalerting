@@ -10,7 +10,8 @@ import cucumber.api.java.en.Then;
 public class JunoAlertingCRUDSteps {
 
     private Logger logger = Logger.getLogger(this.getClass());
-    AlertingAPITest apiTest = Hooks.apiTest;
+    Hooks hooks = new Hooks();
+    AlertingAPITest apiTest = hooks.getApiTest();
 
     @Given("^I trigger CREATE Alert API request on Alert MS for \"([^\"]*)\"$")
     public void i_trigger_CREATE_Alert_API_request_on_Alert_MS(String testCaseRow) throws Throwable {
@@ -135,11 +136,15 @@ public class JunoAlertingCRUDSteps {
     @Then("I trigger DELETE API request on ITSM MS")
     public void i_trigger_DELETE_API_request_on_ITSM_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
+        String msg = apiTest.triggerDeleteAPI_ITSM();
+        assertTrue(msg, msg.length() < 2);
     }
 
     @Then("I verify API response from ITSM MS for DELETE Request")
     public void i_verify_API_response_from_ITSM_MS_for_DELETE_Request() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
+        String msg = apiTest.verifyIncidentDeletionInITMS();
+        assertTrue(msg, msg.length() < 2);
     }
 
 }

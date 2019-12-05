@@ -2,6 +2,7 @@ package continuum.cucumber.stepDefinations;
 
 import static org.junit.Assert.assertTrue;
 
+import cucumber.api.java.en.When;
 import org.apache.log4j.Logger;
 import com.continuum.platform.alerting.api.AlertingAPITest;
 import cucumber.api.java.en.Given;
@@ -12,7 +13,8 @@ import java.util.List;
 public class JunoAlertingSteps {
 
     private Logger logger = Logger.getLogger(this.getClass());
-    AlertingAPITest apiTest = Hooks.apiTest;
+    Hooks hooks = new Hooks();
+    AlertingAPITest apiTest = hooks.getApiTest();
 
     @Then("^I verify If alert reached till ITSM Simulator$")
     public void i_verify_If_alert_reached_till_ITSM_Simulator() throws Throwable {
@@ -207,11 +209,25 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @When("I trigger CREATE Incident API request on ITSM MS")
+    public void i_trigger_CREATE_Incident_API_request_on_ITSM_MS() throws Throwable {
+        String msg = apiTest.triggerCreateITSM_API_AlertMS();
+        assertTrue(msg, msg.length() < 2);
+    }
+
     @Then("I verify API response from ITSM MS")
     public void i_verify_API_response_from_ITSM_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.verifyCreateAPIResponseITSM());
         String msg = apiTest.verifyCreateAPIResponseITSM();
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("I verify Duplicate Alert in API response from ITSM MS")
+    public void i_verify_duplicate_alert_in_API_response_from_ITSM_MS() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //assertTrue(apiTest.verifyCreateAPIResponseITSM());
+        String msg = apiTest.verifyDuplicateCreateAPIResponseITSM();
         assertTrue(msg, msg.length() < 2);
     }
 
