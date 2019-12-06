@@ -1458,6 +1458,10 @@ public class AlertingAPITest {
                 //return false;
             }
         } catch (Exception e) {
+            for(int z = 0 ; z < filterArray.size() ; z ++) {
+                logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
+                errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]" ;
+            }
             logger.info("Exception Occurred : " + e.getMessage());
             errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
             return errMsg;
