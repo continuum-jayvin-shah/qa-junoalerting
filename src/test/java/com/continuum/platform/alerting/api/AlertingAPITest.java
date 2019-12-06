@@ -1535,17 +1535,17 @@ public class AlertingAPITest {
             if (!currentRow.get("partners").equalsIgnoreCase(actualDataInITSM.get("partnerId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Patner ID : Expected -> " + currentRow.get("partners") + " :: Actual ->" + actualDataInITSM.get("partnerId"));
-                errMsg = errMsg + "[Data Mismatch in Patner ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]";
+                errMsg = errMsg + "[Data Mismatch in Patner ID : Expected -> " + currentRow.get("partners") + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]";
             }
             if (!currentRow.get("clients").equalsIgnoreCase(actualDataInITSM.get("clientId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Client ID : Expected -> " + currentRow.get("clients") + " :: Actual ->" + actualDataInITSM.get("clientId"));
-                errMsg = errMsg + "[Data Mismatch in Client ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]";
+                errMsg = errMsg + "[Data Mismatch in Client ID : Expected -> " + currentRow.get("clients") + " :: Actual ->" + actualDataInITSM.get("clientId") + " ]";
             }
             if (!currentRow.get("sites").equalsIgnoreCase(actualDataInITSM.get("siteId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Sites ID : Expected -> " + currentRow.get("sites") + " :: Actual ->" + actualDataInITSM.get("siteId"));
-                errMsg = errMsg + "[Data Mismatch in Sites ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]";
+                errMsg = errMsg + "[Data Mismatch in Sites ID : Expected -> " + currentRow.get("sites") + " :: Actual ->" + actualDataInITSM.get("siteId") + " ]";
             }
             //     if (!currentRow.get("resourceId").equalsIgnoreCase(actualDataInITSM.get("resourceId"))) {
             //         flag = false;
@@ -1554,12 +1554,12 @@ public class AlertingAPITest {
             if (!currentRow.get("endpoints").equalsIgnoreCase(actualDataInITSM.get("endpointId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Endpoint ID : Expected -> " + currentRow.get("endpoints") + " :: Actual ->" + actualDataInITSM.get("endpointId"));
-                errMsg = errMsg + "[Data Mismatch in Endpoint ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]";
+                errMsg = errMsg + "[Data Mismatch in Endpoint ID : Expected -> " + currentRow.get("endpoints") + " :: Actual ->" + actualDataInITSM.get("endpointId") + " ]";
             }
             if (!currentRow.get("conditionId").equalsIgnoreCase(actualDataInITSM.get("conditionId"))) {
                 flag = false;
                 logger.info("Data Mismatch in Condition ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId"));
-                errMsg = errMsg + "[Data Mismatch in Condition ID : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]";
+                errMsg = errMsg + "[Data Mismatch in Condition ID : Expected -> " + currentRow.get("conditionId") + " :: Actual ->" + actualDataInITSM.get("conditionId") + " ]";
             }
             //     JSONParser parser = new JSONParser();
             //     JSONObject jsonObj = (JSONObject) parser.parse(currentRow.get("alertDetails"));
@@ -1567,13 +1567,13 @@ public class AlertingAPITest {
             org.json.JSONObject jsonObj1 = jsonObj.getJSONObject("alertDetails");
             if (!jsonObj1.getString("Test").equalsIgnoreCase(actualDataInITSM.get("Test"))) {
                 flag = false;
-                logger.info("Data Mismatch in Test : Expected -> " + jsonObj1.getString("Test") + " :: Actual ->" + actualDataInITSM.get("alertId"));
-                errMsg = errMsg + "[Data Mismatch in Test : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]";
+                logger.info("Data Mismatch in Test : Expected -> " + jsonObj1.getString("Test") + " :: Actual ->" + actualDataInITSM.get("Test"));
+                errMsg = errMsg + "[Data Mismatch in Test : Expected -> " + jsonObj1.getString("Test") + " :: Actual ->" + actualDataInITSM.get("Test") + " ]";
             }
             if (!jsonObj1.getString("Type").equalsIgnoreCase(actualDataInITSM.get("Type"))) {
                 flag = false;
-                logger.info("Data Mismatch in Type : Expected -> " + jsonObj1.getString("Type") + " :: Actual ->" + actualDataInITSM.get("alertId"));
-                errMsg = errMsg + "[Data Mismatch in Type : Expected -> " + getCurrentAlert() + " :: Actual ->" + actualDataInITSM.get("alertId") + " ]";
+                logger.info("Data Mismatch in Type : Expected -> " + jsonObj1.getString("Type") + " :: Actual ->" + actualDataInITSM.get("Type"));
+                errMsg = errMsg + "[Data Mismatch in Type : Expected -> " + jsonObj1.getString("Type") + " :: Actual ->" + actualDataInITSM.get("Type") + " ]";
             }
         } catch (Exception e) {
             logger.info("Exception Occurred : " + e);
@@ -1644,7 +1644,7 @@ public class AlertingAPITest {
                         setActualDataInITSM("endpointId", jsonObjPayload.getString("endpointId"));
                         setActualDataInITSM("conditionId", jsonObjPayload.getString("conditionId"));
                         setActualDataInITSM("statuscode", Integer.toString(jsonObj.getInt("statuscode")));
-                        JSONObject jsonObjAlertDetails = jsonObjPayload.getJSONObject("alertdetails");
+                        JSONObject jsonObjAlertDetails = jsonObjPayload.getJSONObject("alertDetails");
                         setActualDataInITSM("Test", jsonObjAlertDetails.getString("Test"));
                         setActualDataInITSM("Type", jsonObjAlertDetails.getString("Type"));
                         break;

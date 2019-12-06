@@ -1,7 +1,7 @@
 @Alert_ITSM_integration @ignore
 Feature: Alert ITSM Integration
 
-  @rajat
+
   Scenario Outline: Create/Update/Delete ITSM incident
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
     Then I verify API response from Alert MS
