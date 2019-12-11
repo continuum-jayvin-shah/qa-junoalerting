@@ -1769,13 +1769,13 @@ public class AlertingAPITest {
                 JSONObject filterObj = filterArray.getJSONObject(i);
                 if (filterObj.get("action").equals("POST")) {
                     JSONObject payloadObj = filterObj.getJSONObject("payload");
-                    if (payloadObj.get("remediateurl").equals(null) || payloadObj.get("fetchdataurl").equals(null)) {
+                    if (payloadObj.get("remediateUrl").equals(null) || payloadObj.get("fetchDataUrl").equals(null)) {
                         logger.info("URL for Remediate or FetchMoreData is Null");
                         errMsg = errMsg + "[URL for Remediate or FetchMoreData is Null]";
                         return errMsg;
                     } else {
-                        logger.info("Remediate URL : " + payloadObj.get("remediateurl"));
-                        logger.info("FetchMore URL : " + payloadObj.get("fetchdataurl"));
+                        logger.info("Remediate URL : " + payloadObj.get("remediateUrl"));
+                        logger.info("FetchMore URL : " + payloadObj.get("fetchDataUrl"));
                         return errMsg;
                     }
                 }
