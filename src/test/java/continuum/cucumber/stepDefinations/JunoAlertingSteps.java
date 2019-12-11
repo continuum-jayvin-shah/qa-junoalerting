@@ -1,27 +1,27 @@
 package continuum.cucumber.stepDefinations;
 
-import static org.junit.Assert.assertTrue;
-
+import com.continuum.platform.alerting.api.AlertingAPITest;
 import com.continuum.utils.DataUtils;
 import continuum.cucumber.Utilities;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
-import cucumber.api.java.en.When;
-import org.apache.log4j.Logger;
-import com.continuum.platform.alerting.api.AlertingAPITest;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
+import org.apache.log4j.Logger;
 import org.testng.Reporter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.Assert.assertTrue;
+
 public class JunoAlertingSteps {
 
     private Logger logger = Logger.getLogger(this.getClass());
 
-    AlertingAPITest apiTest ;
+    AlertingAPITest apiTest = null ;
 
     @Before
     public void readScenario(Scenario scenario) {
@@ -279,6 +279,8 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+
+
     @Then("I verify {string} in Alert State API response")
     public void i_verify_in_Alert_State_API_response(String factor) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -287,6 +289,9 @@ public class JunoAlertingSteps {
         String msg = apiTest.validateAlertState(listFactor);
         assertTrue(msg, msg.length() < 2);
     }
+
+
+
 
     @Then("^I verify If alert is Created in JAS$")
     public void i_verify_If_alert_is_Created_in_JAS() throws Throwable {
@@ -430,7 +435,5 @@ public class JunoAlertingSteps {
         logger.info("============================================================================================================================================");
         apiTest.closeTest();
     }
-
-
 
 }

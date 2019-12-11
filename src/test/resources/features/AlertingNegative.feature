@@ -51,6 +51,7 @@ Feature: Juno Alerting Error Code Scenario
     Then Wait for "<duration>" Secs
     Then I get ITSM Simulator Response for Current Alert
     Then I verify New create POST message in ITSM response
+    Then I trigger DELETE API request on Alert MS
 
     Examples:
       | TestCaseRow     | UpdateResponse |  duration |
