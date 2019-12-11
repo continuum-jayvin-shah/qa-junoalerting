@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import com.continuum.utils.JunoAlertingUtils;
 import org.apache.log4j.Logger;
 
 import com.continuum.utils.DataUtils;
@@ -25,7 +26,7 @@ import org.json.simple.parser.JSONParser;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, jasUrl, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID = "";
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, jasUrl, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender = "";
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
@@ -373,6 +374,33 @@ public class AlertingAPITest {
             return errMsg;
             //return false;
         }
+    }
+
+    public String triggerUpdateAPIErrorResponse(String errorCode) {
+        String errMsg = "";
+        try {
+            preProcessing(getTestName());
+            appender = JunoAlertingUtils.timeStamp();
+            setAlertDetails(appendITSMSimulatorErrorCode(getAlertDetails(),errorCode).replace("POST 1", "PUT_" + appender));
+            logger.info("Alert Details : " + alertDetails);
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(alertDetails, alertingAPIUrl + "/" + getCurrentAlert()));
+            return errMsg;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
+            errMsg = errMsg + "[Alert Updation Failed with Error Message : " + e.getMessage() + " ]";
+            return errMsg;
+        }
+    }
+
+    public String appendITSMSimulatorErrorCode(String msg, String errorCode){
+        String details = msg;
+        details = details.substring(0, details.length() - 1) + ",\n" +
+                "    \"itsmSimulator\":{\n" +
+                "        \"statusCode\":"+ errorCode +"\n" +
+                "    }\n" +
+                "}";
+        return details ;
     }
 
     public String triggerUpdateAPI_ITSM() {
@@ -1600,6 +1628,17 @@ public class AlertingAPITest {
         return errMsg;
     }
 
+    public String validateITSMDataTest() throws InterruptedException {
+        String errMsg = getActualDataInITSMPOSTTypeValidate("PUT_"+ appender);
+        if(errMsg.length() < 3 ){
+            logger.info("Expected request found in ITSM Simulator response.");
+            return errMsg ;
+        }
+        logger.info("Expected request not found in ITSM Simulator response.");
+        errMsg = errMsg + "[Expected POST request not reached in ITSM having type : " + "PUT_"+ appender + " ]" ;
+        return errMsg ;
+    }
+
     public String validateAlertState(List<String> factorList) throws InterruptedException {
         String errMsg = "";
         try {
@@ -1661,6 +1700,50 @@ public class AlertingAPITest {
         } catch (Exception e) {
             logger.info("Exception Occured : " + e.getMessage());
         }
+    }
+
+    public String getActualDataInITSMPOSTTypeValidate(String expText) throws InterruptedException {
+        JsonPath filterPath = JsonPath.from(filterArray.toString());
+        String errMsg = "" ;
+        boolean foundFlag = false ;
+        logger.info(filterPath.getList("action"));
+        int i = 0;
+        try {
+            if (filterArray.size() > 0) {
+                while (i < filterArray.size()) {
+                    if (filterArray.getJSONObject(i).get("action").equals("POST")) {
+                        JSONObject jsonObj = filterArray.getJSONObject(i);
+                        JSONObject jsonObjPayload = jsonObj.getJSONObject("payload");
+                        JSONObject jsonObjAlertDetails = jsonObjPayload.getJSONObject("alertDetails");
+                        if(jsonObjAlertDetails.getString("Test").equalsIgnoreCase(expText)){
+                            foundFlag = true ;
+                            setActualDataInITSM("Test", jsonObjAlertDetails.getString("Test"));
+                            setActualDataInITSM("Type", jsonObjAlertDetails.getString("Type"));
+                            setActualDataInITSM("alertId", jsonObjPayload.getString("alertId"));
+                            setActualDataInITSM("partnerId", jsonObjPayload.getString("partnerId"));
+                            setActualDataInITSM("clientId", jsonObjPayload.getString("clientId"));
+                            setActualDataInITSM("siteId", jsonObjPayload.getString("siteId"));
+                            setActualDataInITSM("resourceId", jsonObjPayload.getString("resourceId"));
+                            setActualDataInITSM("endpointId", jsonObjPayload.getString("endpointId"));
+                            setActualDataInITSM("conditionId", jsonObjPayload.getString("conditionId"));
+                            setActualDataInITSM("statuscode", Integer.toString(jsonObj.getInt("statuscode")));
+                            break;
+                        }
+                    }
+                    i++;
+                }
+                if(!foundFlag){
+                    errMsg = errMsg + "[Expected POST request not reached in ITSM having type : " + expText + " ]" ;
+                }
+            } else {
+                errMsg = errMsg + "[No Alert reached till ITSM]" ;
+                logger.info("Alerts Not Reached till ITSM!!");
+            }
+        } catch (Exception e) {
+            logger.info("Exception Occured : " + e.getMessage());
+            errMsg = errMsg + "[Exception occured : " + e.getMessage() +"]" ;
+        }
+        return errMsg ;
     }
 
     public String verifyITSMResponseForChildAlert() throws InterruptedException {

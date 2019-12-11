@@ -69,6 +69,13 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("I trigger UPDATE Alert API request on Alert MS having {string} ITSM Simulator response")
+    public void i_trigger_UPDATE_Alert_API_request_on_Alert_MS_having_ITSM_Simulator_response(String errorCode) {
+        String msg = apiTest.triggerUpdateAPIErrorResponse(errorCode);
+        assertTrue(msg, msg.length() < 2);
+    }
+
+
     @Then("I verify API response {string} from Alert MS for UPDATE Request")
     public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request(String responseCode) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -255,6 +262,12 @@ public class JunoAlertingSteps {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.validateITSMData("statuscode", statusCode));
         String msg = apiTest.validateITSMData("statuscode", statusCode);
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("I verify New create POST message in ITSM response")
+    public void i_verify_New_create_POST_message_in_ITSM_response() throws Throwable {
+        String msg = apiTest.validateITSMDataTest();
         assertTrue(msg, msg.length() < 2);
     }
 
