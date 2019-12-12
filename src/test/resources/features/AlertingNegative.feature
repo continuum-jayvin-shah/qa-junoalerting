@@ -1,4 +1,4 @@
-Feature: Juno Alerting Negative Scenario
+Feature: Juno Alerting Error Code Scenario
 
   @Functional @Negative
   Scenario Outline: Alert goes to Failure table for 500 Server Error
@@ -39,3 +39,20 @@ Feature: Juno Alerting Negative Scenario
     Examples:
       | TestCaseRow                  | StatusCode | duration | TestCaseRow1                   |
       | 500_ServerError_Reprocession | 500        | 25       | 500_ServerError_Reprocession_1 |
+
+
+  @Functional @Negative
+  Scenario Outline: Alert goes as Create while 404 comes in PUT response
+
+    Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
+    Then I verify API response from Alert MS
+    Then I trigger UPDATE Alert API request on Alert MS having "<UpdateResponse>" ITSM Simulator response
+    Then I verify API response from Alert MS for UPDATE Request
+    Then Wait for "<duration>" Secs
+    Then I get ITSM Simulator Response for Current Alert
+    Then I verify New create POST message in ITSM response
+    Then I trigger DELETE API request on Alert MS
+
+    Examples:
+      | TestCaseRow     | UpdateResponse |  duration |
+      | 404_PUT_Error   | 404            |  5        |

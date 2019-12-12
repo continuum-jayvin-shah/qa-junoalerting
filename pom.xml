@@ -451,7 +451,7 @@
                     <properties>
                         <property>
                             <name>dataproviderthreadcount</name>
-                            <value>8</value>
+                            <value>33</value>
                         </property>
                     </properties>
                     <testFailureIgnore>true</testFailureIgnore>
