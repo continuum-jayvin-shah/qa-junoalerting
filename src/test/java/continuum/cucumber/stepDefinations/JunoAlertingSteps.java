@@ -279,8 +279,6 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
-
-
     @Then("I verify {string} in Alert State API response")
     public void i_verify_in_Alert_State_API_response(String factor) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -290,8 +288,11 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
-
-
+    @Then("I verify No data in Alert State API")
+    public void i_verify_no_data_in_alert_state() throws Throwable {
+        String msg = apiTest.validateNoDataAlertState();
+        assertTrue(msg, msg.length() < 2);
+    }
 
     @Then("^I verify If alert is Created in JAS$")
     public void i_verify_If_alert_is_Created_in_JAS() throws Throwable {

@@ -521,14 +521,12 @@ public class AlertingAPITest {
             logger.info("Alerts Deleted!!");
             //return true;
             return errMsg ;
-
         } catch (Exception e) {
             logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
             errMsg = errMsg + "[Alert Deletion Failed with Error Message : " + e.getMessage() + " ]" ;
             return errMsg ;
            // return false;
         }
-
     }
 
     public String triggerChildDeleteAPIForBothParent() {
@@ -1654,6 +1652,22 @@ public class AlertingAPITest {
             } else {
                 logger.info("No data present in Alert State");
                 errMsg = errMsg + "[No data present in Alert State. As filterArray size is 0]";
+            }
+        } catch (Exception e) {
+            logger.info("Exception Occurred " + e);
+            errMsg = errMsg + "Exception Occured " + e.toString() + " ]";
+        }
+        return errMsg;
+    }
+
+    public String validateNoDataAlertState() throws InterruptedException {
+        String errMsg = "";
+        try {
+            if (filterArray.size() == 0) {
+                return errMsg;
+            } else {
+                logger.info("Parent present in Alert State");
+                errMsg = errMsg + "[Parent present in Alert State]";
             }
         } catch (Exception e) {
             logger.info("Exception Occurred " + e);
