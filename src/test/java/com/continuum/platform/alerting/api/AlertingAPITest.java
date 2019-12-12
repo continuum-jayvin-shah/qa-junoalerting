@@ -1796,7 +1796,7 @@ public class AlertingAPITest {
         switch (kafkaMessageType) {
             case "AlertID":
                 String transactionID = "TEST_" + JunoAlertingUtils.timeStamp() ;
-                kafkaMessage = "{\"alertId\":\"" + getCurrentAlert() + "\",\"transactionId\":" + transactionID + "}";
+                kafkaMessage = "{\"alertId\":\"" + getCurrentAlert() + "\",\"transactionId\":\"" + transactionID + "\"}";
                 break;
             case "MetaData":
                 kafkaMessage = getManualClosureMetadata();
