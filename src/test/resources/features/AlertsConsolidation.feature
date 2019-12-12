@@ -152,6 +152,7 @@ Feature: Juno Alerting Consolidation Test
     Then I verify API response from Alert MS
     Then I trigger GET Alert State API for current alert
     Then I verify No data in Alert State API
+    Then I verify alert should not present in Alert Failure table
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert not reached till ITSM Simulator
 
