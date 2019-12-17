@@ -1,6 +1,6 @@
 Feature: Juno Alerting Consolidation Test
 
-   @BVT
+  @Functional @BVT
   Scenario Outline: Alerting API Test for Consolidation Functionality with 2 Child and 1 Parent
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -25,7 +25,7 @@ Feature: Juno Alerting Consolidation Test
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |
       | Child1       | Child2       | Parent1      |
 
-
+  @Functional
   Scenario Outline: Alerting API Test for Consolidation Functionality with 2 Parent With Same ConditionID
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -54,7 +54,7 @@ Feature: Juno Alerting Consolidation Test
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 | TestCaseRow4 | TestCaseRow5 |
       | Child3       | Child4       | FilterChild1 | FilterChild2 | Parent2      |
 
-
+  @Functional
   Scenario Outline: Alerting API Test for Consolidation Functionality with 3 Child 1 Child Delete and 1 Parent
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -83,7 +83,7 @@ Feature: Juno Alerting Consolidation Test
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 | TestCaseRow4 |
       | FilterChild3 | FilterChild4 | FilterChild5 | FilterParent |
 
-   @BVT
+  @Functional @BVT
   Scenario Outline: Alerting API Test for Consolidation Functionality with 1 Child and No Parent
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
@@ -136,7 +136,7 @@ Feature: Juno Alerting Consolidation Test
       | Child6       | Child7       | Parent3      |
 
 
-   @BVT
+  @Functional @BVT
   Scenario Outline: Parent gets dropped for deleted child in payload
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"

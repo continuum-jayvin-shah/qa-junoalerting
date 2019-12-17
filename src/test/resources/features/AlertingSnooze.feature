@@ -90,7 +90,7 @@ Examples:
 |TestCaseRow1|TestCaseRow2|
 |SnoozeFilter1|SnoozeFilter2|
 
-
+@Functional
 Scenario Outline: Alerting API Test for Snooze Functionality Enabled during Consolidation
 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
