@@ -12,6 +12,8 @@ import java.util.Date;
 import java.sql.Timestamp;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
+import java.util.UUID;
+import com.fasterxml.uuid.Generators;
 
 public class JunoAlertingUtils {
 	/**
@@ -68,11 +70,13 @@ public class JunoAlertingUtils {
 	}
 
 	public static String timeStamp(){
-		String timeStamp = "";
-		Date date = new Date();
-		long timeMilli = date.getTime();
-		timeStamp = String. valueOf(timeMilli) ;
-		return timeStamp;
+		//String timeStamp = "";
+		//Date date = new Date();
+		//long timeMilli = date.getTime();
+		//timeStamp = String. valueOf(timeMilli) ;
+		//return timeStamp;
+		UUID uuid1 = Generators.timeBasedGenerator().generate();
+		return uuid1.toString();
 	}
 	
 	/**
