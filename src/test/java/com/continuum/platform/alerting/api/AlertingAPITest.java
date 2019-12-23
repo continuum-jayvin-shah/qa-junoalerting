@@ -516,7 +516,7 @@ public class AlertingAPITest {
                     //return false;
                 }
                 logger.info("Alert Deleted : " + alertId.get(i));
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             }
             logger.info("Alerts Deleted!!");
             //return true;
