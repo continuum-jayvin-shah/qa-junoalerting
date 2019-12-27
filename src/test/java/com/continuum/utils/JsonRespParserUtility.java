@@ -18,8 +18,14 @@ public class JsonRespParserUtility {
 		
 		JSONArray filterArray = new JSONArray();
 		System.out.println("Identifier::" + identifier);
-		
-		JSONArray respArray = (JSONArray) jsonResponse.get("outdata");
+
+		JSONArray respArray = null ;
+
+		try {
+			respArray = (JSONArray) jsonResponse.get("outdata");
+		}catch(Exception e){
+
+		}
 		
 		if(respArray==null) {
 			System.out.println("No Data Present in response");

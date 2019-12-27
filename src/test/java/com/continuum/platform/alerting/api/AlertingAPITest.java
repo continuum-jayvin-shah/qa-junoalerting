@@ -13,6 +13,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 import org.apache.log4j.Logger;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +30,6 @@ public class AlertingAPITest {
     private HashMap<String, String> actualDataInITSM = new HashMap<String, String>();
     private JSONArray filterArray = new JSONArray();
     private HashMap<String, String> currentRow = new HashMap<String, String>();
-
 
 
     public String getCurrentAlert() {
@@ -516,7 +516,7 @@ public class AlertingAPITest {
                     //return false;
                 }
                 logger.info("Alert Deleted : " + alertId.get(i));
-                Thread.sleep(2000);
+                Thread.sleep(5000);
             }
             logger.info("Alerts Deleted!!");
             //return true;
@@ -1190,18 +1190,26 @@ public class AlertingAPITest {
         try {
             if (alertingResponse.getStatusCode() == 200) {
                 JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
-                for (String alertID : alertId)
-                    filterArray1.add(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
-                int i = 0;
-                while (i < filterArray1.size()) {
-                    JSONArray filterArray2 = (JSONArray) filterArray1.get(i);
-                    if (filterArray2.size() < 1) {
-                        i++;
-                    } else {
-                        //return false;
-                        errMsg = errMsg + "[Alert Not present in ITSM]";
-                        return errMsg;
+                try {
+                    for (String alertID : alertId)
+                        filterArray1.add(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
+                    int i = 0;
+                    while (i < filterArray1.size()) {
+                        JSONArray filterArray2 = null;
+                        filterArray2 = (JSONArray) filterArray1.get(i);
+                        if (filterArray2 == null) {
+                            System.out.println("No Data Present in response as expected");
+                            return errMsg;
+                        }
+                        if (filterArray2.size() < 1) {
+                            i++;
+                        } else {
+                            errMsg = errMsg + "[Alert Not present in ITSM]";
+                            return errMsg;
+                        }
                     }
+                } catch (Exception e) {
+
                 }
                 // return true;
                 return errMsg;
