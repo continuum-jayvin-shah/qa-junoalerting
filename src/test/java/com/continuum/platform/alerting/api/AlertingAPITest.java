@@ -8,6 +8,7 @@ import continuum.cucumber.KafkaProducerUtility;
 import continuum.cucumber.Utilities;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import lombok.SneakyThrows;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -1444,11 +1445,25 @@ public class AlertingAPITest {
         }
     }
 
-    public String verifyITSMSimulatorResponse() throws InterruptedException {
+    @SneakyThrows
+    public String verifyITSMSimulatorResponse() throws Exception {
         String errMsg = "";
         boolean flag = false ;
         int i = 0;
         for(int x = 0 ; x < 3 ; x++) {
+            if(x!=0){
+                triggerITSMSimulatorAPI();
+                if (alertingResponse.getStatusCode() == 200) {
+                    JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                    for (String alertID : alertId)
+                        setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
+                    return errMsg;
+                } else {
+                    logger.info("Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "[Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                    return errMsg;
+                }
+            }
             JsonPath filterPath = JsonPath.from(filterArray.toString());
             logger.info("Try " + x +" ------>>" + filterPath.getList("action"));
             try {
@@ -1517,11 +1532,24 @@ public class AlertingAPITest {
         return errMsg;
     }
 
-    public String verifyChildListITSMSimulatorResponse() throws InterruptedException {
+    public String verifyChildListITSMSimulatorResponse() throws Exception {
         String errMsg = "";
         List actualChildConditionId = null ;
         int i = 0;
         for(int x = 0 ; x > 3 ; x++) {
+            if(x!=0){
+                triggerITSMSimulatorAPI();
+                if (alertingResponse.getStatusCode() == 200) {
+                    JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                    for (String alertID : alertId)
+                        setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
+                    return errMsg;
+                } else {
+                    logger.info("Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "[Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                    return errMsg;
+                }
+            }
             JsonPath filterPath = JsonPath.from(filterArray.toString());
             actualChildConditionId = new ArrayList<String>();
             logger.info("Try " + x +" ------>>" + filterPath.getList("action"));
