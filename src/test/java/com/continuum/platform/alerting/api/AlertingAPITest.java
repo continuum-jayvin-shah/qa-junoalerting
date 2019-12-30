@@ -1452,17 +1452,7 @@ public class AlertingAPITest {
         int i = 0;
         for(int x = 0 ; x < 3 ; x++) {
             if(x!=0){
-                triggerITSMSimulatorAPI();
-                if (alertingResponse.getStatusCode() == 200) {
-                    JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
-                    for (String alertID : alertId)
-                        setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
-                    return errMsg;
-                } else {
-                    logger.info("Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode());
-                    errMsg = errMsg + "[Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode() + " ]";
-                    return errMsg;
-                }
+                getITSMSimulatorResponse();
             }
             JsonPath filterPath = JsonPath.from(filterArray.toString());
             logger.info("Try " + x +" ------>>" + filterPath.getList("action"));
@@ -1538,17 +1528,7 @@ public class AlertingAPITest {
         int i = 0;
         for(int x = 0 ; x > 3 ; x++) {
             if(x!=0){
-                triggerITSMSimulatorAPI();
-                if (alertingResponse.getStatusCode() == 200) {
-                    JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
-                    for (String alertID : alertId)
-                        setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
-                    return errMsg;
-                } else {
-                    logger.info("Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode());
-                    errMsg = errMsg + "[Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode() + " ]";
-                    return errMsg;
-                }
+                getITSMSimulatorResponse();
             }
             JsonPath filterPath = JsonPath.from(filterArray.toString());
             actualChildConditionId = new ArrayList<String>();
