@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, jasUrl, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender = "";
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, jasUrl, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, appCheckpointUrl = "";
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
@@ -1917,6 +1917,28 @@ public class AlertingAPITest {
     public void closeTest() {
         alertId.clear();
         filterArray.clear();
+    }
+
+    public void afterAllTest(String topicName){
+        String environment = Utilities.getMavenProperties("Environment").trim();
+        DataUtils.setFileName("TestData_" + environment + ".xls");
+        logger.info("Environment Used : " + environment);
+        if (environment.equals("QA")) {
+            setalertingUrl(Utilities.getMavenProperties("QAAlertingHostUrlV2"));
+            setKafkaServer("QAKafkaProducerIP");
+        } else if (environment.equals("DT")) {
+            setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
+            setKafkaServer("DTKafkaProducerIP");
+            setItsmIntegrationUrl(Utilities.getMavenProperties("DTITSMHostUrlV2"));
+        } else if (environment.equals("PROD")) {
+            setalertingUrl(Utilities.getMavenProperties("PRODHostUrl"));
+            setKafkaServer("");
+        }
+        appCheckpointUrl = alertingUrl + Utilities.getMavenProperties("appCheckpointUrl")
+                .replace("{topicName}", topicName);
+
+
+
     }
 
 }
