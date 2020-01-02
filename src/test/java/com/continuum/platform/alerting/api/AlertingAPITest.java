@@ -1478,7 +1478,8 @@ public class AlertingAPITest {
         String errMsg = "";
         boolean flag = false ;
         int i = 0;
-        forLoop : for(int x = 0 ; x < 3 ; x++) {
+        int tryCount = 5 ;
+        forLoop : for(int x = 0 ; x < tryCount ; x++) {
             if(x!=0){
                 filterArray.clear();
                 getITSMSimulatorResponse();
@@ -1495,7 +1496,7 @@ public class AlertingAPITest {
                                     i = i + 3;
                                     return errMsg;
                                 } else {
-                                    if(x==2){
+                                    if(x==tryCount-1){
                                         logger.info("Delete Requests is not reached till ITSM");
                                         errMsg = errMsg + "[Delete Requests is not reached till ITSM]";
                                         return errMsg;
@@ -1504,7 +1505,7 @@ public class AlertingAPITest {
                                     }
                                 }
                             } else {
-                                if(x==2) {
+                                if(x==tryCount-1){
                                     logger.info("Update Requests is not reached till ITSM");
                                     errMsg = errMsg + "[Update Requests is not reached till ITSM]";
                                     return errMsg;
@@ -1513,7 +1514,7 @@ public class AlertingAPITest {
                                 }
                             }
                         } else {
-                            if(x==2) {
+                            if(x==tryCount-1){
                                 logger.info("Create Requests is not reached till ITSM");
                                 errMsg = errMsg + "[Create Requests is not reached till ITSM]";
                                 return errMsg;
@@ -1523,7 +1524,7 @@ public class AlertingAPITest {
                         }
                     }
                 } else {
-                    if(x==2) {
+                    if(x==tryCount-1){
                         logger.info("No Alerts Reached till ITSM!!");
                         errMsg = errMsg + "[No Alerts Reached till ITSM]";
                         return errMsg;
@@ -1532,7 +1533,7 @@ public class AlertingAPITest {
                     }
                 }
             } catch (Exception e) {
-                if(x==2) {
+                if(x==tryCount-1){
                     logger.info("No Alerts Reached till ITSM!!");
                     errMsg = errMsg + "[No Alerts Reached till ITSM]";
                     for (int z = 0; z < filterArray.size(); z++) {
@@ -1561,7 +1562,8 @@ public class AlertingAPITest {
         String errMsg = "";
         List actualChildConditionId = null ;
         int i = 0;
-        forLoop: for(int x = 0 ; x > 3 ; x++) {
+        int tryCount = 5 ;
+        forLoop: for(int x = 0 ; x < tryCount ; x++) {
             if(x!=0){
                 filterArray.clear();
                 getITSMSimulatorResponse();
@@ -1578,7 +1580,7 @@ public class AlertingAPITest {
                             JSONArray jsonObjRootCauseArr = (JSONArray) jsonObjPayload.get("rootcause");
                             int z = 0;
                             if (jsonObjRootCauseArr == null) {
-                                if(x==2) {
+                                if(x==tryCount-1){
                                     logger.info("No Data Present in ITSM Simulator");
                                     errMsg = errMsg + "[No Data Present in ITSM Simulator]";
                                     return errMsg;
@@ -1597,7 +1599,7 @@ public class AlertingAPITest {
                         i++;
                     }
                 } else {
-                    if(x==2) {
+                    if(x==tryCount-1){
                     logger.info("No Alerts Reached till ITSM!!");
                     errMsg = errMsg + "[No Alerts Reached till ITSM]";
                     return errMsg;
@@ -1606,7 +1608,7 @@ public class AlertingAPITest {
                     }
                 }
             } catch (Exception e) {
-                if(x==2) {
+                if(x==tryCount-1){
                     logger.info("No Alerts Reached till ITSM!!");
                     errMsg = errMsg + "[No Alerts Reached till ITSM]";
                     for (int z = 0; z < filterArray.size(); z++) {
