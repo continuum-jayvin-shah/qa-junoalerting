@@ -8,7 +8,6 @@ import continuum.cucumber.KafkaProducerUtility;
 import continuum.cucumber.Utilities;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
-import lombok.SneakyThrows;
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -1445,148 +1444,111 @@ public class AlertingAPITest {
         }
     }
 
-    @SneakyThrows
-    public String verifyITSMSimulatorResponse() throws Exception {
+    public String verifyITSMSimulatorResponse() throws InterruptedException {
         String errMsg = "";
-        boolean flag = false ;
+        JsonPath filterPath = JsonPath.from(filterArray.toString());
+        logger.info(filterPath.getList("action"));
         int i = 0;
-        for(int x = 0 ; x < 3 ; x++) {
-            if(x!=0){
-                getITSMSimulatorResponse();
-            }
-            JsonPath filterPath = JsonPath.from(filterArray.toString());
-            logger.info("Try " + x +" ------>>" + filterPath.getList("action"));
-            try {
-                if (filterArray.size() > 0) {
-                    while (i < filterArray.size()) {
-                        if (filterArray.getJSONObject(i).get("action").equals("POST")) {
-                            if (filterArray.getJSONObject(i + 1).get("action").equals("PUT")) {
-                                if (filterArray.getJSONObject(i + 2).get("action").equals("DELETE")) {
-                                    logger.info("All 3 Requests Reached till ITSM");
-                                    i = i + 3;
-                                    return errMsg;
-                                } else {
-                                    if(x==2){
-                                        logger.info("Delete Requests is not reached till ITSM");
-                                        errMsg = errMsg + "[Delete Requests is not reached till ITSM]";
-                                        return errMsg;
-                                    }else{
-                                        continue;
-                                    }
-                                }
+        try {
+            if (filterArray.size() > 0) {
+                while (i < filterArray.size()) {
+                    if (filterArray.getJSONObject(i).get("action").equals("POST")) {
+                        if (filterArray.getJSONObject(i + 1).get("action").equals("PUT")) {
+                            if (filterArray.getJSONObject(i + 2).get("action").equals("DELETE")) {
+                                logger.info("All 3 Requests Reached till ITSM");
+                                i = i + 3;
                             } else {
-                                if(x==2) {
-                                    logger.info("Update Requests is not reached till ITSM");
-                                    errMsg = errMsg + "[Update Requests is not reached till ITSM]";
-                                    return errMsg;
-                                }else{
-                                    continue;
-                                }
+                                logger.info("Delete Requests is not reached till ITSM");
+                                errMsg = errMsg + "[Delete Requests is not reached till ITSM]";
+                                return errMsg;
+                                //return false;
                             }
                         } else {
-                            if(x==2) {
-                                logger.info("Create Requests is not reached till ITSM");
-                                errMsg = errMsg + "[Create Requests is not reached till ITSM]";
-                                return errMsg;
-                            }else{
-                                continue;
-                            }
+                            logger.info("Update Requests is not reached till ITSM");
+                            errMsg = errMsg + "[Update Requests is not reached till ITSM]";
+                            return errMsg;
+                            //return false;
                         }
-                    }
-                } else {
-                    if(x==2) {
-                        logger.info("No Alerts Reached till ITSM!!");
-                        errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                    } else {
+                        logger.info("Create Requests is not reached till ITSM");
+                        errMsg = errMsg + "[Create Requests is not reached till ITSM]";
                         return errMsg;
-                    }else{
-                        continue;
+                        //return false;
                     }
                 }
-            } catch (Exception e) {
-                for (int z = 0; z < filterArray.size(); z++) {
-                    logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
-                    errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
-                }
-                logger.info("Exception Occurred : " + e.getMessage());
-                errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
+                //return true;
                 return errMsg;
+            } else {
+                logger.info("No Alerts Reached till ITSM!!");
+                errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                return errMsg;
+                //return false;
             }
-        }
-        if(!flag){
-            for (int z = 0; z < filterArray.size(); z++) {
+        } catch (Exception e) {
+            for(int z = 0 ; z < filterArray.size() ; z ++) {
                 logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
-                errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
+                errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]" ;
             }
+            logger.info("Exception Occurred : " + e.getMessage());
+            errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
             return errMsg;
+            //return false;
         }
-        return errMsg;
     }
 
-    public String verifyChildListITSMSimulatorResponse() throws Exception {
+    public String verifyChildListITSMSimulatorResponse() throws InterruptedException {
         String errMsg = "";
-        List actualChildConditionId = null ;
+        JsonPath filterPath = JsonPath.from(filterArray.toString());
+        List actualChildConditionId = new ArrayList<String>();
+        logger.info(filterPath.getList("action"));
         int i = 0;
-        for(int x = 0 ; x > 3 ; x++) {
-            if(x!=0){
-                getITSMSimulatorResponse();
-            }
-            JsonPath filterPath = JsonPath.from(filterArray.toString());
-            actualChildConditionId = new ArrayList<String>();
-            logger.info("Try " + x +" ------>>" + filterPath.getList("action"));
-            try {
-                if (filterArray.size() > 0) {
-                    while (i < filterArray.size()) {
-                        if (filterArray.getJSONObject(i).get("action").equals("POST")) {
-                            JSONObject jsonObj = filterArray.getJSONObject(i);
-                            JSONObject jsonObjPayload = jsonObj.getJSONObject("payload");
-                            JSONArray jsonObjRootCauseArr = (JSONArray) jsonObjPayload.get("rootcause");
-                            int z = 0;
-                            if (jsonObjRootCauseArr == null) {
-                                if(x==2) {
-                                    logger.info("No Data Present in ITSM Simulator");
-                                    errMsg = errMsg + "[No Data Present in ITSM Simulator]";
-                                    return errMsg;
-                                }else{
-                                    continue;
-                                }
-                            } else {
-                                while (z < jsonObjRootCauseArr.size()) {
-                                    JSONObject resObject = jsonObjRootCauseArr.getJSONObject(z);
-                                    logger.info("resObject : " + resObject);
-                                    actualChildConditionId.add(resObject.getString("conditionId"));
-                                    z++;
-                                }
+        try {
+            if (filterArray.size() > 0) {
+                while (i < filterArray.size()) {
+                    if (filterArray.getJSONObject(i).get("action").equals("POST")) {
+                        JSONObject jsonObj = filterArray.getJSONObject(i);
+                        JSONObject jsonObjPayload = jsonObj.getJSONObject("payload");
+                        JSONArray jsonObjRootCauseArr = (JSONArray) jsonObjPayload.get("rootcause");
+                        int z = 0;
+                        if (jsonObjRootCauseArr == null) {
+                            logger.info("No Data Present in ITSM Simulator");
+                            errMsg = errMsg + "[No Data Present in ITSM Simulator]";
+                            return errMsg;
+                            //return false;
+                        } else {
+                            while (z < jsonObjRootCauseArr.size()) {
+                                JSONObject resObject = jsonObjRootCauseArr.getJSONObject(z);
+                                logger.info("resObject : " + resObject);
+                                actualChildConditionId.add(resObject.getString("conditionId"));
+                                z++;
                             }
                         }
-                        i++;
                     }
-                } else {
-                    if(x==2) {
-                    logger.info("No Alerts Reached till ITSM!!");
-                    errMsg = errMsg + "[No Alerts Reached till ITSM]";
-                    return errMsg;
-                    }else{
-                        continue;
-                    }
+                    i++;
                 }
-            } catch (Exception e) {
-                if(x==2) {
-                    logger.info("Child Alert validation failed in ITSM simulator : " + e.getMessage());
-                    errMsg = errMsg + "[Child Alert validation failed in ITSM simulator : " + e.getMessage() + "]";
-                    return errMsg;
-                }else{
-                    continue;
-                }
+            } else {
+                logger.info("No Alerts Reached till ITSM!!");
+                errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                return errMsg;
+                //return false;
             }
+        } catch (Exception e) {
+            logger.info("Child Alert validation failed in ITSM simulator : " + e.getMessage());
+            errMsg = errMsg + "[Child Alert validation failed in ITSM simulator : " + e.getMessage() + "]";
+            return errMsg;
+            //return false;
         }
         if (conditionId.size() == actualChildConditionId.size()) {
             if (conditionId.containsAll(actualChildConditionId)) {
+                // return true;
                 return errMsg;
             }
             errMsg = errMsg + "[Parent not contains all Child. Excepted -> " + conditionId + ". Actual -> " + actualChildConditionId + ".]";
+            //return false;
             return errMsg;
         } else {
             errMsg = errMsg + "[Child count is not same. Excepted -> " + conditionId.size() + ". Actual -> " + actualChildConditionId.size() + ".]";
+            //return false;
             return errMsg;
         }
     }
