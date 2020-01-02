@@ -13,6 +13,8 @@ Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert reached till ITSM Simulator
 Then I should verify ITSM payload data as expected
 Then I verify FetchMore and Remediate URL in ITSM Request
+When I trigger CREATE Incident API request on ITSM MS
+Then I verify Duplicate Alert in API response from ITSM MS
 
 Examples:
 |TestCaseRow|

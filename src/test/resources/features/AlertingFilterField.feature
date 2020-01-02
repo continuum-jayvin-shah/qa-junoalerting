@@ -15,6 +15,8 @@ Then I trigger DELETE API request on Alert MS
 Then I verify API response from Alert MS for DELETE Request
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If alert reached till ITSM Simulator
+When I trigger CREATE Incident API request on ITSM MS
+Then I verify Duplicate Alert in API response from ITSM MS
 
 Examples:
 |TestCaseRow1|TestCaseRow2|

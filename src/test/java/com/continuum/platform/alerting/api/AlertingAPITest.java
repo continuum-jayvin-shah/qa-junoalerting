@@ -275,6 +275,7 @@ public class AlertingAPITest {
             preProcessingITSM(getTestName());
             setConditionId(currentRow.get("conditionId"));
             logger.info("Incident Details : " + itsmIncidentDetails);
+            Thread.sleep(5000);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(itsmIncidentDetails, itsmIntegrationUrl));
             return errMsg;
         } catch (Exception e) {
@@ -593,7 +594,7 @@ public class AlertingAPITest {
                 .replace("{sites}", currentRow.get("sites"))
                 .replace("{endpoints}", currentRow.get("endpoints"));
 
-        if (currentRow.get("endpoints").isEmpty()) {
+        /*if (currentRow.get("endpoints").isEmpty()) {
             if (currentRow.get("sites").isEmpty()) {
                 if (currentRow.get("clients").isEmpty()) {
                     alertingAPIUrl = alertingAPIUrl.replace("sites//endpoints//", "");
@@ -607,7 +608,20 @@ public class AlertingAPITest {
                 alertingAPIUrl = alertingAPIUrl.replace("sites", "clients/{clients}/sites");
                 alertingAPIUrl = alertingAPIUrl.replace("{clients}", currentRow.get("clients"));
             }
+        }*/
+
+        if (currentRow.get("endpoints").isEmpty()) {
+            if (currentRow.get("sites").isEmpty()) {
+                if (currentRow.get("clients").isEmpty()) {
+                    alertingAPIUrl = alertingAPIUrl.replace("clients//sites//endpoints//", "");
+                }else{
+                    alertingAPIUrl = alertingAPIUrl.replace("sites//endpoints//", "");
+                }
+            }else{
+                alertingAPIUrl = alertingAPIUrl.replace("endpoints//", "");
+            }
         }
+
         setAlertDetails(currentRow.get("alertDetails"));
 
         logger.info(alertingAPIUrl);
@@ -627,7 +641,7 @@ public class AlertingAPITest {
                 .replace("{sites}", currentRow.get("sites"))
                 .replace("{endpoints}", currentRow.get("endpoints"));
 
-        if (currentRow.get("endpoints").isEmpty()) {
+        /*if (currentRow.get("endpoints").isEmpty()) {
             if (currentRow.get("sites").isEmpty()) {
                 if (currentRow.get("clients").isEmpty()) {
                     itsmIntegrationUrl = itsmIntegrationUrl.replace("clients//sites//endpoints//", "");
@@ -641,7 +655,20 @@ public class AlertingAPITest {
                 itsmIntegrationUrl = itsmIntegrationUrl.replace("sites", "clients/{clients}/sites");
                 itsmIntegrationUrl = itsmIntegrationUrl.replace("{clients}", currentRow.get("clients"));
             }
+        }*/
+
+        if (currentRow.get("endpoints").isEmpty()) {
+            if (currentRow.get("sites").isEmpty()) {
+                if (currentRow.get("clients").isEmpty()) {
+                    itsmIntegrationUrl = itsmIntegrationUrl.replace("clients//sites//endpoints//", "");
+                }else{
+                    itsmIntegrationUrl = itsmIntegrationUrl.replace("sites//endpoints//", "");
+                }
+            }else{
+                itsmIntegrationUrl = itsmIntegrationUrl.replace("endpoints//", "");
+            }
         }
+
         setAlertDetails(currentRow.get("alertDetails"));
         setItsmIncidentDetails(currentRow.get("itsmPayload").replace("{alertID_AlertingMS}", getCurrentAlert()));
         logger.info(itsmIntegrationUrl);
@@ -725,6 +752,7 @@ public class AlertingAPITest {
                 setITSMIncidentId(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
                 setITSMPublicId(JsonPath.from(alertingResponse.getBody().asString()).get("publicId"));
                 logger.info("Incident Created in ITSM : " + getITSMIncidentId());
+                logger.info("Public ID Created in ITSM : " + getITSMIncidentId());
                 errMsg = errMsg + "[Incident Created in ITSM : " + alertingResponse.getBody().asString() + " ]";
                 return errMsg;
             } else {
@@ -1037,7 +1065,7 @@ public class AlertingAPITest {
                 .replace("{sites}", currentRow.get("sites"))
                 .replace("{conditionId}", currentRow.get("conditionId"));
 
-        if (currentRow.get("endpoints").isEmpty()) {
+       if (currentRow.get("endpoints").isEmpty()) {
             if (currentRow.get("sites").isEmpty()) {
                 if (currentRow.get("clients").isEmpty()) {
                     itsmUrl = itsmUrl.replace("/clients//sites/", "");
@@ -1450,8 +1478,9 @@ public class AlertingAPITest {
         String errMsg = "";
         boolean flag = false ;
         int i = 0;
-        for(int x = 0 ; x < 3 ; x++) {
+        forLoop : for(int x = 0 ; x < 3 ; x++) {
             if(x!=0){
+                filterArray.clear();
                 getITSMSimulatorResponse();
             }
             JsonPath filterPath = JsonPath.from(filterArray.toString());
@@ -1471,7 +1500,7 @@ public class AlertingAPITest {
                                         errMsg = errMsg + "[Delete Requests is not reached till ITSM]";
                                         return errMsg;
                                     }else{
-                                        continue;
+                                        continue forLoop;
                                     }
                                 }
                             } else {
@@ -1480,7 +1509,7 @@ public class AlertingAPITest {
                                     errMsg = errMsg + "[Update Requests is not reached till ITSM]";
                                     return errMsg;
                                 }else{
-                                    continue;
+                                    continue forLoop;
                                 }
                             }
                         } else {
@@ -1489,7 +1518,7 @@ public class AlertingAPITest {
                                 errMsg = errMsg + "[Create Requests is not reached till ITSM]";
                                 return errMsg;
                             }else{
-                                continue;
+                                continue forLoop;
                             }
                         }
                     }
@@ -1499,17 +1528,23 @@ public class AlertingAPITest {
                         errMsg = errMsg + "[No Alerts Reached till ITSM]";
                         return errMsg;
                     }else{
-                        continue;
+                        continue forLoop;
                     }
                 }
             } catch (Exception e) {
-                for (int z = 0; z < filterArray.size(); z++) {
-                    logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
-                    errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
+                if(x==2) {
+                    logger.info("No Alerts Reached till ITSM!!");
+                    errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                    for (int z = 0; z < filterArray.size(); z++) {
+                        logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
+                        errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
+                    }
+                    logger.info("Exception Occurred : " + e.getMessage());
+                    errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
+                    return errMsg;
+                }else{
+                    continue forLoop;
                 }
-                logger.info("Exception Occurred : " + e.getMessage());
-                errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
-                return errMsg;
             }
         }
         if(!flag){
@@ -1526,8 +1561,9 @@ public class AlertingAPITest {
         String errMsg = "";
         List actualChildConditionId = null ;
         int i = 0;
-        for(int x = 0 ; x > 3 ; x++) {
+        forLoop: for(int x = 0 ; x > 3 ; x++) {
             if(x!=0){
+                filterArray.clear();
                 getITSMSimulatorResponse();
             }
             JsonPath filterPath = JsonPath.from(filterArray.toString());
@@ -1547,7 +1583,7 @@ public class AlertingAPITest {
                                     errMsg = errMsg + "[No Data Present in ITSM Simulator]";
                                     return errMsg;
                                 }else{
-                                    continue;
+                                    continue forLoop;
                                 }
                             } else {
                                 while (z < jsonObjRootCauseArr.size()) {
@@ -1566,16 +1602,22 @@ public class AlertingAPITest {
                     errMsg = errMsg + "[No Alerts Reached till ITSM]";
                     return errMsg;
                     }else{
-                        continue;
+                        continue forLoop;
                     }
                 }
             } catch (Exception e) {
                 if(x==2) {
-                    logger.info("Child Alert validation failed in ITSM simulator : " + e.getMessage());
-                    errMsg = errMsg + "[Child Alert validation failed in ITSM simulator : " + e.getMessage() + "]";
+                    logger.info("No Alerts Reached till ITSM!!");
+                    errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                    for (int z = 0; z < filterArray.size(); z++) {
+                        logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
+                        errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
+                    }
+                    logger.info("Exception Occurred : " + e.getMessage());
+                    errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
                     return errMsg;
                 }else{
-                    continue;
+                    continue forLoop;
                 }
             }
         }
@@ -1736,7 +1778,7 @@ public class AlertingAPITest {
                         setActualDataInITSM("partnerId", jsonObjPayload.getString("partnerId"));
                         setActualDataInITSM("clientId", jsonObjPayload.getString("clientId"));
                         setActualDataInITSM("siteId", jsonObjPayload.getString("siteId"));
-                        setActualDataInITSM("resourceId", jsonObjPayload.getString("resourceId"));
+                        //setActualDataInITSM("resourceId", jsonObjPayload.getString("resourceId"));
                         setActualDataInITSM("endpointId", jsonObjPayload.getString("endpointId"));
                         setActualDataInITSM("conditionId", jsonObjPayload.getString("conditionId"));
                         setActualDataInITSM("statuscode", Integer.toString(jsonObj.getInt("statuscode")));
@@ -1776,7 +1818,7 @@ public class AlertingAPITest {
                             setActualDataInITSM("partnerId", jsonObjPayload.getString("partnerId"));
                             setActualDataInITSM("clientId", jsonObjPayload.getString("clientId"));
                             setActualDataInITSM("siteId", jsonObjPayload.getString("siteId"));
-                            setActualDataInITSM("resourceId", jsonObjPayload.getString("resourceId"));
+                            //setActualDataInITSM("resourceId", jsonObjPayload.getString("resourceId"));
                             setActualDataInITSM("endpointId", jsonObjPayload.getString("endpointId"));
                             setActualDataInITSM("conditionId", jsonObjPayload.getString("conditionId"));
                             setActualDataInITSM("statuscode", Integer.toString(jsonObj.getInt("statuscode")));
@@ -1881,7 +1923,7 @@ public class AlertingAPITest {
         manualClosureMessage.put("clientid", currentRow.get("clients"));
         manualClosureMessage.put("siteid", currentRow.get("sites"));
         manualClosureMessage.put("partnerid", currentRow.get("partners"));
-        manualClosureMessage.put("resourceid", currentRow.get("resourceid"));
+        //manualClosureMessage.put("resourceid", currentRow.get("resourceid"));
         manualClosureMessage.put("endpointid", currentRow.get("endpoints"));
         manualClosureMessage.put("conditionid", currentRow.get("conditionid"));
 

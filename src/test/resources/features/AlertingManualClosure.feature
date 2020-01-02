@@ -13,7 +13,8 @@ Then I get ITSM Simulator Response for Current Alert
 Then I verify If all requests were sent to ITSM
 Then I should verify ITSM payload data as expected
 Then I verify If alert is Deleted in AlertingMS
-
+When I trigger CREATE Incident API request on ITSM MS
+Then I verify Duplicate Alert in API response from ITSM MS
 
 Examples:
 |TestCaseRow|KafkaMessageType|
@@ -34,6 +35,8 @@ Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaM
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If all requests were sent to ITSM
 Then I should verify ITSM payload data as expected
+When I trigger CREATE Incident API request on ITSM MS
+Then I verify Duplicate Alert in API response from ITSM MS
 
 Examples:
 |TestCaseRow|KafkaMessageType|
