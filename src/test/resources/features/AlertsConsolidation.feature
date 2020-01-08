@@ -20,8 +20,8 @@ Feature: Juno Alerting Consolidation Test
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
     Then I should verify ITSM payload data as expected
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
+  #  #When I trigger CREATE Incident API request on ITSM MS
+  #  Then I verify Duplicate Alert in API response from ITSM MS
 
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |
@@ -51,8 +51,8 @@ Feature: Juno Alerting Consolidation Test
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
+  #  #When I trigger CREATE Incident API request on ITSM MS
+  #  Then I verify Duplicate Alert in API response from ITSM MS
 
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 | TestCaseRow4 | TestCaseRow5 |
@@ -82,8 +82,8 @@ Feature: Juno Alerting Consolidation Test
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
     Then I should verify ITSM payload data as expected
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
+  #  #When I trigger CREATE Incident API request on ITSM MS
+   # Then I verify Duplicate Alert in API response from ITSM MS
 
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 | TestCaseRow4 |
@@ -104,8 +104,8 @@ Feature: Juno Alerting Consolidation Test
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If all requests were sent to ITSM
     Then I should verify ITSM payload data as expected
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
+  #  #When I trigger CREATE Incident API request on ITSM MS
+  #  Then I verify Duplicate Alert in API response from ITSM MS
 
     Examples:
       | TestCaseRow1 |
@@ -138,8 +138,8 @@ Feature: Juno Alerting Consolidation Test
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If all requests were sent to ITSM
     Then I should verify ITSM payload data as expected
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
+    #When I trigger CREATE Incident API request on ITSM MS
+    #Then I verify Duplicate Alert in API response from ITSM MS
 
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |
