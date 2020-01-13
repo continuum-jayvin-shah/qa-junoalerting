@@ -403,7 +403,7 @@ public class AlertingAPITest {
         try {
             preProcessingITSM(getTestName());
             logger.info("Incident Details : " + itsmIncidentDetails);
-            this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(itsmIncidentDetails, itsmIntegrationUrl + "/" + getCurrentAlert()));
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(itsmIncidentDetails, itsmIntegrationUrl + "/" + getITSMIncidentId()));
             return errMsg;
             //return true;
         } catch (Exception e) {
@@ -420,7 +420,7 @@ public class AlertingAPITest {
         try {
             preProcessingITSM(getTestName());
             logger.info("Incident Details : " + itsmIncidentDetails);
-            this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(itsmIncidentDetails, itsmIntegrationUrl + "/" + getCurrentAlert()));
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(itsmIncidentDetails, itsmIntegrationUrl + "/" + getITSMIncidentId() + "/close"));
             return errMsg;
         } catch (Exception e) {
             e.printStackTrace();
@@ -641,22 +641,6 @@ public class AlertingAPITest {
                 .replace("{sites}", currentRow.get("sites"))
                 .replace("{endpoints}", currentRow.get("endpoints"));
 
-        /*if (currentRow.get("endpoints").isEmpty()) {
-            if (currentRow.get("sites").isEmpty()) {
-                if (currentRow.get("clients").isEmpty()) {
-                    itsmIntegrationUrl = itsmIntegrationUrl.replace("clients//sites//endpoints//", "");
-                } else {
-                    itsmIntegrationUrl = itsmIntegrationUrl.replace("endpoints//", "");
-                    itsmIntegrationUrl = itsmIntegrationUrl.replace("sites/", "clients/{clients}");
-                    itsmIntegrationUrl = itsmIntegrationUrl.replace("{clients}", currentRow.get("clients"));
-                }
-            } else {
-                itsmIntegrationUrl = itsmIntegrationUrl.replace("endpoints//", "");
-                itsmIntegrationUrl = itsmIntegrationUrl.replace("sites", "clients/{clients}/sites");
-                itsmIntegrationUrl = itsmIntegrationUrl.replace("{clients}", currentRow.get("clients"));
-            }
-        }*/
-
         if (currentRow.get("endpoints").isEmpty()) {
             if (currentRow.get("sites").isEmpty()) {
                 if (currentRow.get("clients").isEmpty()) {
@@ -752,7 +736,7 @@ public class AlertingAPITest {
                 setITSMIncidentId(JsonPath.from(alertingResponse.getBody().asString()).get("id"));
                 setITSMPublicId(JsonPath.from(alertingResponse.getBody().asString()).get("publicId"));
                 logger.info("Incident Created in ITSM : " + getITSMIncidentId());
-                logger.info("Public ID Created in ITSM : " + getITSMIncidentId());
+                logger.info("Public ID Created in ITSM : " + getITSMPublicId());
                 errMsg = errMsg + "[Incident Created in ITSM : " + alertingResponse.getBody().asString() + " ]";
                 return errMsg;
             } else {
