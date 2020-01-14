@@ -34,10 +34,13 @@ public class JunoAlertingSteps {
         if (environment.equals("QA")) {
             AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("QAAlertingHostUrlV2"));
             AlertingAPITest.setKafkaServer("QAKafkaProducerIP");
+            AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("QAITSMHostUrlV2"));
+            AlertingAPITest.setJasUrl(Utilities.getMavenProperties("QAJASHostUrlV1"));
         } else if (environment.equals("DT")) {
             AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
             AlertingAPITest.setKafkaServer("DTKafkaProducerIP");
             AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("DTITSMHostUrlV2"));
+            AlertingAPITest.setJasUrl(Utilities.getMavenProperties("DTJASHostUrlV1"));
         } else if (environment.equals("PROD")) {
             AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("PRODHostUrl"));
             AlertingAPITest.setKafkaServer("");

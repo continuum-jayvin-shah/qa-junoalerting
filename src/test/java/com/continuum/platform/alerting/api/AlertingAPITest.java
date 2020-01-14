@@ -23,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, jasUrl, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender = "";
-    private static String alertingUrl, kafkaServer, itsmIntegrationUrl;
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender = "";
+    private static String alertingUrl, kafkaServer, itsmIntegrationUrl, jasUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
     private List<String> conditionId = new ArrayList<String>();
@@ -153,8 +153,8 @@ public class AlertingAPITest {
         return jasUrl;
     }
 
-    public void setJasUrl(String jasUrl) {
-        this.jasUrl = jasUrl;
+    public static void setJasUrl(String jasUrl1) {
+        jasUrl = jasUrl1;
     }
 
     public Response getAlertDetailsResponse() {
@@ -632,7 +632,7 @@ public class AlertingAPITest {
 
         setCurrentRow(DataUtils.getTestRow("Test", testName));
         logger.info("Test Data Captured.");
-        AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("DTITSMHostUrlV2"));
+
         logger.info("Getting Host URL itsmIntegrationUrl:" + itsmIntegrationUrl);
 
         itsmIntegrationUrl = itsmIntegrationUrl + Utilities.getMavenProperties("ITSMUrlSchema")
@@ -1326,7 +1326,7 @@ public class AlertingAPITest {
 
         //currentRow.putAll(DataUtils.getTestRow());
 
-        setJasUrl(Utilities.getMavenProperties("DTJASHostUrlV1"));
+
         logger.info("Getting Host URL:" + jasUrl);
         jasUrl = jasUrl + Utilities.getMavenProperties("GetJASAlertUrlSchema")
                 .replace("{partners}", currentRow.get("partners"))
