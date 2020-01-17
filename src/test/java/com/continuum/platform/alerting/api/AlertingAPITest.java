@@ -223,7 +223,7 @@ public class AlertingAPITest {
                 int i = 0;
                 while (i < respArray.size()) {
                     JSONObject resObject = respArray.getJSONObject(i);
-                    if (alertId.contains((resObject.get("DuplicateAlertId").toString()))) {
+                    if (alertId.contains((resObject.get("alertId").toString()))) {
                         //return true;
                         return errMsg;
                     }
@@ -1478,7 +1478,7 @@ public class AlertingAPITest {
         String errMsg = "";
         boolean flag = false ;
         int i = 0;
-        int tryCount = 5 ;
+        int tryCount = 15 ;
         forLoop : for(int x = 0 ; x < tryCount ; x++) {
             if(x!=0){
                 filterArray.clear();
@@ -1851,8 +1851,8 @@ public class AlertingAPITest {
                 //return true;
                 return errMsg;
             } else {
-                logger.info("Child alert reached till ITSM!!");
-                errMsg = errMsg + "[Child alert reached till ITSM!!]";
+                logger.info("Alert reached till ITSM!!");
+                errMsg = errMsg + "[Alert reached till ITSM!!]";
                 //return false;
                 return errMsg;
             }
