@@ -1478,7 +1478,7 @@ public class AlertingAPITest {
         String errMsg = "";
         boolean flag = false ;
         int i = 0;
-        int tryCount = 5 ;
+        int tryCount = 15 ;
         forLoop : for(int x = 0 ; x < tryCount ; x++) {
             if(x!=0){
                 filterArray.clear();
@@ -1562,7 +1562,7 @@ public class AlertingAPITest {
         String errMsg = "";
         List actualChildConditionId = null ;
         int i = 0;
-        int tryCount = 5 ;
+        int tryCount = 15 ;
         forLoop: for(int x = 0 ; x < tryCount ; x++) {
             if(x!=0){
                 filterArray.clear();
