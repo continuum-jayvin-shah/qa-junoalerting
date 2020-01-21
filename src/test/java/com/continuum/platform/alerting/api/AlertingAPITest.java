@@ -1005,22 +1005,18 @@ public class AlertingAPITest {
             if (alertingResponse.getStatusCode() == 202) {
                 logger.info("Update of Alert Snoozed Status Code : " + alertingResponse.getStatusCode());
                 return errMsg;
-                //return true;
             } else if (alertingResponse.getStatusCode() == 204) {
                 logger.info("Alert Updated during snooze period with Response Code : " + alertingResponse.getStatusCode());
                 errMsg = errMsg + "[Alert Updated during snooze period with Response Code : " + alertingResponse.getStatusCode() + " ]";
                 return errMsg;
-                //return false;
             }
             logger.info("Alert Update is giving Response Code : " + alertingResponse.getStatusCode());
             errMsg = errMsg + "[Alert Update is giving Response Code : " + alertingResponse.getStatusCode() + " ]";
             return errMsg;
-            //return false;
         } catch (Exception e) {
             logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
             errMsg = errMsg + "[Alert Updation Failed with Error Message : " + e.getMessage() + " ]";
             return errMsg;
-            // return false;
         }
     }
 

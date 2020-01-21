@@ -1,3 +1,4 @@
+@ignore
 Feature: Juno Alerting Error Code Scenario
 
   @Functional @Negative
