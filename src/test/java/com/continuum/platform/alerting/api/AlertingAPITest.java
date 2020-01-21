@@ -23,8 +23,8 @@ import java.util.concurrent.TimeUnit;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
-    private static String alertingUrl, kafkaServer, itsmIntegrationUrl, jasUrl;
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, jasUrl, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
+    private static String alertingUrl, kafkaServer, itsmIntegrationUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
     private List<String> conditionId = new ArrayList<String>();
@@ -153,8 +153,8 @@ public class AlertingAPITest {
         return jasUrl;
     }
 
-    public static void setJasUrl(String jasUrl1) {
-        jasUrl = jasUrl1;
+    public void setJasUrl(String jasUrl) {
+        this.jasUrl = jasUrl;
     }
 
     public Response getAlertDetailsResponse() {
@@ -1480,7 +1480,7 @@ public class AlertingAPITest {
         String errMsg = "";
         boolean flag = false;
         int i = 0;
-        int tryCount = 5;
+        int tryCount = 15;
         forLoop:
         for (int x = 0; x < tryCount; x++) {
             if (x != 0) {
@@ -1565,7 +1565,7 @@ public class AlertingAPITest {
         String errMsg = "";
         List actualChildConditionId = null;
         int i = 0;
-        int tryCount = 5;
+        int tryCount = 15;
         forLoop:
         for (int x = 0; x < tryCount; x++) {
             if (x != 0) {
