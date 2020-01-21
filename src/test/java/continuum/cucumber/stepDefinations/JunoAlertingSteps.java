@@ -79,11 +79,11 @@ public class JunoAlertingSteps {
     }
 
 
-    @Then("I verify API response {string} from Alert MS for UPDATE Request")
-    public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request(String responseCode) throws Throwable {
+    @Then("I verify API response {string} from Alert MS for {string} Request")
+    public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request(String responseCode, String verb) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.verifyUpdateAPIResponse(responseCode));
-        String msg = apiTest.verifyUpdateAPIResponse(responseCode);
+        String msg = apiTest.verifyUpdateAPIResponse(responseCode,verb);
         assertTrue(msg, msg.length() < 2);
     }
 
@@ -225,6 +225,12 @@ public class JunoAlertingSteps {
     public void wait_for_Secs(int duration) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         assertTrue(apiTest.waitForSnooze(duration));
+    }
+
+    @Then("^Pause execution for \"([^\"]*)\" seconds$")
+    public void Pause_exe(int duration) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        apiTest.waitForSleep(duration*1000);
     }
 
     @Then("^I verify FetchMore and Remediate URL in ITSM Request$")
