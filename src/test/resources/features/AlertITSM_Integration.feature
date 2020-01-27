@@ -1,4 +1,4 @@
-@Alert_ITSM_integration @ignore
+@Alert_ITSM_integration
 Feature: Alert ITSM Integration
 
 

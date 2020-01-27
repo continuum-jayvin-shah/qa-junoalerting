@@ -33,8 +33,6 @@ Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
 Then I verify API response from Alert MS for UPDATE Request
-When I trigger CREATE Incident API request on ITSM MS
-Then I verify Duplicate Alert in API response from ITSM MS
 Then I trigger UPDATE ITSM API request on ITSM MS
 Then I verify API response from ITSM MS for UPDATE Request
 Then I verify If alert is Created in JAS
@@ -51,7 +49,7 @@ Examples:
 |TestCaseRow|
 |DM 2.0|
 #|BDR|
-|Security|
+#|Security|
 
 
 @Functional @BVT
@@ -74,6 +72,10 @@ Then I trigger DELETE API request on ITSM MS
 Then I verify API response "404" from Alert MS for "DELETE" Request
 Then I trigger UPDATE ITSM API request on ITSM MS
 Then I verify API response "404" from Alert MS for "UPDATE" Request
+When I trigger CREATE Incident API request on ITSM MS
+Then I verify Duplicate Alert in API response from ITSM MS
+Then I trigger DELETE API request on ITSM MS
+Then I verify API response "404" from Alert MS for "DELETE" Request
 Examples:
 |TestCaseRow|
 |SiteLevel|
