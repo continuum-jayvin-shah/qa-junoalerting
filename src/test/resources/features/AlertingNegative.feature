@@ -1,3 +1,4 @@
+@ignore @Functional
 Feature: Juno Alerting Error Code Scenario
 
   @Functional @Negative
@@ -7,7 +8,7 @@ Feature: Juno Alerting Error Code Scenario
     Then I verify API response from Alert MS
     Then Wait for "<duration>" Secs
     Then I trigger UPDATE Alert API request on Alert MS
-    Then I verify API response "<UpdateResponse>" from Alert MS for UPDATE Request
+    Then Then I verify API response "<UpdateResponse>" from Alert MS for "UPDATE" Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify status code "<StatusCode>" in ITSM Simulator Response
     Then I verify alert should present in Alert Failure table
