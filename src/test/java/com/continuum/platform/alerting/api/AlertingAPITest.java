@@ -1141,7 +1141,7 @@ public class AlertingAPITest {
 
     public String getITSMSimulatorResponse() throws InterruptedException {
         String errMsg = "";
-        Thread.sleep(10000);
+        Thread.sleep(5000);
         triggerITSMSimulatorAPI();
         try {
             if (alertingResponse.getStatusCode() == 200) {
