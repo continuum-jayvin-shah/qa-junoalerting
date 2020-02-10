@@ -371,6 +371,31 @@ public class AlertingAPITest {
         }
     }
 
+    public String triggerUpdateAPIChild(String testName, String countS) {
+        String errMsg = "";
+        int i = 0;
+        if(countS.equalsIgnoreCase("first")){
+            i = 0 ;
+        }else if(countS.equalsIgnoreCase("second")){
+            i = 1 ;
+        }else if(countS.equalsIgnoreCase("third")){
+            i = 2 ;
+        }
+        try {
+            setTestName(testName);
+            preProcessing(getTestName());
+            logger.info("Alert Details : " + alertDetails);
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
+            return errMsg;
+            //return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
+            errMsg = errMsg + "[Alert Updation Failed with Error Message : " + e.getMessage() + " ]";
+            return errMsg;
+        }
+    }
+
     public String triggerUpdateAPIErrorResponse(String errorCode) {
         String errMsg = "";
         try {
@@ -528,6 +553,29 @@ public class AlertingAPITest {
             errMsg = errMsg + "[Alert Deletion Failed with Error Message : " + e.getMessage() + " ]";
             return errMsg;
             // return false;
+        }
+    }
+
+    public String triggerAllChildDeleteAtATime() {
+        String errMsg = "";
+        try {
+            int j = 0 ;
+            for (int i = 0 ; i < alertId.size() - 1 ; i++) {
+                this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(j)));
+                j ++ ;
+                if (alertingResponse.getStatusCode() != 204) {
+                    logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                    return errMsg;
+                }
+                logger.info("Alert Deleted : " + alertId.get(j-1));
+            }
+            logger.info("All Child Alerts Deleted!!");
+            return errMsg;
+        } catch (Exception e) {
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
+            errMsg = errMsg + "[Alert Deletion Failed with Error Message : " + e.getMessage() + " ]";
+            return errMsg;
         }
     }
 
