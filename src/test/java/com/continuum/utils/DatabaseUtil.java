@@ -2,14 +2,212 @@ package com.continuum.utils;
 
 import continuum.cucumber.DatabaseUtility;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.Map;
+
+import continuum.cucumber.Utilities;
+import org.apache.log4j.Logger;
 
 public class DatabaseUtil {
 
+	private static String DB_NAME , DB_SERVER_URL , DB_USER_NAME , DB_PASSWORD, siteCode, resouceName, legacyId, alertId ;
+	private static int conditionId = 0;
+	private static Connection connection;
+	private static Logger logger = Logger.getLogger("DatabaseUtil");
+	private static final SimpleDateFormat DATE_FORMATTER = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss aa");
+	private static final String LDS_DESCRIPTION = Utilities.getMavenProperties("lowDiskSpaceDescriptionWithTime");
+	private static final String ALERT_DETAILS_ID = "AlertDetailsID";
+
+	public static void setDBName(String dbName){
+		DatabaseUtil.DB_NAME = dbName;
+	}
+
+	public static void setDBServerUrl(String dbUrl){
+		DatabaseUtil.DB_SERVER_URL = dbUrl;
+	}
+
+	public static void setDBUserName(String dbUserName){
+		DatabaseUtil.DB_USER_NAME = dbUserName;
+	}
+
+	public static void setDBPswd(String dbPswd){
+		DatabaseUtil.DB_PASSWORD = dbPswd;
+	}
+
 	String queryToGetRegID = "Select top 1 * from Regmain with(NOLOCK)where guid = <GUID> and SiteCode=<SITECODE> order by regid desc;";
+
+	public static Connection createConnection() {
+		Connection connection;
+		connection = DatabaseUtility.createConnection(DB_NAME, DB_SERVER_URL, DB_USER_NAME, DB_PASSWORD);
+		return connection;
+	}
+
+	public static void setSiteCode(String siteCode1) {
+		siteCode = siteCode1;
+	}
+
+	public static String getSiteCode() {
+		return siteCode;
+	}
+
+	public static void setResourceName(String resouceName1) {
+		resouceName = resouceName1;
+	}
+
+	public static String getResourceName() {
+		return resouceName;
+	}
+
+	public static void setLegacyId(String legacyId1) {
+		legacyId = legacyId1;
+	}
+
+	public static String getLegacyId() {
+		return legacyId;
+	}
+
+	public static void setConditonId(int conditionId1) {
+		conditionId = conditionId1;
+	}
+
+	public static int getConditionId() {
+		return conditionId;
+	}
+
+	public static void setAlertId(String alertId1) {
+		alertId = alertId1;
+	}
+
+	public static String getAlertID1() {
+		return alertId;
+	}
+
+	public static boolean changeAllActualAlertStatusForEndPoint(int status, int reggID) throws SQLException {
+		connection = createConnection();
+		try {
+			final PreparedStatement statement = connection.prepareStatement(Utilities.getMavenProperties("QUERY_TO_CHANGE_ALL_ENDPOINT_ALERT_STATUS"));
+			statement.setInt(1, status);
+			statement.setInt(2, reggID);
+			int rowCount = statement.executeUpdate();
+			logger.info("All Actual Alerts status changed " + status + " with RegID " + reggID
+					+ ". Query status " + rowCount);
+		} catch (SQLException se) {
+			logger.info("Unable to Execute the Update query to udate the status");
+			throw se;
+		} finally {
+			closeConnection();
+		}
+		return true;
+	}
+
+	public static void closeConnection() throws SQLException {
+		try {
+			if (connection != null && !connection.isClosed()) {
+				connection.close();
+			}
+		} catch (SQLException ex) {
+			throw ex;
+		}
+	}
+
+	public static String getAlertDetailsId(String alertId) throws InterruptedException {
+		connection = createConnection();
+		int attempt = 0;
+		String rowValue = null;
+		while (attempt != 5) {
+			String sqlQueryToGetAlertDetails = Utilities
+					.getMavenProperties("sqlQueryToGetAlertDetailsFromAlertSync") + alertId;
+			Map<String, String> map = new HashMap<String, String>();
+			try {
+				Statement stmt;
+				ResultSet rs;
+				stmt = createConnection().createStatement();
+				rs = stmt.executeQuery(sqlQueryToGetAlertDetails);
+				ResultSetMetaData rsmd = rs.getMetaData();
+				int columnsNumber = rsmd.getColumnCount();
+				while (rs.next()) {
+					for (int i = 1; i <= columnsNumber; i++) {
+						String columnName = rsmd.getColumnName(i);
+						String columnValue = rs.getString(i);
+						map.put(columnName, columnValue);
+					}
+				}
+				rowValue = (String) map.get(ALERT_DETAILS_ID);
+				if (rowValue != null) {
+					break;
+				}
+				Thread.sleep(2000);
+				stmt.close();
+				rs.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (connection != null && !connection.isClosed()) {
+						connection.close();
+					}
+				} catch (SQLException ex) {
+					ex.printStackTrace();
+				}
+			}
+		}
+		return rowValue;
+	}
+
+	public static String createLowDiskSpaceAlertInDatabase() throws SQLException {
+		final String siteCodeStr = getSiteCode();
+		final String resourceNameStr = getResourceName();
+		final String legacyId = getLegacyId();
+		final int conditionId = 5;
+		final Timestamp time = getCurrentDateInDatabase();
+		final String dateForDescription = DATE_FORMATTER.format(new Date(time.getTime()));
+		final String description = LDS_DESCRIPTION.replaceAll("TIME_REPLACE", dateForDescription);
+		String columnValue = null;
+
+		final String query = "USE NOCBO DECLARE @JobId1 bigint exec\r\n"
+				+ "JobManagement_SOD  'ContinuumTesting_QA','Server Performance Alert','" + description + "',\r\n"
+				+ "1,'Emergency\\LowDiskSpace',2,0,Null,'" + time.toString() + "','" + time.toString() + "',Null,'"
+				+ siteCodeStr + "','','" + resourceNameStr + "','SAM',Null,\r\n" + "@jobid1 output,'GPM','"
+				+ time.toString()
+				+ "','Emergency\\LowDiskSpace\\C:',0,'ERROR','Generated by Critical Data Checking Process',Null,10,1,"
+				+ legacyId + ",Null,Null,Null,'" + time.toString() + "',Null," + conditionId
+				+ ",Null,Null SELECT @jobid1";
+		final Statement stat = createConnection().createStatement();
+		try {
+			final ResultSet rs = stat.executeQuery(query);
+			if (rs.next()) {
+				columnValue = rs.getString(1);
+			}
+		} catch (SQLException e) {
+			logger.info("Unable to execute the SQL Query " + query);
+			throw e;
+		} finally {
+			stat.close();
+			closeConnection();
+		}
+		return columnValue;
+	}
+
+	public static Timestamp getCurrentDateInDatabase() throws SQLException {
+		connection = createConnection();
+		final String sqlQuery = "select getDate()";
+		Statement statement = connection.createStatement();
+		Timestamp currentDate = null;
+		try {
+			ResultSet rs = statement.executeQuery(sqlQuery);
+			if (rs.next()) {
+				currentDate = rs.getTimestamp(1);
+			}
+		} catch (SQLException e) {
+			logger.info("Error ocuured while executing getDate() SQL query : " + sqlQuery);
+			throw e;
+		} finally {
+			closeConnection();
+		}
+		return currentDate;
+	}
 
 	public static String getRegID(String databaseName1, String sqlServerURL1, String username1, String password1,
 			String guid,

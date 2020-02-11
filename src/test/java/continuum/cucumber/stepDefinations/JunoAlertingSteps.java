@@ -2,16 +2,19 @@ package continuum.cucumber.stepDefinations;
 
 import com.continuum.platform.alerting.api.AlertingAPITest;
 import com.continuum.utils.DataUtils;
+import com.continuum.utils.DatabaseUtil;
 import continuum.cucumber.Utilities;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
+import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
 import org.apache.log4j.Logger;
 import org.testng.Reporter;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +39,10 @@ public class JunoAlertingSteps {
             AlertingAPITest.setKafkaServer("QAKafkaProducerIP");
             AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("QAITSMHostUrlV2"));
             AlertingAPITest.setJasUrl(Utilities.getMavenProperties("QAJASHostUrlV1"));
+            DatabaseUtil.setDBServerUrl(Utilities.getMavenProperties("DBserverURLQA"));
+            DatabaseUtil.setDBName(Utilities.getMavenProperties("DBnameQA"));
+            DatabaseUtil.setDBUserName(Utilities.getMavenProperties("DBusernameQA"));
+            DatabaseUtil.setDBPswd(Utilities.getMavenProperties("DBpasswordQA"));
         } else if (environment.equals("DT")) {
             AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
             AlertingAPITest.setKafkaServer("DTKafkaProducerIP");
@@ -444,6 +451,35 @@ public class JunoAlertingSteps {
         Reporter.log("<b><i><font color='Blue'>====== Scenario Name: =====" + scenario.getName() + "</font></i></b>");
         logger.info("============================================================================================================================================");
         apiTest.closeTest();
+    }
+
+    @Given("^I set site code as (.*), resource name as (.*), legacy Id as (.*) and condition Id as (.*)$")
+    public void setSiteCodeResourceNameLegacyIdConditionId(String siteCodeValue, String resourceName, String legacyId,
+                                                           int conditionId) {
+        DatabaseUtil.setSiteCode(siteCodeValue);
+        DatabaseUtil.setResourceName(resourceName);
+        DatabaseUtil.setLegacyId(legacyId);
+        DatabaseUtil.setConditonId(conditionId);
+    }
+
+    @And("I close all the alerts for the legacy Id (.+)")
+    public void closeTheALertsForEndpoint(String legacyID) throws SQLException {
+        int reggID = Integer.parseInt(legacyID);
+        DatabaseUtil.changeAllActualAlertStatusForEndPoint(4, reggID);
+        logger.info("All open alerts having status not in (4,5) avaibale for " + legacyID + " is now closed");
+    }
+
+    @Then("^I generate an actual type alert in dataBase$")
+    public void i_generate_an_actualType_alert() throws SQLException, InterruptedException {
+        String alertIDGenerated = DatabaseUtil.createLowDiskSpaceAlertInDatabase();
+        DatabaseUtil.setAlertId(alertIDGenerated);
+        if (!(alertIDGenerated == null)) {
+            logger.info("Alert is generated and alert ID is : " + alertIDGenerated);
+        }
+        String alertDetailsIDGenerated = DatabaseUtil.getAlertDetailsId(DatabaseUtil.getAlertID1());
+        if (!(alertDetailsIDGenerated == null)) {
+            logger.info("Alert details id is generated and alert details ID is : " + alertDetailsIDGenerated);
+        }
     }
 
 }
