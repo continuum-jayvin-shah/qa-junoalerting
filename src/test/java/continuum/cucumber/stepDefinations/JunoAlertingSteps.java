@@ -39,10 +39,6 @@ public class JunoAlertingSteps {
             AlertingAPITest.setKafkaServer("QAKafkaProducerIP");
             AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("QAITSMHostUrlV2"));
             AlertingAPITest.setJasUrl(Utilities.getMavenProperties("QAJASHostUrlV1"));
-            DatabaseUtil.setDBServerUrl(Utilities.getMavenProperties("DBserverURLQA"));
-            DatabaseUtil.setDBName(Utilities.getMavenProperties("DBnameQA"));
-            DatabaseUtil.setDBUserName(Utilities.getMavenProperties("DBusernameQA"));
-            DatabaseUtil.setDBPswd(Utilities.getMavenProperties("DBpasswordQA"));
         } else if (environment.equals("DT")) {
             AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("DTAlertingHostUrlV2"));
             AlertingAPITest.setKafkaServer("DTKafkaProducerIP");
