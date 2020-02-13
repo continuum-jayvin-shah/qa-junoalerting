@@ -13,10 +13,10 @@ Feature: Juno Alerting Consolidation Test
     Then I verify If alert not reached till ITSM Simulator
     Then I trigger CREATE Alert API request for Parent Alert on Alert MS for "<TestCaseRow3>"
     Then I verify API response from Alert MS
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response from ITSM MS for UPDATE Request
+    #When I trigger CREATE Incident API request on ITSM MS
+    #Then I verify Duplicate Alert in API response from ITSM MS
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response from ITSM MS for UPDATE Request
     Then I trigger GET Alert State API for current alert
     Then I verify "child list" in Alert State API response
     Then I trigger DELETE API request for Child Alert on Alert MS
@@ -24,10 +24,10 @@ Feature: Juno Alerting Consolidation Test
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
     Then I should verify ITSM payload data as expected
-    Then I trigger DELETE API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "DELETE" Request
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "UPDATE" Request
+    #Then I trigger DELETE API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "DELETE" Request
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "UPDATE" Request
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |
       | Child1       | Child2       | Parent1      |
@@ -53,18 +53,18 @@ Feature: Juno Alerting Consolidation Test
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert not reached till ITSM Simulator
     Then I trigger CREATE Alert API request for Two Parent Alert with Same ConditionID on Alert MS for "<TestCaseRow5>"
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response from ITSM MS for UPDATE Request
+    #When I trigger CREATE Incident API request on ITSM MS
+    #Then I verify Duplicate Alert in API response from ITSM MS
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response from ITSM MS for UPDATE Request
     Then I trigger DELETE API request for Child Alert for Both Parent on Alert MS
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
-    Then I trigger DELETE API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "DELETE" Request
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "UPDATE" Request
+    #Then I trigger DELETE API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "DELETE" Request
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "UPDATE" Request
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 | TestCaseRow4 | TestCaseRow5 |
       | Child3       | Child4       | FilterChild1 | FilterChild2 | Parent2      |
@@ -89,19 +89,19 @@ Feature: Juno Alerting Consolidation Test
     Then I verify API response from Alert MS for DELETE Request
     Then I trigger CREATE Alert API request for Parent Alert on Alert MS for "<TestCaseRow4>"
     Then I verify API response from Alert MS
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response from ITSM MS for UPDATE Request
+    #When I trigger CREATE Incident API request on ITSM MS
+    #Then I verify Duplicate Alert in API response from ITSM MS
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response from ITSM MS for UPDATE Request
     Then I trigger DELETE API request for Child Alert for Both Parent on Alert MS
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
     Then I should verify ITSM payload data as expected
-    Then I trigger DELETE API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "DELETE" Request
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "UPDATE" Request
+    #Then I trigger DELETE API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "DELETE" Request
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "UPDATE" Request
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 | TestCaseRow4 |
       | FilterChild3 | FilterChild4 | FilterChild5 | FilterParent |
@@ -117,19 +117,19 @@ Feature: Juno Alerting Consolidation Test
     Then Wait for "65" Secs
     Then I trigger UPDATE Alert API request on Alert MS
     Then I verify API response from Alert MS for UPDATE Request
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response from ITSM MS for UPDATE Request
+    #When I trigger CREATE Incident API request on ITSM MS
+    #Then I verify Duplicate Alert in API response from ITSM MS
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response from ITSM MS for UPDATE Request
     Then I trigger DELETE API request on Alert MS
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If all requests were sent to ITSM
     Then I should verify ITSM payload data as expected
-    Then I trigger DELETE API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "DELETE" Request
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "UPDATE" Request
+    #Then I trigger DELETE API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "DELETE" Request
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "UPDATE" Request
     Examples:
       | TestCaseRow1 |
       | Child5       |
@@ -157,19 +157,19 @@ Feature: Juno Alerting Consolidation Test
     Then I verify API response as Duplicate Alert Request from Alert MS
     Then I trigger UPDATE Alert API request on Alert MS
     Then I verify API response from Alert MS for UPDATE Request
-    When I trigger CREATE Incident API request on ITSM MS
-    Then I verify Duplicate Alert in API response from ITSM MS
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response from ITSM MS for UPDATE Request
+    #When I trigger CREATE Incident API request on ITSM MS
+    #Then I verify Duplicate Alert in API response from ITSM MS
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response from ITSM MS for UPDATE Request
     Then I trigger DELETE API for One Child Alert on Alert MS
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If all requests were sent to ITSM
     Then I should verify ITSM payload data as expected
-    Then I trigger DELETE API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "DELETE" Request
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response "404" from Alert MS for "UPDATE" Request
+    #Then I trigger DELETE API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "DELETE" Request
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for "UPDATE" Request
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |
       | Child6       | Child7       | Parent3      |
