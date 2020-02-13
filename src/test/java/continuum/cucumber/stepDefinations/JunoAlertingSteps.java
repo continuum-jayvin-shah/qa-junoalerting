@@ -72,6 +72,12 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("I trigger UPDATE Alert API request for {string} child {string} Child Alert in Alert MS")
+    public void i_trigger_UPDATE_Alert_API_request_on_child_Alert_MS(String countS, String testCaseRow) throws Throwable {
+        String msg = apiTest.triggerUpdateAPIChild(testCaseRow,countS);
+        assertTrue(msg, msg.length() < 2);
+    }
+
     @Then("I trigger UPDATE Alert API request on Alert MS having {string} ITSM Simulator response")
     public void i_trigger_UPDATE_Alert_API_request_on_Alert_MS_having_ITSM_Simulator_response(String errorCode) {
         String msg = apiTest.triggerUpdateAPIErrorResponse(errorCode);
@@ -132,6 +138,14 @@ public class JunoAlertingSteps {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.triggerChildDeleteAPI());
         String msg = apiTest.triggerChildDeleteAPI();
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("^I trigger DELETE API request for Child Alert only on Alert MS$")
+    public void i_trigger_DELETE_API_request_for_Child_Alert_only_on_Alert_MS() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //assertTrue(apiTest.triggerChildDeleteAPI());
+        String msg = apiTest.triggerAllChildDeleteAtATime();
         assertTrue(msg, msg.length() < 2);
     }
 

@@ -198,3 +198,29 @@ Feature: Juno Alerting Consolidation Test
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |
       | Child11      | Child12      | Parent13     |
+
+
+  @Functional @54306
+  Scenario Outline: Multiple Update Delete process Execution sequence
+    Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
+    Then I verify API response from Alert MS
+    Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow2>"
+    Then I verify API response from Alert MS
+    Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow3>"
+    Then I verify API response from Alert MS
+    Then I trigger CREATE Alert API request for Parent Alert on Alert MS for "<TestCaseRow5>"
+    Then I verify API response from Alert MS
+    Then I trigger UPDATE Alert API request for "first" child "<TestCaseRow1>" Child Alert in Alert MS
+    Then I verify API response from Alert MS for UPDATE Request
+    Then I trigger UPDATE Alert API request for "second" child "<TestCaseRow2>" Child Alert in Alert MS
+    Then I verify API response from Alert MS for UPDATE Request
+    Then I trigger UPDATE Alert API request for "third" child "<TestCaseRow3>" Child Alert in Alert MS
+    Then I verify API response from Alert MS for UPDATE Request
+    Then I trigger DELETE API request for Child Alert only on Alert MS
+    Then I verify API response from Alert MS for DELETE Request
+    Then I verify alert should not present in Alert Failure table
+
+    Examples:
+      | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |  TestCaseRow5 |
+      | Child15      | Child16      | Child17      |  Parent19     |
+
