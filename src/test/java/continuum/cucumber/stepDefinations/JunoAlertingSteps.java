@@ -465,14 +465,17 @@ public class JunoAlertingSteps {
         logger.info("All open alerts having status not in (4,5) avaibale for " + legacyID + " is now closed");
     }
 
-    @Then("^I generate an actual type alert in dataBase$")
-    public void i_generate_an_actualType_alert() throws SQLException, InterruptedException {
+    @Then("^I generate an actual type alert in dataBase with data (.+)$")
+    public void i_generate_an_actualType_alert(String testCase) throws Exception {
+        apiTest.setTestName(testCase);
+        apiTest.setCurrentRow(DataUtils.getTestRow("Test", testCase));
         String alertIDGenerated = DatabaseUtil.createLowDiskSpaceAlertInDatabase();
         DatabaseUtil.setAlertId(alertIDGenerated);
         if (!(alertIDGenerated == null)) {
             logger.info("Alert is generated and alert ID is : " + alertIDGenerated);
         }
         String alertDetailsIDGenerated = DatabaseUtil.getAlertDetailsId(DatabaseUtil.getAlertID1());
+        apiTest.setCurrentAlert(alertDetailsIDGenerated);
         if (!(alertDetailsIDGenerated == null)) {
             logger.info("Alert details id is generated and alert details ID is : " + alertDetailsIDGenerated);
         }

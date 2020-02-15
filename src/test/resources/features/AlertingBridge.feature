@@ -57,12 +57,17 @@ Examples:
 |TestCaseRow1|TestCaseRow2|
 |Alerting 1.0 with LegacyAlertID|Alerting 1.0 with New LegacyAlertID|
 
-  @rajat
+  @rajat @AlwaysQA @itsmTrue
 Scenario Outline: Create an alert with the help of RegId
     Given I set site code as <siteCodeValue>, resource name as <resourceName>, legacy Id as <legacyId> and condition Id as <conditionId>
     And I close all the alerts for the legacy Id <legacyId>
-    Then I generate an actual type alert in dataBase
+    Then I generate an actual type alert in dataBase with data <TestCaseRow1>
+    When I trigger CREATE Incident API request on ITSM MS
+    Then I verify Duplicate Alert in API response from ITSM MS
+    Then I trigger UPDATE ITSM API request on ITSM MS
+    Then I verify API response from ITSM MS for UPDATE Request
+
     Examples:
-      |siteCodeValue               |resourceName     |legacyId |conditionId |
-      |ITSM-Elite-level-3          |BOSQAPERF01      |50066763 |5           |
+    |TestCaseRow1  |siteCodeValue               |resourceName     |legacyId |conditionId |
+    | BridgeTest1  |ITSM-Elite-level-3          |BOSQAPERF01      |50066763 |5           |
 
