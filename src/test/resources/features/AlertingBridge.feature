@@ -67,7 +67,7 @@ Scenario Outline: Create an alert with the help of RegId with Body as <BodyDate>
     Then I trigger UPDATE ITSM API request on ITSM MS
     Then I verify API response from ITSM MS for UPDATE Request
     And I close all the alerts for the legacy Id <legacyId>
- #   Then I trigger DELETE API request on Alert MS
+    Then I trigger DELETE API request on Alert MS
  #   Then I verify API response from Alert MS for DELETE Request
     Examples:
     |TestCaseRow1  |BodyData|siteCodeValue               |resourceName     |legacyId |conditionId |
