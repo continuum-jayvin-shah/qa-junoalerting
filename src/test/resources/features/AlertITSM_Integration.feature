@@ -9,10 +9,10 @@ Feature: Alert ITSM Integration
     Then I verify Duplicate Alert in API response from ITSM MS
     Then I trigger UPDATE ITSM API request on ITSM MS
     Then I verify API response from ITSM MS for UPDATE Request
-    Then I trigger DELETE API request on ITSM MS
-    Then I verify API response from ITSM MS for DELETE Request
-    Then I trigger UPDATE ITSM API request on ITSM MS
-    Then I verify API response "404" from Alert MS for UPDATE Request
+    #Then I trigger DELETE API request on ITSM MS
+    #Then I verify API response from ITSM MS for DELETE Request
+    #Then I trigger UPDATE ITSM API request on ITSM MS
+    #Then I verify API response "404" from Alert MS for UPDATE Request
     Examples:
       | TestCaseRow       |
       | PatnerLevel_ITSM1 |

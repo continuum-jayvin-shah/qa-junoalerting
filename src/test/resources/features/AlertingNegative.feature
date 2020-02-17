@@ -1,7 +1,7 @@
-@ignore @Functional
+@ignore
 Feature: Juno Alerting Error Code Scenario
 
-  @Functional @Negative
+  @Negative
   Scenario Outline: Alert goes to Failure table for 500 Server Error
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -18,7 +18,7 @@ Feature: Juno Alerting Error Code Scenario
       | 500_ServerError | 404            | 500        | 45       |
 
 
-  @Functional @Negative
+  @Negative
   Scenario Outline: Success in Reprocessing Alert remove alert from Failure table
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
@@ -42,7 +42,7 @@ Feature: Juno Alerting Error Code Scenario
       | 500_ServerError_Reprocession | 500        | 25       | 500_ServerError_Reprocession_1 |
 
 
-  @Functional @Negative
+  @Negative
   Scenario Outline: Alert goes as Create while 404 comes in PUT response
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
