@@ -57,8 +57,8 @@ Examples:
 |TestCaseRow1|TestCaseRow2|
 |Alerting 1.0 with LegacyAlertID|Alerting 1.0 with New LegacyAlertID|
 
-  @rajat @AlwaysQA @itsmTrue
-Scenario Outline: Create an alert with the help of RegId
+  @rajat1 @AlwaysQA @itsmTrue
+Scenario Outline: Create an alert with the help of RegId with Body as <BodyDate>
     Given I set site code as <siteCodeValue>, resource name as <resourceName>, legacy Id as <legacyId> and condition Id as <conditionId>
     And I close all the alerts for the legacy Id <legacyId>
     Then I generate an actual type alert in dataBase with data <TestCaseRow1>
@@ -66,8 +66,10 @@ Scenario Outline: Create an alert with the help of RegId
     Then I verify Duplicate Alert in API response from ITSM MS
     Then I trigger UPDATE ITSM API request on ITSM MS
     Then I verify API response from ITSM MS for UPDATE Request
-
+    And I close all the alerts for the legacy Id <legacyId>
+ #   Then I trigger DELETE API request on Alert MS
+ #   Then I verify API response from Alert MS for DELETE Request
     Examples:
-    |TestCaseRow1  |siteCodeValue               |resourceName     |legacyId |conditionId |
-    | BridgeTest1  |ITSM-Elite-level-3          |BOSQAPERF01      |50066763 |5           |
+    |TestCaseRow1  |BodyData|siteCodeValue               |resourceName     |legacyId |conditionId |
+    | BridgeTest1  |String  |ITSM-Elite-level-3          |BOSQAPERF01      |50066763 |5           |
 
