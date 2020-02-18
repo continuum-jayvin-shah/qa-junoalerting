@@ -217,8 +217,11 @@ Feature: Juno Alerting Consolidation Test
     Then I trigger UPDATE Alert API request for "third" child "<TestCaseRow3>" Child Alert in Alert MS
     Then I verify API response from Alert MS for UPDATE Request
     Then I trigger DELETE API request for Child Alert only on Alert MS
+    Then Wait for "60" Secs
     Then I verify API response from Alert MS for DELETE Request
     Then I verify alert should not present in Alert Failure table
+    Then I get ITSM Simulator Response for Current Alert
+    Then I verify If all requests were sent to ITSM for Consolidation
 
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |  TestCaseRow5 |
