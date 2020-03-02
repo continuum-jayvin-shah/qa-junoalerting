@@ -7,10 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+
 import continuum.cucumber.Utilities;
 import org.apache.log4j.Logger;
 
 public class DatabaseUtil {
+
     private static String siteCode, resouceName, legacyId, alertId;
     private static int conditionId = 0;
     private static Connection connection;

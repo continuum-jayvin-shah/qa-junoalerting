@@ -3,6 +3,7 @@ package continuum.cucumber.stepDefinations;
 import com.continuum.platform.alerting.api.AlertingAPITest;
 import com.continuum.utils.DataUtils;
 import com.continuum.utils.DatabaseUtil;
+import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion;
 import continuum.cucumber.Utilities;
 import cucumber.api.Scenario;
 import cucumber.api.java.After;
@@ -22,9 +23,9 @@ import static org.junit.Assert.assertTrue;
 
 public class JunoAlertingSteps {
 
-    private Logger logger = Logger.getLogger(this.getClass());
+    private  Logger logger = Logger.getLogger(this.getClass());
 
-    AlertingAPITest apiTest = null ;
+     AlertingAPITest apiTest = null;
 
     @Before
     public void readScenario(Scenario scenario) {
@@ -44,6 +45,12 @@ public class JunoAlertingSteps {
             AlertingAPITest.setKafkaServer("DTKafkaProducerIP");
             AlertingAPITest.setItsmIntegrationUrl(Utilities.getMavenProperties("DTITSMHostUrlV2"));
             AlertingAPITest.setJasUrl(Utilities.getMavenProperties("DTJASHostUrlV1"));
+
+
+            final String DB_SERVER_URL = Utilities.getMavenProperties("DBserverURLQA");
+              final String DB_NAME = Utilities.getMavenProperties("DBnameQA");
+              final String DB_USER_NAME = Utilities.getMavenProperties("DBusernameQA");
+              final String DB_PASSWORD = Utilities.getMavenProperties("DBpasswordQA");
         } else if (environment.equals("PROD")) {
             AlertingAPITest.setalertingUrl(Utilities.getMavenProperties("PRODHostUrl"));
             AlertingAPITest.setKafkaServer("");
@@ -51,7 +58,7 @@ public class JunoAlertingSteps {
         apiTest = new AlertingAPITest();
     }
 
-   @Given("^I trigger CREATE Alert API request on Alert MS for \"([^\"]*)\"$")
+    @Given("^I trigger CREATE Alert API request on Alert MS for \"([^\"]*)\"$")
     public void i_trigger_CREATE_Alert_API_request_on_Alert_MS(String testCaseRow) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.triggerCreateAPI(testCaseRow));
@@ -86,7 +93,7 @@ public class JunoAlertingSteps {
     public void i_verify_API_response_from_Alert_MS_for_UPDATE_Request(String responseCode, String verb) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.verifyUpdateAPIResponse(responseCode));
-        String msg = apiTest.verifyUpdateAPIResponse(responseCode,verb);
+        String msg = apiTest.verifyUpdateAPIResponse(responseCode, verb);
         assertTrue(msg, msg.length() < 2);
     }
 
@@ -233,7 +240,7 @@ public class JunoAlertingSteps {
     @Then("^Pause execution for \"([^\"]*)\" seconds$")
     public void Pause_exe(int duration) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
-        apiTest.waitForSleep(duration*1000);
+        apiTest.waitForSleep(duration * 1000);
     }
 
     @Then("^I verify FetchMore and Remediate URL in ITSM Request$")
