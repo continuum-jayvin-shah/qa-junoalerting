@@ -483,6 +483,7 @@ public class JunoAlertingSteps {
         }
         String alertDetailsIDGenerated = DatabaseUtil.getAlertDetailsId(DatabaseUtil.getAlertID1());
         apiTest.setCurrentAlert(alertDetailsIDGenerated);
+        apiTest.setAlertId(alertDetailsIDGenerated);
         if (!(alertDetailsIDGenerated == null)) {
             logger.info("Alert details id is generated and alert details ID is : " + alertDetailsIDGenerated);
         }
