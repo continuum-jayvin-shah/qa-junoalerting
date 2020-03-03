@@ -6,7 +6,9 @@ Scenario Outline: Alerting API Test for Snooze Functionality on Update Request -
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
-Then I verify API response from Alert MS for UPDATE Request with Snooze Enabled
+Then I verify API response from Alert MS for UPDATE Request
+Then I get ITSM Simulator Response for Current Alert
+Then I verify only POST will reach to ITSM Simulator
 Then Wait for "10" Secs
 Then I trigger UPDATE Alert API request on Alert MS
 Then I verify API response from Alert MS for UPDATE Request
@@ -34,12 +36,12 @@ Scenario Outline: Alerting API Test for Snooze Functionality Disabled on Delete 
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
-Then I verify API response from Alert MS for UPDATE Request with Snooze Enabled
+Then I verify API response from Alert MS for UPDATE Request
+Then I get ITSM Simulator Response for Current Alert
+Then I verify only POST will reach to ITSM Simulator
 Then Wait for "10" Secs
 Then I trigger UPDATE Alert API request on Alert MS
 Then I verify API response from Alert MS for UPDATE Request
-Then I trigger UPDATE Alert API request on Alert MS
-Then I verify API response from Alert MS for UPDATE Request with Snooze Enabled
 #When I trigger CREATE Incident API request on ITSM MS
 #Then I verify Duplicate Alert in API response from ITSM MS
 #Then I trigger UPDATE ITSM API request on ITSM MS
@@ -64,7 +66,9 @@ Scenario Outline: Alerting API Test for Snooze Functionality Disabled on Duplica
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
-Then I verify API response from Alert MS for UPDATE Request with Snooze Enabled
+Then I verify API response from Alert MS for UPDATE Request
+Then I get ITSM Simulator Response for Current Alert
+Then I verify only POST will reach to ITSM Simulator
 Then I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
 Then I verify API response as Duplicate Alert Request from Alert MS
 Then Wait for "10" Secs
@@ -93,14 +97,18 @@ Scenario Outline: Alerting API Test for Snooze Functionality Disabled If New Ale
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
 Then I verify API response from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
-Then I verify API response from Alert MS for UPDATE Request with Snooze Enabled
+Then I verify API response from Alert MS for UPDATE Request
+Then I get ITSM Simulator Response for Current Alert
+Then I verify only POST will reach to ITSM Simulator
 Then Wait for "10" Secs
 Then I trigger UPDATE Alert API request on Alert MS
 Then I verify API response from Alert MS for UPDATE Request
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow2>"
 Then I verify API response from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
-Then I verify API response from Alert MS for UPDATE Request with Snooze Enabled
+Then I verify API response from Alert MS for UPDATE Request
+Then I get ITSM Simulator Response for Current Alert
+Then I verify only POST will reach to ITSM Simulator
 Then Wait for "10" Secs
 Then I trigger UPDATE Alert API request on Alert MS
 Then I verify API response from Alert MS for UPDATE Request
@@ -127,14 +135,14 @@ Scenario Outline: Alerting API Test for Snooze Functionality Enabled during Cons
 Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
 Then I verify API response from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
-Then I verify API response from Alert MS for UPDATE Request with Snooze Enabled
+Then I verify API response from Alert MS for UPDATE Request
 Then Wait for "10" Secs
 Then I trigger UPDATE Alert API request on Alert MS
 Then I verify API response from Alert MS for UPDATE Request
 Then I trigger CREATE Alert API request on Alert MS for "<TestCaseRow2>"
 Then I verify API response from Alert MS
 Then I trigger UPDATE Alert API request on Alert MS
-Then I verify API response from Alert MS for UPDATE Request with Snooze Enabled
+Then I verify API response from Alert MS for UPDATE Request
 Then I trigger CREATE Alert API request for Parent Alert on Alert MS for "<TestCaseRow3>"
 Then I verify API response from Alert MS
 #When I trigger CREATE Incident API request on ITSM MS
