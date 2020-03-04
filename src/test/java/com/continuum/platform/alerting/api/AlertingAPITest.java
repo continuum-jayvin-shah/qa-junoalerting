@@ -1660,6 +1660,45 @@ public class AlertingAPITest {
     }
 
     @SneakyThrows
+    public String verifyPOST_PUTinITSM() throws Exception {
+        String errMsg = "";
+        boolean flag = false;
+        JsonPath filterPath = JsonPath.from(filterArray.toString());
+        try {
+            if (filterArray.size() > 0) {
+                int i = filterArray.size() - 1 ;
+                if (filterArray.getJSONObject(i).get("action").equals("POST")) {
+                    if (filterArray.getJSONObject(i+1).get("action").equals("DELETE")) {
+                        return errMsg;
+                    }else {
+                        logger.info("Delete Requests is not reached till ITSM");
+                        errMsg = errMsg + "[Delete Requests is not reached till ITSM]";
+                        return errMsg;
+                    }
+                } else {
+                    logger.info("Create Requests is not reached till ITSM");
+                    errMsg = errMsg + "[Create Requests is not reached till ITSM]";
+                    return errMsg;
+                }
+            } else {
+                logger.info("No Alerts Reached till ITSM!!");
+                errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                return errMsg;
+            }
+        } catch (Exception e) {
+            logger.info("No Alerts Reached till ITSM!!");
+            errMsg = errMsg + "[No Alerts Reached till ITSM]";
+            for (int z = 0; z < filterArray.size(); z++) {
+                logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
+                errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
+            }
+            logger.info("Exception Occurred : " + e.getMessage());
+            errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
+            return errMsg;
+        }
+    }
+
+    @SneakyThrows
     public String verifyITSMSimulatorResponseConsolidation() throws Exception {
         String errMsg = "";
         boolean flag = false;

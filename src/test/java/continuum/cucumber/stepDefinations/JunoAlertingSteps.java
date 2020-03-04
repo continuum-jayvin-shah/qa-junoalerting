@@ -219,6 +219,14 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("^I verify If POST and PUT reached till ITSM Simulator$")
+    public void i_verify_post_ITSM_Simulator() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //assertTrue(apiTest.verifyITSMSimulatorResponse());
+        String msg = apiTest.verifyPOST_PUTinITSM();
+        assertTrue(msg, msg.length() < 2);
+    }
+
     @Then("^I verify Child alert list in parent Alert response of ITSM Simulator$")
     public void i_verify_child_alert_list_in_parent_alert_response_of_ITSM_simulator() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
