@@ -50,7 +50,7 @@ Feature: Juno Alerting Consolidation Test - Manual Closure
       | Child22      | Child23      | Parent24     |AlertID         |
 
 
-  @Functional @BVT @rajat
+  @Functional @BVT
   Scenario Outline: Closed all child alert and Manual Closure of Parent
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"

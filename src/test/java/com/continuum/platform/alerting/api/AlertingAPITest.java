@@ -1504,6 +1504,26 @@ public class AlertingAPITest {
         }
     }
 
+    public String triggerAlertDelete(int alertCount, String testName){
+        String errMsg = "";
+        try {
+            setTestName(testName);
+            preProcessing(getTestName());
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(alertCount)));
+            if (alertingResponse.getStatusCode() != 204) {
+                logger.info("Alert ID Deletion Failed for : " + alertId.get(alertCount) + " with Response Code : " + alertingResponse.getStatusCode());
+                errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(alertCount) + " with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                return errMsg;
+            }
+            logger.info("Alert Deleted : " + alertId.get(alertCount));
+        }catch(Exception e){
+            logger.info("Exception occured : " + alertId.get(alertCount) + " with Response Code : " + alertingResponse.getStatusCode());
+            errMsg = errMsg + "[Exception occured : " + alertId.get(alertCount) + " with Response Code : " + alertingResponse.getStatusCode() + " ]";
+            return errMsg;
+        }
+        return errMsg;
+    }
+
     public String verifyIncidentDeletionInITMS() throws InterruptedException {
         Thread.sleep(5000);
         String errMsg = "";
@@ -1529,6 +1549,94 @@ public class AlertingAPITest {
         boolean flag = false;
         int i = 0;
         int tryCount = 15;
+        forLoop:
+        for (int x = 0; x < tryCount; x++) {
+            if (x != 0) {
+                filterArray.clear();
+                getITSMSimulatorResponse();
+            }
+            JsonPath filterPath = JsonPath.from(filterArray.toString());
+            logger.info("Try " + x + " ------>>" + filterPath.getList("action"));
+            try {
+                if (filterArray.size() > 0) {
+                    while (i < filterArray.size()) {
+                        if (filterArray.getJSONObject(i).get("action").equals("POST")) {
+                            if (filterArray.getJSONObject(i + 1).get("action").equals("PUT")) {
+                                if (filterArray.getJSONObject(i + 2).get("action").equals("DELETE")) {
+                                    logger.info("All 3 Requests Reached till ITSM");
+                                    i = i + 3;
+                                    return errMsg;
+                                } else {
+                                    if (x == tryCount - 1) {
+                                        logger.info("Delete Requests is not reached till ITSM");
+                                        errMsg = errMsg + "[Delete Requests is not reached till ITSM]";
+                                        return errMsg;
+                                    } else {
+                                        continue forLoop;
+                                    }
+                                }
+                            } else {
+                                if (x == tryCount - 1) {
+                                    logger.info("Update Requests is not reached till ITSM");
+                                    errMsg = errMsg + "[Update Requests is not reached till ITSM]";
+                                    return errMsg;
+                                } else {
+                                    continue forLoop;
+                                }
+                            }
+                        } else {
+                            if (x == tryCount - 1) {
+                                logger.info("Create Requests is not reached till ITSM");
+                                errMsg = errMsg + "[Create Requests is not reached till ITSM]";
+                                return errMsg;
+                            } else {
+                                continue forLoop;
+                            }
+                        }
+                    }
+                } else {
+                    if (x == tryCount - 1) {
+                        logger.info("No Alerts Reached till ITSM!!");
+                        errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                        return errMsg;
+                    } else {
+                        continue forLoop;
+                    }
+                }
+            } catch (Exception e) {
+                if (x == tryCount - 1) {
+                    logger.info("No Alerts Reached till ITSM!!");
+                    errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                    for (int z = 0; z < filterArray.size(); z++) {
+                        logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
+                        errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
+                    }
+                    logger.info("Exception Occurred : " + e.getMessage());
+                    errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
+                    return errMsg;
+                } else {
+                    continue forLoop;
+                }
+            }
+        }
+        if (!flag) {
+            for (int z = 0; z < filterArray.size(); z++) {
+                logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
+                errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
+            }
+            return errMsg;
+        }
+        return errMsg;
+    }
+
+    @SneakyThrows
+    public String verifyITSMSimulatorResponseParent(String testData) throws Exception {
+        String errMsg = "";
+        boolean flag = false;
+        int i = 0;
+        int tryCount = 15;
+        setTestName(testData);
+        preProcessing(getTestName());
         forLoop:
         for (int x = 0; x < tryCount; x++) {
             if (x != 0) {
