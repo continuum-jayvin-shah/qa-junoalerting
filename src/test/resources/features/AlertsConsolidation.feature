@@ -249,6 +249,7 @@ Feature: Juno Alerting Consolidation Test
     Then I verify API response from Alert MS for DELETE Request
     Then I get ITSM Simulator Response for "<TestCaseRow3>" Alert
     Then I verify If alert reached till ITSM Simulator
+
     Examples:
       | ChildLevel | ParentLevel | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |
       | Endpoint   | Site        | Child25      | Child26      | Parent27     |

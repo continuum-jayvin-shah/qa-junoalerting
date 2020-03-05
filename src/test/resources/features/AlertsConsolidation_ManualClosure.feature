@@ -1,7 +1,7 @@
 Feature: Juno Alerting Consolidation Test - Manual Closure
 
   @Functional @BVT
-  Scenario Outline: Manual Closure of 1 Parent Alert with 2 child
+  Scenario Outline: Manual Closure of Parent Alert with 2 child
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
     Then I verify API response from Alert MS
