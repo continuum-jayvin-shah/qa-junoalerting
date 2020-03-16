@@ -149,6 +149,12 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("I trigger DELETE API request for Child {int} {string} Alert on Alert MS")
+    public void i_trigger_DELETE_API_request_for_Child_Alert_only_on_Alert_MS(int alertId, String testCaseRow) throws Throwable {
+        String msg = apiTest.triggerAlertDelete(alertId-1,testCaseRow);
+        assertTrue(msg, msg.length() < 2);
+    }
+
     @Then("I trigger GET Alert State API for current alert")
     public void i_trigger_GET_Alert_State_API_for_current_alert() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -219,6 +225,14 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("^I verify If POST and DELETE reached till ITSM Simulator$")
+    public void i_verify_post_put_ITSM_Simulator() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //assertTrue(apiTest.verifyITSMSimulatorResponse());
+        String msg = apiTest.verifyPOST_DelinITSM();
+        assertTrue(msg, msg.length() < 2);
+    }
+
     @Then("^I verify Child alert list in parent Alert response of ITSM Simulator$")
     public void i_verify_child_alert_list_in_parent_alert_response_of_ITSM_simulator() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -269,6 +283,15 @@ public class JunoAlertingSteps {
         apiTest.clearFilterArray();
         //assertTrue(apiTest.getITSMSimulatorResponse());
         String msg = apiTest.getITSMSimulatorResponse();
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("I get ITSM Simulator Response for {string} Alert")
+    public void i_get_ITSM_Simulator_Response_for_Parent_Alert(String testdata) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        apiTest.clearFilterArray();
+        //assertTrue(apiTest.getITSMSimulatorResponse());
+        String msg = apiTest.verifyITSMSimulatorResponseParent(testdata);
         assertTrue(msg, msg.length() < 2);
     }
 
@@ -370,6 +393,14 @@ public class JunoAlertingSteps {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.triggerManualClosure(kafkaMessageType));
         String msg = apiTest.triggerManualClosure(kafkaMessageType);
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("I trigger Manual Closure By Posting on KafkaTopic with MessageType {string} for Alert ID Child {int}")
+    public void i_trigger_Manual_Closure_By_Posting_on_KafkaTopic_with_MessageType(String kafkaMessageType, int alert) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //assertTrue(apiTest.triggerManualClosure(kafkaMessageType));
+        String msg = apiTest.triggerManualClosure1(kafkaMessageType,alert-1);
         assertTrue(msg, msg.length() < 2);
     }
 

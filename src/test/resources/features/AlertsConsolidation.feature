@@ -227,3 +227,31 @@ Feature: Juno Alerting Consolidation Test
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |  TestCaseRow5 |
       | Child15      | Child16      | Child17      |  Parent19     |
 
+
+  @Functional @BVT
+  Scenario Outline: Consolidation having Child at "<ChildLevel>" and Parent at "<ParentLevel>" Level
+
+    Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
+    Then I verify API response from Alert MS
+    Then I get ITSM Simulator Response for Current Alert
+    Then I verify If alert not reached till ITSM Simulator
+    Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow2>"
+    Then I verify API response from Alert MS
+    Then I get ITSM Simulator Response for Current Alert
+    Then I verify If alert not reached till ITSM Simulator
+    Then I trigger CREATE Alert API request for Parent Alert on Alert MS for "<TestCaseRow3>"
+    Then I verify API response from Alert MS
+  #  Then I trigger GET Alert State API for current alert
+  #  Then I verify "child list" in Alert State API response
+    Then I trigger DELETE API request for Child 1 "<TestCaseRow1>" Alert on Alert MS
+    Then I verify API response from Alert MS for DELETE Request
+    Then I trigger DELETE API request for Child 2 "<TestCaseRow2>" Alert on Alert MS
+    Then I verify API response from Alert MS for DELETE Request
+    Then I get ITSM Simulator Response for "<TestCaseRow3>" Alert
+    Then I verify If alert reached till ITSM Simulator
+
+    Examples:
+      | ChildLevel | ParentLevel | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |
+      | Endpoint   | Site        | Child25      | Child26      | Parent27     |
+      | Site       | Client      | Child28      | Child29      | Parent30     |
+      | Client     | Partner     | Child31      | Child32      | Parent33     |
