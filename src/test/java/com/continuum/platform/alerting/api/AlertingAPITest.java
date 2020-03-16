@@ -1768,13 +1768,13 @@ public class AlertingAPITest {
     }
 
     @SneakyThrows
-    public String verifyPOST_PUTinITSM() throws Exception {
+    public String verifyPOST_DelinITSM() throws Exception {
         String errMsg = "";
         boolean flag = false;
         JsonPath filterPath = JsonPath.from(filterArray.toString());
+        int i = 0 ;
         try {
             if (filterArray.size() > 0) {
-                int i = filterArray.size() - 1 ;
                 if (filterArray.getJSONObject(i).get("action").equals("POST")) {
                     if (filterArray.getJSONObject(i+1).get("action").equals("DELETE")) {
                         return errMsg;
@@ -2244,6 +2244,29 @@ public class AlertingAPITest {
             case "AlertID":
                 String transactionID = "TEST_" + JunoAlertingUtils.timeStamp();
                 kafkaMessage = "{\"alertId\":\"" + getCurrentAlert() + "\",\"transactionId\":\"" + transactionID + "\"}";
+                break;
+            case "MetaData":
+                kafkaMessage = getManualClosureMetadata();
+                break;
+            default:
+                logger.info("Message Type is Invalid!!");
+                errMsg = "[Message Type is Invalid!!]";
+                return errMsg;
+            //return false;
+        }
+        logger.info("Posting Kafka Message to Kafka topic : " + kafkaMessage);
+        KafkaProducerUtility.postMessage(kafkaServer, Utilities.getMavenProperties("KafkaTopic"), kafkaMessage);
+        // return true;
+        return errMsg;
+    }
+
+    public String triggerManualClosure1(String kafkaMessageType, int alertCount) {
+        String kafkaMessage;
+        String errMsg = "";
+        switch (kafkaMessageType) {
+            case "AlertID":
+                String transactionID = "TEST_" + JunoAlertingUtils.timeStamp();
+                kafkaMessage = "{\"alertId\":\"" + alertId.get(alertCount) + "\",\"transactionId\":\"" + transactionID + "\"}";
                 break;
             case "MetaData":
                 kafkaMessage = getManualClosureMetadata();
