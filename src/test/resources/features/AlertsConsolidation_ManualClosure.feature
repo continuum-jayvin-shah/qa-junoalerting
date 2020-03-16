@@ -72,4 +72,4 @@ Feature: Juno Alerting Consolidation Test - Manual Closure
     Then I should verify ITSM payload data as expected
     Examples:
       | TestCaseRow1 | TestCaseRow2 | TestCaseRow3 |KafkaMessageType|
-      | Child22      | Child23      | Parent24     |AlertID         |
+      | Child25      | Child23      | Parent24     |AlertID         |
