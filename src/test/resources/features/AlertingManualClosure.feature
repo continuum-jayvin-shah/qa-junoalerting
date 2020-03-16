@@ -11,7 +11,7 @@ Then I verify API response from Alert MS for UPDATE Request
 #Then I verify Duplicate Alert in API response from ITSM MS
 #Then I trigger UPDATE ITSM API request on ITSM MS
 #Then I verify API response from ITSM MS for UPDATE Request
-Then I verify If alert is Created in AlertingMS
+#Then I verify If alert is Created in AlertingMS
 Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>"
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If all requests were sent to ITSM
@@ -39,7 +39,7 @@ Then I verify API response from Alert MS for UPDATE Request
 #Then I verify Duplicate Alert in API response from ITSM MS
 #Then I trigger UPDATE ITSM API request on ITSM MS
 #Then I verify API response from ITSM MS for UPDATE Request
-Then I verify If alert is Created in AlertingMS
+#Then I verify If alert is Created in AlertingMS
 Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>"
 Then I get ITSM Simulator Response for Current Alert
 Then I verify If all requests were sent to ITSM
