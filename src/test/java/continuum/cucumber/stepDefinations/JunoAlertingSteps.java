@@ -419,8 +419,8 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
-    @Then("I trigger Manual Closure By Posting on KafkaTopic with MessageType {string} for Alert ID Child {int}")
-    public void i_trigger_Manual_Closure_By_Posting_on_KafkaTopic_with_MessageType(String kafkaMessageType, int alert) throws Throwable {
+    @Then("I trigger Manual Closure By Posting on KafkaTopic with MessageType {string} for Alert ID {string} {int}")
+    public void i_trigger_Manual_Closure_By_Posting_on_KafkaTopic_with_MessageType(String kafkaMessageType, String name,int alert) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.triggerManualClosure(kafkaMessageType));
         String msg = apiTest.triggerManualClosure1(kafkaMessageType,alert-1);

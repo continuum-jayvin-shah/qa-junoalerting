@@ -1349,6 +1349,7 @@ public class AlertingAPITest {
 
     public String getAlertStateResponseParent(int parent) throws InterruptedException {
         Thread.sleep(5000);
+        clearFilterArray();
         triggerAlertStateAPIParent(parent);
         String errMsg = "";
         try {
@@ -2181,8 +2182,10 @@ public class AlertingAPITest {
                 for (String factor : factorList) {
                     switch (factor) {
                         case "child list":
-                            String expectedChildList = alertId.get(0);
+                            //String expectedChildList = alertId.get(0);
                             String actualChildList = jsonObj.getString("childlist");
+                            logger.info("Actual Child List - > " + actualChildList);
+                            logger.info("Expected Child List including parent - > " + alertId);
                             String[] arrActual = actualChildList.split(",");
                             for (String childAlert : arrActual) {
                                 if (!alertId.contains(childAlert)) {
