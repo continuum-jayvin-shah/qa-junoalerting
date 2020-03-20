@@ -310,6 +310,30 @@ public class AlertingAPITest {
         }
     }
 
+    public String triggerParentUpdateAPI(String testName, int parent,int child) {
+        String errMsg = "";
+        try {
+            setTestName(testName);
+            preProcessing(getTestName());
+            JSON json = JSONSerializer.toJSON(alertDetails);
+            JSONObject parentAlertDetails = (JSONObject) json;
+            JSONArray alerts = new JSONArray();
+            alerts.add(alertId.get(child));
+            parentAlertDetails.put("alerts", alerts);
+            logger.info(parentAlertDetails.toString());
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl + "/" + alertId.get(parent)));
+            Thread.sleep(3000);
+            return errMsg;
+            // return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Parent Alert Creation Failed with Error Message : " + e.getMessage());
+            //return false;
+            errMsg = errMsg + "[Parent Alert Creation Failed with Error Message : " + e.getMessage() + "]";
+            return errMsg;
+        }
+    }
+
     public String triggerParentWithSameConditionCreateAPI(String testName) {
         String errMsg = "";
         try {
@@ -740,6 +764,39 @@ public class AlertingAPITest {
         return errMsg;
     }
 
+    public String verifyCreateAPIResponseParent() {
+        String errMsg = "";
+        try {
+            if (alertingResponse.getStatusCode() == 409) {
+                logger.info(alertingResponse.getBody().asString());
+                setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
+                setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
+                triggerDeleteAPI(currentAlert);
+                if (alertingResponse.getStatusCode() == 204) {
+                    alertId.remove(alertId.size() - 1);
+                    Thread.sleep(5000);
+                    triggerParentCreateAPI(getTestName());
+                    return verifyCreateAPIResponseParent();
+                } else {
+                    logger.info("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "[Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode() + " ]";
+                }
+            } else if (alertingResponse.getStatusCode() == 201) {
+                logger.info(alertingResponse.getBody().asString());
+                setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
+                setCurrentAlert(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
+                logger.info("Alert Created : " + getCurrentAlert());
+            } else {
+                logger.info("Alert Not Created with Response Code : " + alertingResponse.getStatusCode());
+                errMsg = errMsg + "[Alert Not Created with Response Code : " + alertingResponse.getStatusCode() + " ]";
+            }
+        } catch (Exception e) {
+            logger.info("Alert Verification Failed with Error Message : " + e.getMessage());
+            errMsg = errMsg + "[Alert Verification Failed with Error Message : " + e.getMessage() + " ]";
+        }
+        return errMsg;
+    }
+
     public String verifyCreateAPIResponseITSM() {
         String errMsg = "";
         try {
@@ -1149,6 +1206,16 @@ public class AlertingAPITest {
         }
     }
 
+    public void triggerAlertStateAPIParent(int parent) {
+        try {
+            alertStatePreProcessingParent(parent);
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertState));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Alert State API Call Failed With Error : " + e.getMessage());
+        }
+    }
+
     public void alertFailurePreProcessing() throws Exception {
         logger.info("Getting Host URL:" + alertingUrl);
         alertFailure = alertingUrl + Utilities.getMavenProperties("AlertFailureUrlSchema")
@@ -1175,6 +1242,25 @@ public class AlertingAPITest {
                 .replace("{clients}", currentRow.get("clients"))
                 .replace("{sites}", currentRow.get("sites"))
                 .replace("{alertId}", getCurrentAlert());
+        if (currentRow.get("sites").isEmpty()) {
+            alertState = alertState.replace("/sites/", "");
+        }
+        if (currentRow.get("clients").isEmpty()) {
+            alertState = alertState.replace("/clients/", "");
+        }
+        if (currentRow.get("partners").isEmpty()) {
+            alertState = alertState.replace("/partners/", "");
+        }
+        logger.info("alertState API : " + alertState);
+    }
+
+    public void alertStatePreProcessingParent(int parent) throws Exception {
+        logger.info("Getting Host URL:" + alertingUrl);
+        alertState = alertingUrl + Utilities.getMavenProperties("AlertStateUrlSchema")
+                .replace("{partners}", currentRow.get("partners"))
+                .replace("{clients}", currentRow.get("clients"))
+                .replace("{sites}", currentRow.get("sites"))
+                .replace("{alertId}", alertId.get(parent));
         if (currentRow.get("sites").isEmpty()) {
             alertState = alertState.replace("/sites/", "");
         }
@@ -1245,6 +1331,30 @@ public class AlertingAPITest {
             if (alertingResponse.getStatusCode() == 200) {
                 JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, getCurrentAlert()));
+                return errMsg;
+                // return true;
+            } else {
+                logger.info("Request to Alert State with Response Code : " + alertingResponse.getStatusCode());
+                //return false;
+                errMsg = errMsg + "[Request to Alert State with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                return errMsg;
+            }
+        } catch (Exception e) {
+            logger.info("Failed to save  Alert State Response : " + e.getMessage());
+            errMsg = errMsg + "[Failed to save  Alert State Response : " + e.getMessage() + " ]";
+            return errMsg;
+            //return false;
+        }
+    }
+
+    public String getAlertStateResponseParent(int parent) throws InterruptedException {
+        Thread.sleep(5000);
+        triggerAlertStateAPIParent(parent);
+        String errMsg = "";
+        try {
+            if (alertingResponse.getStatusCode() == 200) {
+                JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertId.get(parent)));
                 return errMsg;
                 // return true;
             } else {

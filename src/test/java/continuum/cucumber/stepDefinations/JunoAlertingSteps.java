@@ -64,6 +64,21 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("^I verify API response of Parent from Alert MS$")
+    public void i_verify_API_response_of_Parent_from_Alert_MS() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //assertTrue(apiTest.verifyCreateAPIResponse());
+        String msg = apiTest.verifyCreateAPIResponseParent();
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("I trigger UPDATE Alert API on Parent Alert {string} {int} with Newly created Child Alert {int}")
+    public void i_trigger_UPDATE_Alert_API_on_Parent_Alert_with_Newly_created_Child_Alert(String test, Integer int1, Integer int2) {
+        String msg = apiTest.triggerParentUpdateAPI(test,int1-1,int2-1);
+        assertTrue(msg, msg.length() < 2);
+    }
+
+
     @Then("^I trigger UPDATE Alert API request on Alert MS$")
     public void i_trigger_UPDATE_Alert_API_request_on_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -160,6 +175,14 @@ public class JunoAlertingSteps {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.getAlertStateResponse());
         String msg = apiTest.getAlertStateResponse();
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("I trigger GET Alert State API for Parent alert {int}")
+    public void i_trigger_GET_Alert_State_API_for_current_alert(Integer parent) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //assertTrue(apiTest.getAlertStateResponse());
+        String msg = apiTest.getAlertStateResponseParent(parent-1);
         assertTrue(msg, msg.length() < 2);
     }
 
