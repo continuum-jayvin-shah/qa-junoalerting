@@ -64,6 +64,21 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("^I verify API response of Parent from Alert MS$")
+    public void i_verify_API_response_of_Parent_from_Alert_MS() throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //assertTrue(apiTest.verifyCreateAPIResponse());
+        String msg = apiTest.verifyCreateAPIResponseParent();
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("I trigger UPDATE Alert API on Parent Alert {string} {int} with Newly created Child Alert {int}")
+    public void i_trigger_UPDATE_Alert_API_on_Parent_Alert_with_Newly_created_Child_Alert(String test, Integer int1, Integer int2) {
+        String msg = apiTest.triggerParentUpdateAPI(test,int1-1,int2-1);
+        assertTrue(msg, msg.length() < 2);
+    }
+
+
     @Then("^I trigger UPDATE Alert API request on Alert MS$")
     public void i_trigger_UPDATE_Alert_API_request_on_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -141,6 +156,12 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("I trigger DELETE API request for Child Alert {int} on Alert MS")
+    public void i_trigger_DELETE_API_request_for_Child_Alert_on_Alert_MS(Integer int1) {
+        String msg = apiTest.triggerChildDeleteAPI(int1-1);
+        assertTrue(msg, msg.length() < 2);
+    }
+
     @Then("^I trigger DELETE API request for Child Alert only on Alert MS$")
     public void i_trigger_DELETE_API_request_for_Child_Alert_only_on_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -160,6 +181,14 @@ public class JunoAlertingSteps {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.getAlertStateResponse());
         String msg = apiTest.getAlertStateResponse();
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("I trigger GET Alert State API for Parent alert {int}")
+    public void i_trigger_GET_Alert_State_API_for_current_alert(Integer parent) throws Throwable {
+        // Write code here that turns the phrase above into concrete actions
+        //assertTrue(apiTest.getAlertStateResponse());
+        String msg = apiTest.getAlertStateResponseParent(parent-1);
         assertTrue(msg, msg.length() < 2);
     }
 
@@ -396,8 +425,8 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
-    @Then("I trigger Manual Closure By Posting on KafkaTopic with MessageType {string} for Alert ID Child {int}")
-    public void i_trigger_Manual_Closure_By_Posting_on_KafkaTopic_with_MessageType(String kafkaMessageType, int alert) throws Throwable {
+    @Then("I trigger Manual Closure By Posting on KafkaTopic with MessageType {string} for Alert ID {string} {int}")
+    public void i_trigger_Manual_Closure_By_Posting_on_KafkaTopic_with_MessageType(String kafkaMessageType, String name,int alert) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         //assertTrue(apiTest.triggerManualClosure(kafkaMessageType));
         String msg = apiTest.triggerManualClosure1(kafkaMessageType,alert-1);

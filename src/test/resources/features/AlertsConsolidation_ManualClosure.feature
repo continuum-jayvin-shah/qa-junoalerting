@@ -46,7 +46,7 @@ Feature: Juno Alerting Consolidation Test - Manual Closure
     Then I trigger UPDATE Alert API request on Alert MS
     Then I verify API response from Alert MS for UPDATE Request
     Then Wait for "40" Secs
-    Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>" for Alert ID Child 1
+    Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>" for Alert ID "Child" 1
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert reached till ITSM Simulator
     Examples:
