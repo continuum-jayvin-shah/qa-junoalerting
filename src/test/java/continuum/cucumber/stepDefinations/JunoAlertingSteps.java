@@ -156,6 +156,12 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("I trigger DELETE API request for Child Alert {int} on Alert MS")
+    public void i_trigger_DELETE_API_request_for_Child_Alert_on_Alert_MS(Integer int1) {
+        String msg = apiTest.triggerChildDeleteAPI(int1-1);
+        assertTrue(msg, msg.length() < 2);
+    }
+
     @Then("^I trigger DELETE API request for Child Alert only on Alert MS$")
     public void i_trigger_DELETE_API_request_for_Child_Alert_only_on_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions

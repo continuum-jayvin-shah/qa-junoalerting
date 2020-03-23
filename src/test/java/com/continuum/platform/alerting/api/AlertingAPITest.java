@@ -580,6 +580,24 @@ public class AlertingAPITest {
         }
     }
 
+    public String triggerChildDeleteAPI(int i) {
+        String errMsg = "";
+        try {
+                this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
+                if (alertingResponse.getStatusCode() != 204) {
+                    logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                    return errMsg;
+                }
+            logger.info("Alerts Deleted : " + alertId.get(i));
+            return errMsg;
+        } catch (Exception e) {
+            logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
+            errMsg = errMsg + "[Alert Deletion Failed with Error Message : " + e.getMessage() + " ]";
+            return errMsg;
+        }
+    }
+
     public String triggerAllChildDeleteAtATime() {
         String errMsg = "";
         try {
