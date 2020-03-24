@@ -24,6 +24,8 @@ Feature: Juno Alerting Condition ID send to downstream
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
     Then I verify API response from Alert MS
+    Then I get ITSM Simulator Response for Current Alert
+    Then I verify only POST will reach to ITSM Simulator
     Then I verify alert should present in Alert Failure table
     Examples:
       | TestCaseRow | TestCaseRow1 | TestCaseRow2 |
