@@ -1325,6 +1325,11 @@ public class AlertingAPITest {
                 JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 for (String alertID : alertId)
                     setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
+                    if(filterArray==null){
+                        logger.info("No Data in Filter array.");
+                        errMsg = errMsg + "No Data in Filter array.";
+                        return errMsg;
+                    }
                 //return true;
                 return errMsg;
             } else {
@@ -2224,6 +2229,29 @@ public class AlertingAPITest {
         return errMsg;
     }
 
+    public String validateActualDataInITSM(String expSourceSystem) throws InterruptedException {
+        String errMsg = "";
+        getActualDataInITSM();
+        boolean flag = true;
+        try {
+            if (!expSourceSystem.equalsIgnoreCase(actualDataInITSM.get("sourceSystem"))) {
+                flag = false;
+                logger.info("Data Mismatch in Source System in Payload : Expected -> " + expSourceSystem + " :: Actual ->" + actualDataInITSM.get("sourceSystem"));
+                errMsg = errMsg + "[Data Mismatch in Source System in Payload : Expected -> " + expSourceSystem + " :: Actual ->" + actualDataInITSM.get("sourceSystem") + " ]";
+            }
+            if (!expSourceSystem.equalsIgnoreCase(actualDataInITSM.get("sourceSystem1"))) {
+                flag = false;
+                logger.info("Data Mismatch in Source System : Expected -> " + expSourceSystem + " :: Actual ->" + actualDataInITSM.get("sourceSystem1"));
+                errMsg = errMsg + "[Data Mismatch in Source System : Expected -> " + expSourceSystem + " :: Actual ->" + actualDataInITSM.get("sourceSystem1") + " ]";
+            }
+        } catch (Exception e) {
+            logger.info("Exception Occurred : " + e);
+            errMsg = errMsg + "[Exception Occurred : " + e + " ]";
+            flag = false;
+        }
+        return errMsg;
+    }
+
     public String validateNoDataAlertState() throws InterruptedException {
         String errMsg = "";
         try {
@@ -2257,7 +2285,9 @@ public class AlertingAPITest {
                         //setActualDataInITSM("resourceId", jsonObjPayload.getString("resourceId"));
                         setActualDataInITSM("endpointId", jsonObjPayload.getString("endpointId"));
                         setActualDataInITSM("conditionId", jsonObjPayload.getString("conditionId"));
+                        setActualDataInITSM("sourceSystem", jsonObjPayload.getString("sourcesystem"));
                         setActualDataInITSM("statuscode", Integer.toString(jsonObj.getInt("statuscode")));
+                        setActualDataInITSM("sourceSystem1", Double.toString(jsonObj.getDouble("source_system")));
                         JSONObject jsonObjAlertDetails = jsonObjPayload.getJSONObject("alertDetails");
                         setActualDataInITSM("Test", jsonObjAlertDetails.getString("Test"));
                         setActualDataInITSM("Type", jsonObjAlertDetails.getString("Type"));
