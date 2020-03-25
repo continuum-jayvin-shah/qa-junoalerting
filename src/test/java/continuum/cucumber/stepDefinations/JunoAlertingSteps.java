@@ -348,6 +348,12 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Then("I should verify ITSM payload source system {string} data as expected")
+    public void i_should_verify_ITSM_payload_source_system_data_as_expected(String expSourceSystem) throws Throwable {
+        String msg = apiTest.validateActualDataInITSM(expSourceSystem);
+        assertTrue(msg, msg.length() < 2);
+    }
+
     @Then("I verify status code {string} in ITSM Simulator Response")
     public void i_verify_status_code_in_ITSM_Simulator_Response(String statusCode) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
