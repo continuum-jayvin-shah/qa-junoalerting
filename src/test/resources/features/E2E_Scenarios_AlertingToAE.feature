@@ -5,6 +5,9 @@ Feature: Verify end to end functionality from Alerting to Automation engine
   Scenario Outline: Verify End to End flow Alert creation, policy file execution for tasking and validate in alerting
     When I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
     Then I verify API response from Alert MS
+    And I trigger GET Automation data API for current alert
+    Then I verify API response from Alert MS for remediate
+
 
     Examples:
       | TestCaseRow |

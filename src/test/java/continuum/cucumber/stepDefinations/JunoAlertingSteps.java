@@ -9,6 +9,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import io.cucumber.java.en.And;
 import org.apache.log4j.Logger;
 import org.testng.Reporter;
 
@@ -536,4 +537,16 @@ public class JunoAlertingSteps {
         apiTest.closeTest();
     }
 
+    @And("I trigger GET Automation data API for current alert")
+    public void iTriggerGETAutomationDataAPIForCurrentAlert() throws InterruptedException {
+            // Write code here that turns the phrase above into concrete actions
+            //assertTrue(apiTest.getAlertStateResponse());
+            String msg = apiTest.getAlertAutomationDataAPI();
+            assertTrue(msg, msg.length() < 2);
+        }
+
+    @Then("I verify API response from Alert MS for remediate")
+    public void iVerifyAPIResponseFromAlertMSForRemediate() {
+
+    }
 }

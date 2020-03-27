@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState,alertAutomationData, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl, jasUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
@@ -1325,6 +1325,11 @@ public class AlertingAPITest {
                 JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 for (String alertID : alertId)
                     setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
+                    if(filterArray==null){
+                        logger.info("No Data in Filter array.");
+                        errMsg = errMsg + "No Data in Filter array.";
+                        return errMsg;
+                    }
                 //return true;
                 return errMsg;
             } else {
@@ -2224,6 +2229,29 @@ public class AlertingAPITest {
         return errMsg;
     }
 
+    public String validateActualDataInITSM(String expSourceSystem) throws InterruptedException {
+        String errMsg = "";
+        getActualDataInITSM();
+        boolean flag = true;
+        try {
+            if (!expSourceSystem.equalsIgnoreCase(actualDataInITSM.get("sourceSystem"))) {
+                flag = false;
+                logger.info("Data Mismatch in Source System in Payload : Expected -> " + expSourceSystem + " :: Actual ->" + actualDataInITSM.get("sourceSystem"));
+                errMsg = errMsg + "[Data Mismatch in Source System in Payload : Expected -> " + expSourceSystem + " :: Actual ->" + actualDataInITSM.get("sourceSystem") + " ]";
+            }
+            if (!expSourceSystem.equalsIgnoreCase(actualDataInITSM.get("sourceSystem1"))) {
+                flag = false;
+                logger.info("Data Mismatch in Source System : Expected -> " + expSourceSystem + " :: Actual ->" + actualDataInITSM.get("sourceSystem1"));
+                errMsg = errMsg + "[Data Mismatch in Source System : Expected -> " + expSourceSystem + " :: Actual ->" + actualDataInITSM.get("sourceSystem1") + " ]";
+            }
+        } catch (Exception e) {
+            logger.info("Exception Occurred : " + e);
+            errMsg = errMsg + "[Exception Occurred : " + e + " ]";
+            flag = false;
+        }
+        return errMsg;
+    }
+
     public String validateNoDataAlertState() throws InterruptedException {
         String errMsg = "";
         try {
@@ -2257,7 +2285,9 @@ public class AlertingAPITest {
                         //setActualDataInITSM("resourceId", jsonObjPayload.getString("resourceId"));
                         setActualDataInITSM("endpointId", jsonObjPayload.getString("endpointId"));
                         setActualDataInITSM("conditionId", jsonObjPayload.getString("conditionId"));
+                        setActualDataInITSM("sourceSystem", jsonObjPayload.getString("sourcesystem"));
                         setActualDataInITSM("statuscode", Integer.toString(jsonObj.getInt("statuscode")));
+                        setActualDataInITSM("sourceSystem1", Double.toString(jsonObj.getDouble("source_system")));
                         JSONObject jsonObjAlertDetails = jsonObjPayload.getJSONObject("alertDetails");
                         setActualDataInITSM("Test", jsonObjAlertDetails.getString("Test"));
                         setActualDataInITSM("Type", jsonObjAlertDetails.getString("Type"));
@@ -2465,4 +2495,58 @@ public class AlertingAPITest {
         filterArray.clear();
     }
 
+    public String triggerAlertAutomationDataAPI() throws InterruptedException {
+            Thread.sleep(5000);
+            triggerAlertStateAPI();
+            String errMsg = "";
+            try {
+                if (alertingResponse.getStatusCode() == 200) {
+                    JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                    setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, getCurrentAlert()));
+                    return errMsg;
+                    // return true;
+                } else {
+                    logger.info("Request to Alert State with Response Code : " + alertingResponse.getStatusCode());
+                    //return false;
+                    errMsg = errMsg + "[Request to Alert State with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                    return errMsg;
+                }
+            } catch (Exception e) {
+                logger.info("Failed to save  Alert State Response : " + e.getMessage());
+                errMsg = errMsg + "[Failed to save  Alert State Response : " + e.getMessage() + " ]";
+                return errMsg;
+                //return false;
+            }
+    }
+
+    public String getAlertAutomationDataAPI() {
+        try {
+            automationDataPreProcessing();
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertAutomationData));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Alert automation API Call Failed With Error : " + e.getMessage());
+        }
+        return null;
+    }
+
+    private void automationDataPreProcessing() {
+        logger.info("Getting Host URL:" + alertingUrl);
+        alertAutomationData = alertingUrl + Utilities.getMavenProperties("GetAutomationUrlSchema")
+                .replace("{partners}", currentRow.get("partners"))
+                .replace("{clients}", currentRow.get("clients"))
+                .replace("{sites}", currentRow.get("sites"))
+                .replace("{endpoints}", currentRow.get("endpoints"))
+                .replace("{alert}", currentAlert);
+        if (currentRow.get("sites").isEmpty()) {
+            alertAutomationData = alertAutomationData.replace("/sites/", "");
+        }
+        if (currentRow.get("clients").isEmpty()) {
+            alertAutomationData = alertAutomationData.replace("/clients/", "");
+        }
+        if (currentRow.get("partners").isEmpty()) {
+            alertAutomationData = alertAutomationData.replace("/partners/", "");
+        }
+        logger.info("alertAutomationData API >> : " + alertAutomationData);
+    }
 }
