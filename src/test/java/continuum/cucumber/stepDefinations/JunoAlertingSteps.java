@@ -547,6 +547,15 @@ public class JunoAlertingSteps {
 
     @Then("I verify API response from Alert MS for remediate")
     public void iVerifyAPIResponseFromAlertMSForRemediate() {
+        String msg = apiTest.verifyRemediateURLRequest();
+        assertTrue(msg, msg.length() < 2);
+    }
 
+    @And("I get automation response for current alert")
+    public void iGetAutomationResponseForCurrentAlert() throws InterruptedException {
+        apiTest.clearFilterArray();
+        //assertTrue(apiTest.getITSMSimulatorResponse());
+        String msg = apiTest.getRemediateURLResponse();
+        assertTrue(msg, msg.length() < 2);
     }
 }
