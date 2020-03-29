@@ -7,10 +7,10 @@ Feature: Verify end to end functionality from Alerting to Automation engine
     Then I verify API response from Alert MS
     And I get automation response for current alert
     Then Wait for "10" Secs
-    Then I verify API response from Alert MS for remediate
+    And I verify API response from Alert MS for remediate
 
 
     Examples:
       | TestCaseRow |
-      | E2E_test1   |
+#      | E2E_test1   |
       | E2E_test2   |

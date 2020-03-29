@@ -2560,10 +2560,18 @@ public class AlertingAPITest {
                 JSONObject filterObj = filterArray.getJSONObject(i);
 
                 JSONObject payloadObj = filterObj.getJSONObject("payload");
+                if (payloadObj.get("alertid").equals(null) || payloadObj.get("condionid").equals(null)) {
+                    logger.info("Alertid is null");
+                    errMsg = errMsg + "[Alertid is null]";
+                    i++;
+                    return errMsg;
+                } else {
+                    logger.info("Alert id  : " + payloadObj.get("alertid"));
+                    logger.info("Condition id : " + payloadObj.get("conditionid"));
+                    i++;
+                    return errMsg;
+                }
 
-                System.out.println("Payload:"+ payloadObj);
-
-                i++;
             }
 
         } catch (Exception e) {
