@@ -2556,18 +2556,19 @@ public class AlertingAPITest {
         try {
             int i = 0;
             while (i <= filterArray.size()) {
-                System.out.println("Size :"+filterArray.size());
+                System.out.println("Size :" + filterArray.size());
                 JSONObject filterObj = filterArray.getJSONObject(i);
 
-                JSONObject payloadObj = filterObj.getJSONObject("payload");
-                if (payloadObj.get("alertid").equals(null) || payloadObj.get("condionid").equals(null)) {
+//                JSONObject payloadObj = filterObj.getJSONObject("payload");
+                if ((filterObj.get("alertid").equals(null) || (filterObj.get("alertid").equals("")) && filterObj.get("automationtype").equals("remediate")))
+                {
                     logger.info("Alertid is null");
                     errMsg = errMsg + "[Alertid is null]";
                     i++;
                     return errMsg;
-                } else {
-                    logger.info("Alert id  : " + payloadObj.get("alertid"));
-                    logger.info("Condition id : " + payloadObj.get("conditionid"));
+                } else{
+                    logger.info("Alert id  : " + filterObj.get("alertid"));
+                    logger.info("Condition id : " + filterObj.get("conditionid"));
                     i++;
                     return errMsg;
                 }

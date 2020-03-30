@@ -7,7 +7,7 @@ features = "src/test/resources/features",
 glue = {"continuum.cucumber.stepDefinations"},
 plugin = {"pretty", "json:target/cucumber-reports/cucumber.json",
         "timeline:target/timeline-reports/"},
-tags={"@Functional","~@ignore"})
+tags={"@E2E","~@ignore"})
 public class TestRunner extends AbstractTestNGCucumberTests {
     @Override
     @DataProvider(parallel = true)
