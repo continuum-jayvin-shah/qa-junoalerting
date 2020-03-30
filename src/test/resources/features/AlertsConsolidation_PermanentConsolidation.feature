@@ -74,15 +74,15 @@ Feature: Juno Alerting Consolidation Test - Permanent Consolidation
     Then I trigger DELETE API request for Child Alert 2 on Alert MS
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow5>"
     Then I verify API response from Alert MS
-    Then I trigger UPDATE Alert API on Parent Alert "<TestCaseRow4>" 4 with Newly created Child Alert 5
+    Then I trigger UPDATE Alert API on Parent Alert "<TestCaseRow4>" 2 with Newly created Child Alert 3
     Then I verify API response from Alert MS for UPDATE Request
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow6>"
     Then I verify API response from Alert MS
-    Then I trigger UPDATE Alert API on Parent Alert "<TestCaseRow4>" 4 with Newly created Child Alert 6
+    Then I trigger UPDATE Alert API on Parent Alert "<TestCaseRow4>" 2 with Newly created Child Alert 4
     Then I verify API response from Alert MS for UPDATE Request
-    Then I trigger GET Alert State API for Parent alert 4
+    Then I trigger GET Alert State API for Parent alert 2
     Then I verify "child list" in Alert State API response
-    Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>" for Alert ID "Parent" 4
+    Then I trigger Manual Closure By Posting on KafkaTopic with MessageType "<KafkaMessageType>" for Alert ID "Parent" 2
   #  Then I get ITSM Simulator Response for Current Alert
   #  Then I verify If all requests were sent to ITSM
     Examples:

@@ -16,6 +16,7 @@ import net.sf.json.JSONSerializer;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -27,6 +28,7 @@ public class AlertingAPITest {
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl, jasUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
+    private List<String> parentAlertId = new ArrayList<String>();
     private List<String> conditionId = new ArrayList<String>();
     private HashMap<String, String> actualDataInITSM = new HashMap<String, String>();
     private JSONArray filterArray = new JSONArray();
@@ -298,6 +300,7 @@ public class AlertingAPITest {
             parentAlertDetails.put("alerts", alerts);
             logger.info(parentAlertDetails.toString());
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl));
+            parentAlertId.add(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
             Thread.sleep(3000);
             return errMsg;
             // return true;
@@ -584,6 +587,7 @@ public class AlertingAPITest {
         String errMsg = "";
         try {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
+                alertId.remove(alertId.get(i));
                 if (alertingResponse.getStatusCode() != 204) {
                     logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
                     errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]";
@@ -2210,9 +2214,19 @@ public class AlertingAPITest {
                             logger.info("Actual Child List - > " + actualChildList);
                             logger.info("Expected Child List including parent - > " + alertId);
                             String[] arrActual = actualChildList.split(",");
+                            List arrActualList = Arrays.asList(arrActual);
+                            /*
                             for (String childAlert : arrActual) {
                                 if (!alertId.contains(childAlert)) {
                                     errMsg = errMsg + "[Child Alert : " + childAlert + " not present in Alert ID List.]";
+                                }
+                            }
+                            */
+                            for(int d = 0 ; d < alertId.size() ; d++){
+                                if(!parentAlertId.contains(alertId.get(d))){
+                                    if(!arrActualList.contains(alertId.get(d))){
+                                        errMsg = errMsg + "[Child Alert : " + alertId.get(d) + " not present in Alert ID List.]";
+                                    }
                                 }
                             }
                             break;
