@@ -9,6 +9,7 @@ import cucumber.api.java.Before;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
+import io.cucumber.java.en.And;
 import org.apache.log4j.Logger;
 import org.testng.Reporter;
 
@@ -348,12 +349,6 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
-    @Then("I should verify ITSM payload source system {string} data as expected")
-    public void i_should_verify_ITSM_payload_source_system_data_as_expected(String expSourceSystem) throws Throwable {
-        String msg = apiTest.validateActualDataInITSM(expSourceSystem);
-        assertTrue(msg, msg.length() < 2);
-    }
-
     @Then("I verify status code {string} in ITSM Simulator Response")
     public void i_verify_status_code_in_ITSM_Simulator_Response(String statusCode) throws Throwable {
         // Write code here that turns the phrase above into concrete actions
@@ -542,4 +537,25 @@ public class JunoAlertingSteps {
         apiTest.closeTest();
     }
 
+    @And("I trigger GET Automation data API for current alert")
+    public void iTriggerGETAutomationDataAPIForCurrentAlert() throws InterruptedException {
+            // Write code here that turns the phrase above into concrete actions
+            //assertTrue(apiTest.getAlertStateResponse());
+            String msg = apiTest.getAlertAutomationDataAPI();
+            assertTrue(msg, msg.length() < 2);
+        }
+
+    @And("I get automation response for current alert")
+    public void iGetAutomationResponseForCurrentAlert() throws InterruptedException {
+        apiTest.clearFilterArray();
+        //assertTrue(apiTest.getITSMSimulatorResponse());
+        String msg = apiTest.getRemediateURLResponse();
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @And("I verify API response from Alert MS for remediate")
+    public void iVerifyAPIResponseFromAlertMSForRemediate() {
+        String msg = apiTest.verifyRemediateURLRequest();
+        assertTrue(msg, msg.length() < 2);
+    }
 }

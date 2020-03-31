@@ -61,5 +61,28 @@ public class JsonRespParserUtility {
 		 * desObj;
 		 */
 	}
+
+	public static JSONArray responseDataAsArray(JSONArray jsonResponse, String identifier)  throws Exception{
+
+		JSONArray filterArray = new JSONArray();
+		System.out.println("Identifier::" + identifier);
+
+		if(jsonResponse==null) {
+			System.out.println("No Data Present in response");
+			return jsonResponse;
+		}
+
+		int i = 0;
+
+		while(i < jsonResponse.size()) {
+			JSONObject resObject = jsonResponse.getJSONObject(i);
+			if(identifier.equalsIgnoreCase(resObject.get("alertid").toString())) {
+				filterArray.add(resObject);
+			}
+			i++;
+		}
+		System.out.println("Filter Array : " + filterArray);
+		return filterArray;
+	}
 	
 }

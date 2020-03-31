@@ -4,6 +4,8 @@ import com.continuum.utils.DataUtils;
 import com.continuum.utils.JsonRespParserUtility;
 import com.continuum.utils.JunoAlertingAPIUtil;
 import com.continuum.utils.JunoAlertingUtils;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import continuum.cucumber.KafkaProducerUtility;
 import continuum.cucumber.Utilities;
 import io.restassured.path.json.JsonPath;
@@ -16,7 +18,6 @@ import net.sf.json.JSONSerializer;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl,alertAutomationData, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl, jasUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
@@ -605,16 +606,16 @@ public class AlertingAPITest {
     public String triggerAllChildDeleteAtATime() {
         String errMsg = "";
         try {
-            int j = 0 ;
-            for (int i = 0 ; i < alertId.size() - 1 ; i++) {
+            int j = 0;
+            for (int i = 0; i < alertId.size() - 1; i++) {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(j)));
-                j ++ ;
+                j++;
                 if (alertingResponse.getStatusCode() != 204) {
                     logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode());
                     errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode() + " ]";
                     return errMsg;
                 }
-                logger.info("Alert Deleted : " + alertId.get(j-1));
+                logger.info("Alert Deleted : " + alertId.get(j - 1));
             }
             logger.info("All Child Alerts Deleted!!");
             return errMsg;
@@ -1031,14 +1032,14 @@ public class AlertingAPITest {
 
     public String verifyUpdateAPIResponse(String responseCode, String verb) throws InterruptedException {
         String errMsg = "";
-        int count = 5 ;
+        int count = 5;
         for (int i = 0; i < count; i++) {
             logger.info("Try Count ------> " + i);
-            if(i != 0){
+            if (i != 0) {
                 Thread.sleep(10000);
-                if(verb.equalsIgnoreCase("update")){
+                if (verb.equalsIgnoreCase("update")) {
                     triggerUpdateAPI_ITSM();
-                }else{
+                } else {
                     triggerDeleteAPI_ITSM();
                 }
             }
@@ -1050,21 +1051,21 @@ public class AlertingAPITest {
                 } else {
                     logger.info("Expected Response Not Code found. Actual -> " + alertingResponse.getStatusCode());
                     logger.info("Internal Status Code : " + alertingResponse.toString());
-                    if(i == count) {
+                    if (i == count) {
                         errMsg = errMsg + "[Expected Response Not Code found. Actual -> " + alertingResponse.getStatusCode() + " ]";
                         errMsg = errMsg + "[Internal Status Code : " + alertingResponse.toString() + " ]";
                         return errMsg;
-                    }else{
-                        continue ;
+                    } else {
+                        continue;
                     }
                 }
             } catch (Exception e) {
-                if(i == count) {
+                if (i == count) {
                     logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
                     errMsg = errMsg + "[Alert Updation Failed with Error Message : " + e.getMessage() + " ]";
                     return errMsg;
-                }else{
-                    continue ;
+                } else {
+                    continue;
                 }
             }
 
@@ -1072,7 +1073,6 @@ public class AlertingAPITest {
         } // for loop
         return errMsg;
     }
-
 
 
     public String verifyUpdateAPIResponseITSM() {
@@ -1329,11 +1329,11 @@ public class AlertingAPITest {
                 JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 for (String alertID : alertId)
                     setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
-                    if(filterArray==null){
-                        logger.info("No Data in Filter array.");
-                        errMsg = errMsg + "No Data in Filter array.";
-                        return errMsg;
-                    }
+                if (filterArray == null) {
+                    logger.info("No Data in Filter array.");
+                    errMsg = errMsg + "No Data in Filter array.";
+                    return errMsg;
+                }
                 //return true;
                 return errMsg;
             } else {
@@ -1642,7 +1642,7 @@ public class AlertingAPITest {
         }
     }
 
-    public String triggerAlertDelete(int alertCount, String testName){
+    public String triggerAlertDelete(int alertCount, String testName) {
         String errMsg = "";
         try {
             setTestName(testName);
@@ -1654,7 +1654,7 @@ public class AlertingAPITest {
                 return errMsg;
             }
             logger.info("Alert Deleted : " + alertId.get(alertCount));
-        }catch(Exception e){
+        } catch (Exception e) {
             logger.info("Exception occured : " + alertId.get(alertCount) + " with Response Code : " + alertingResponse.getStatusCode());
             errMsg = errMsg + "[Exception occured : " + alertId.get(alertCount) + " with Response Code : " + alertingResponse.getStatusCode() + " ]";
             return errMsg;
@@ -1860,47 +1860,47 @@ public class AlertingAPITest {
         String errMsg = "";
         boolean flag = false;
 
-             //   filterArray.clear();
-             //   getITSMSimulatorResponse();
-            JsonPath filterPath = JsonPath.from(filterArray.toString());
-            try {
-                if (filterArray.size() > 0) {
-                    int i = filterArray.size() - 1 ;
-                   // while (i < filterArray.size()) {
-                        if (filterArray.getJSONObject(i).get("action").equals("POST")) {
-                            try {
-                                if (filterArray.getJSONObject(i + 1).get("action").equals("PUT")) {
-                                    logger.info("Update Requests reached till ITSM - Not expected");
-                                    errMsg = errMsg + "[Update Requests reached till ITSM - Not expected]";
-                                    return errMsg;
-                                } else {
-                                    return errMsg;
-                                }
-                             }catch(Exception e){
-                                return errMsg;
-                            }
+        //   filterArray.clear();
+        //   getITSMSimulatorResponse();
+        JsonPath filterPath = JsonPath.from(filterArray.toString());
+        try {
+            if (filterArray.size() > 0) {
+                int i = filterArray.size() - 1;
+                // while (i < filterArray.size()) {
+                if (filterArray.getJSONObject(i).get("action").equals("POST")) {
+                    try {
+                        if (filterArray.getJSONObject(i + 1).get("action").equals("PUT")) {
+                            logger.info("Update Requests reached till ITSM - Not expected");
+                            errMsg = errMsg + "[Update Requests reached till ITSM - Not expected]";
+                            return errMsg;
                         } else {
-                            logger.info("Create Requests is not reached till ITSM");
-                            errMsg = errMsg + "[Create Requests is not reached till ITSM]";
                             return errMsg;
                         }
-
-                } else {
-                        logger.info("No Alerts Reached till ITSM!!");
-                        errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                    } catch (Exception e) {
                         return errMsg;
-                }
-            } catch (Exception e) {
-                    logger.info("No Alerts Reached till ITSM!!");
-                    errMsg = errMsg + "[No Alerts Reached till ITSM]";
-                    for (int z = 0; z < filterArray.size(); z++) {
-                        logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
-                        errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
                     }
-                    logger.info("Exception Occurred : " + e.getMessage());
-                    errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
+                } else {
+                    logger.info("Create Requests is not reached till ITSM");
+                    errMsg = errMsg + "[Create Requests is not reached till ITSM]";
                     return errMsg;
                 }
+
+            } else {
+                logger.info("No Alerts Reached till ITSM!!");
+                errMsg = errMsg + "[No Alerts Reached till ITSM]";
+                return errMsg;
+            }
+        } catch (Exception e) {
+            logger.info("No Alerts Reached till ITSM!!");
+            errMsg = errMsg + "[No Alerts Reached till ITSM]";
+            for (int z = 0; z < filterArray.size(); z++) {
+                logger.info("Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action"));
+                errMsg = errMsg + "[Exception Occurred -> FilterArray : " + filterArray.getJSONObject(z).get("action") + "]";
+            }
+            logger.info("Exception Occurred : " + e.getMessage());
+            errMsg = errMsg + "[Exception Occurred : " + e.getMessage() + "]";
+            return errMsg;
+        }
 
 
     }
@@ -1910,13 +1910,13 @@ public class AlertingAPITest {
         String errMsg = "";
         boolean flag = false;
         JsonPath filterPath = JsonPath.from(filterArray.toString());
-        int i = 0 ;
+        int i = 0;
         try {
             if (filterArray.size() > 0) {
                 if (filterArray.getJSONObject(i).get("action").equals("POST")) {
-                    if (filterArray.getJSONObject(i+1).get("action").equals("DELETE")) {
+                    if (filterArray.getJSONObject(i + 1).get("action").equals("DELETE")) {
                         return errMsg;
-                    }else {
+                    } else {
                         logger.info("Delete Requests is not reached till ITSM");
                         errMsg = errMsg + "[Delete Requests is not reached till ITSM]";
                         return errMsg;
@@ -2214,19 +2214,9 @@ public class AlertingAPITest {
                             logger.info("Actual Child List - > " + actualChildList);
                             logger.info("Expected Child List including parent - > " + alertId);
                             String[] arrActual = actualChildList.split(",");
-                            List arrActualList = Arrays.asList(arrActual);
-                            /*
                             for (String childAlert : arrActual) {
                                 if (!alertId.contains(childAlert)) {
                                     errMsg = errMsg + "[Child Alert : " + childAlert + " not present in Alert ID List.]";
-                                }
-                            }
-                            */
-                            for(int d = 0 ; d < alertId.size() ; d++){
-                                if(!parentAlertId.contains(alertId.get(d))){
-                                    if(!arrActualList.contains(alertId.get(d))){
-                                        errMsg = errMsg + "[Child Alert : " + alertId.get(d) + " not present in Alert ID List.]";
-                                    }
                                 }
                             }
                             break;
@@ -2509,4 +2499,115 @@ public class AlertingAPITest {
         filterArray.clear();
     }
 
+    public String triggerAlertAutomationDataAPI() throws InterruptedException {
+        Thread.sleep(5000);
+        triggerAlertStateAPI();
+        String errMsg = "";
+        try {
+            if (alertingResponse.getStatusCode() == 200) {
+                JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, getCurrentAlert()));
+                return errMsg;
+                // return true;
+            } else {
+                logger.info("Request to Alert State with Response Code : " + alertingResponse.getStatusCode());
+                //return false;
+                errMsg = errMsg + "[Request to Alert State with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                return errMsg;
+            }
+        } catch (Exception e) {
+            logger.info("Failed to save  Alert State Response : " + e.getMessage());
+            errMsg = errMsg + "[Failed to save  Alert State Response : " + e.getMessage() + " ]";
+            return errMsg;
+            //return false;
+        }
+    }
+
+    public String getAlertAutomationDataAPI() {
+        try {
+            automationDataPreProcessing();
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(alertAutomationData));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Alert automation API Call Failed With Error : " + e.getMessage());
+        }
+        return null;
+    }
+
+    private void automationDataPreProcessing() {
+        logger.info("Getting Host URL:" + alertingUrl);
+        alertAutomationData = alertingUrl + Utilities.getMavenProperties("GetAutomationUrlSchema")
+                .replace("{partners}", currentRow.get("partners"))
+                .replace("{clients}", currentRow.get("clients"))
+                .replace("{sites}", currentRow.get("sites"))
+                .replace("{endpoints}", currentRow.get("endpoints"))
+                .replace("{alert}", currentAlert);
+        if (currentRow.get("sites").isEmpty()) {
+            alertAutomationData = alertAutomationData.replace("/sites/", "");
+        }
+        if (currentRow.get("clients").isEmpty()) {
+            alertAutomationData = alertAutomationData.replace("/clients/", "");
+        }
+        if (currentRow.get("partners").isEmpty()) {
+            alertAutomationData = alertAutomationData.replace("/partners/", "");
+        }
+        logger.info("alertAutomationData API >> : " + alertAutomationData);
+    }
+
+    public String verifyRemediateURLRequest() {
+        String errMsg = "";
+        try {
+            int i = 0;
+            while (i <= filterArray.size()) {
+                System.out.println("Size :" + filterArray.size());
+                JSONObject filterObj = filterArray.getJSONObject(i);
+
+//                JSONObject payloadObj = filterObj.getJSONObject("payload");
+                if ((filterObj.get("alertid").equals(null) || (filterObj.get("alertid").equals("")) && filterObj.get("automationtype").equals("remediate")))
+                {
+                    logger.info("Alertid is null");
+                    errMsg = errMsg + "[Alertid is null]";
+                    i++;
+                    return errMsg;
+                } else{
+                    logger.info("Alert id  : " + filterObj.get("alertid"));
+                    logger.info("Condition id : " + filterObj.get("conditionid"));
+                    i++;
+                    return errMsg;
+                }
+
+            }
+
+        } catch (Exception e) {
+            logger.info("Exception occured " + e.getMessage());
+            errMsg = errMsg + "[Exception occured : " + e.getMessage() + " ]";
+        }
+        return errMsg;
+    }
+
+    public String getRemediateURLResponse() throws InterruptedException {
+        String errMsg = "";
+        Thread.sleep(5000);
+        getAlertAutomationDataAPI();
+        try {
+            if (alertingResponse.getStatusCode() == 200) {
+                JSONArray json = (JSONArray) JSONSerializer.toJSON(alertingResponse.getBody().asString());
+                logger.info("Json:" + json);
+                for (String alertID : alertId)
+                    setFilterArray(JsonRespParserUtility.responseDataAsArray(json, alertID));
+                //return true;
+                return errMsg;
+            } else {
+                logger.info("Request to Remediate Failed with Response Code : " + alertingResponse.getStatusCode());
+                //return false;
+                errMsg = errMsg + "[Request to Remediate Failed with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                return errMsg;
+            }
+        } catch (Exception e) {
+            logger.info("Failed to save Remediate Response : " + e.getMessage());
+            //return false;
+            errMsg = errMsg + "[Failed to save Remediate Response : " + e.getMessage() + " ]";
+            return errMsg;
+        }
+    }
 }
