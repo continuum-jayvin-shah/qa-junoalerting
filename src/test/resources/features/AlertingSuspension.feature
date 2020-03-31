@@ -1,6 +1,6 @@
 Feature: Juno Alerting Suspension Tests
 
-  @Functional @BVT
+  @BVT
   Scenario Outline: Alerting API Test for Suspension Functionality - "<TestCaseRow>"
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"

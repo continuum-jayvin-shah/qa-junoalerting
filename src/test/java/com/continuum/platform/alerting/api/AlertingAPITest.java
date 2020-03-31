@@ -25,10 +25,11 @@ import java.util.concurrent.TimeUnit;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, alertState, alertAutomationData, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl, jasUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
+    private List<String> parentAlertId = new ArrayList<String>();
     private List<String> conditionId = new ArrayList<String>();
     private HashMap<String, String> actualDataInITSM = new HashMap<String, String>();
     private JSONArray filterArray = new JSONArray();
@@ -300,6 +301,7 @@ public class AlertingAPITest {
             parentAlertDetails.put("alerts", alerts);
             logger.info(parentAlertDetails.toString());
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(parentAlertDetails.toString(), alertingAPIUrl));
+            parentAlertId.add(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
             Thread.sleep(3000);
             return errMsg;
             // return true;
@@ -312,7 +314,7 @@ public class AlertingAPITest {
         }
     }
 
-    public String triggerParentUpdateAPI(String testName, int parent, int child) {
+    public String triggerParentUpdateAPI(String testName, int parent,int child) {
         String errMsg = "";
         try {
             setTestName(testName);
@@ -400,12 +402,12 @@ public class AlertingAPITest {
     public String triggerUpdateAPIChild(String testName, String countS) {
         String errMsg = "";
         int i = 0;
-        if (countS.equalsIgnoreCase("first")) {
-            i = 0;
-        } else if (countS.equalsIgnoreCase("second")) {
-            i = 1;
-        } else if (countS.equalsIgnoreCase("third")) {
-            i = 2;
+        if(countS.equalsIgnoreCase("first")){
+            i = 0 ;
+        }else if(countS.equalsIgnoreCase("second")){
+            i = 1 ;
+        }else if(countS.equalsIgnoreCase("third")){
+            i = 2 ;
         }
         try {
             setTestName(testName);
@@ -585,12 +587,13 @@ public class AlertingAPITest {
     public String triggerChildDeleteAPI(int i) {
         String errMsg = "";
         try {
-            this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
-            if (alertingResponse.getStatusCode() != 204) {
-                logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
-                errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]";
-                return errMsg;
-            }
+                this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
+                alertId.remove(alertId.get(i));
+                if (alertingResponse.getStatusCode() != 204) {
+                    logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                    return errMsg;
+                }
             logger.info("Alerts Deleted : " + alertId.get(i));
             return errMsg;
         } catch (Exception e) {
