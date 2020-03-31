@@ -12,5 +12,5 @@ Feature: Verify end to end functionality from Alerting to Automation engine
 
     Examples:
       | TestCaseRow |
-#      | E2E_test1   |
+      | E2E_test1   |
       | E2E_test2   |
