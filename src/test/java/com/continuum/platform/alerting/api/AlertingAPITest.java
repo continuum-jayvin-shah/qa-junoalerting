@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl,alertAutomationData, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl, jasUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
