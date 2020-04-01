@@ -71,15 +71,27 @@ public class JunoAlertingAPIUtil {
 	}
 
 	public static Response postWithFormParameters(String formParametersJson, String URI) {
-		
-		Response res = setTransactionID().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().post(URI).andReturn();
+		Response res = null ;
+		for(int i=0 ; i < 3; i++){
+			System.out.println("Retry POST Count -> " + i );
+			res = setTransactionID().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().post(URI).andReturn();
+			if(res.getStatusCode()!= 500){
+			   break;
+			}
+		}
 		return res;
 	}
 	
 	public static Response putWithFormParameters(String formParametersJson, String URI) {
-		
-		Response res = setTransactionID().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().put(URI).andReturn();
-		return res;
+        Response res = null ;
+        for(int i=0 ; i < 3; i++){
+            System.out.println("Retry POST Count -> " + i );
+            res = setTransactionID().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().put(URI).andReturn();
+            if(res.getStatusCode()!= 500){
+                break;
+            }
+        }
+        return res;
 	}
 
 	public static Response getWithBody(JSONObject formParametersJson, String URI) {
@@ -126,13 +138,27 @@ public class JunoAlertingAPIUtil {
 	}
 
 	public static Response getWithNoParameters(String URI) {
-		Response res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().get(URI);
-		return res;
+        Response res = null ;
+        for(int i=0 ; i < 3; i++){
+            System.out.println("Retry POST Count -> " + i );
+            res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().get(URI);
+            if(res.getStatusCode()!= 500){
+                break;
+            }
+        }
+        return res;
 	}
 	
 	public static Response getWithAuthorizationNoParameters(String URI) {
-		Response res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().get(URI);
-		return res;
+        Response res = null ;
+        for(int i=0 ; i < 3; i++){
+            System.out.println("Retry POST Count -> " + i );
+            res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().get(URI);
+            if(res.getStatusCode()!= 500){
+                break;
+            }
+        }
+        return res;
 	}
 
 	public static Response getWithNoParameters(String URI, String authToken) {
@@ -156,13 +182,27 @@ public class JunoAlertingAPIUtil {
 	}
 
 	public static Response deletePathParameters(String URI) {
-		Response res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().delete(URI);
-		return res;
+        Response res = null ;
+        for(int i=0 ; i < 3; i++){
+            System.out.println("Retry POST Count -> " + i );
+            res = setTransactionID().contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().delete(URI);
+            if(res.getStatusCode()!= 500){
+                break;
+            }
+        }
+        return res;
 	}
 
 	public static Response deleteWithBody(String formParametersJson, String URI) {
-		Response res = setTransactionID().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().delete(URI).andReturn();
-		return res;
+        Response res = null ;
+        for(int i=0 ; i < 3; i++){
+            System.out.println("Retry POST Count -> " + i );
+            res = setTransactionID().body(formParametersJson).contentType(ContentType.JSON).config(config().encoderConfig(EncoderConfig.encoderConfig().appendDefaultContentCharsetToContentTypeIfUndefined(false))).when().delete(URI).andReturn();
+        if(res.getStatusCode()!= 500){
+            break;
+        }
+    }
+        return res;
 	}
 
 	/*
