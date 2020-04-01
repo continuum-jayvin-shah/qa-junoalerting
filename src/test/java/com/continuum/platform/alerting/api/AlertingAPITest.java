@@ -33,7 +33,7 @@ public class AlertingAPITest {
     private HashMap<String, String> actualDataInITSM = new HashMap<String, String>();
     private JSONArray filterArray = new JSONArray();
     private HashMap<String, String> currentRow = new HashMap<String, String>();
-
+    static int retryCountCreateAlertAPI = 0 , retryCountUpdateAlertAPI = 0, retryCountITSM_GET_API = 0;
 
     public String getCurrentAlert() {
         return currentAlert;
@@ -514,20 +514,38 @@ public class AlertingAPITest {
             if (alertId.size() > 1) {
                 for (i = 0; i < alertId.size(); i++) {
                     this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
-                    if (alertingResponse.getStatusCode() != 204) {
-                        logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode());
-                        errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + " with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                    if (alertingResponse.getStatusCode() == 204) {
+                        logger.info("Delete of Alert Done with Status Code : " + alertingResponse.getStatusCode());
+                        logger.info("Alert Deleted : " + alertId.get(i));
+                        return errMsg;
+                    } else if(alertingResponse.getStatusCode() == 500){
+                        logger.info("Server Error Occurred : " + alertingResponse.getStatusCode() + ". Try Retry count : 1");
+                        Thread.sleep(5000);
+                        this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
+                        if (alertingResponse.getStatusCode() == 204) {
+                            logger.info("Delete of Alert Done with Status Code : " + alertingResponse.getStatusCode());
+                            logger.info("Alert Deleted : " + alertId.get(i));
+                            return errMsg;
+                        } else {
+                            logger.info("Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode());
+                            logger.info("Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+                            errMsg = errMsg + "[Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                            errMsg = errMsg + "[Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status") + " ]";
+                            return errMsg;
+                        }
+                    } else {
+                        logger.info("Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode());
+                        logger.info("Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
+                        errMsg = errMsg + "[Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode() + " ]";
+                        errMsg = errMsg + "[Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status") + " ]";
                         return errMsg;
                     }
-                    logger.info("Alert Deleted : " + alertId.get(i));
                 }
             } else {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deleteWithBody(alertDetails, alertingAPIUrl + "/" + alertId.get(i)));
                 logger.info("Alert Deletion Called for AlertID : " + alertId.get(i));
                 return errMsg;
-                //  return true;
             }
-            // return true;
             return errMsg;
         } catch (Exception e) {
             logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
@@ -770,6 +788,18 @@ public class AlertingAPITest {
                     logger.info("Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode());
                     errMsg = errMsg + "[Delete of Alert Fail with Status Code : " + alertingResponse.getStatusCode() + " ]";
                 }
+            } else if (alertingResponse.getStatusCode() == 500) {
+                logger.info("Server Error Occurred : " + alertingResponse.getStatusCode() + ". Try retry count : " +
+                        retryCountCreateAlertAPI);
+                Thread.sleep(5000);
+                if(retryCountCreateAlertAPI < 3){
+                    triggerCreateAPI(getTestName());
+                    retryCountCreateAlertAPI ++ ;
+                    return verifyCreateAPIResponse();
+                }else{
+                    logger.info("Server Error Occurred : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "Server Error Occurred : " + alertingResponse.getStatusCode() + " ]";
+                }
             } else if (alertingResponse.getStatusCode() == 201) {
                 logger.info(alertingResponse.getBody().asString());
                 setAlertId(JsonPath.from(alertingResponse.getBody().asString()).get("alertId"));
@@ -1011,21 +1041,31 @@ public class AlertingAPITest {
         try {
             if (alertingResponse.getStatusCode() == 204) {
                 logger.info("Update of Alert Done with Status Code : " + alertingResponse.getStatusCode());
-                //  return true;
                 return errMsg;
+            } else if(alertingResponse.getStatusCode() == 500){
+                logger.info("Server Error Occurred : " + alertingResponse.getStatusCode() + ". Try Retry count : " +
+                        retryCountUpdateAlertAPI);
+                Thread.sleep(5000);
+                if(retryCountUpdateAlertAPI < 3){
+                    triggerCreateAPI(getTestName());
+                    retryCountUpdateAlertAPI ++ ;
+                    return triggerUpdateAPI();
+                }else{
+                    logger.info("Server Error Occurred : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "Server Error Occurred : " + alertingResponse.getStatusCode() + " ]";
+                    return errMsg;
+                }
             } else {
                 logger.info("Alert Not Updated with Response Code : " + alertingResponse.getStatusCode());
                 logger.info("Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status"));
                 errMsg = errMsg + "[Alert Not Updated with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status") + " ]";
                 errMsg = errMsg + "[Alert Not Updated with Response Code : " + alertingResponse.getStatusCode() + " ]";
                 return errMsg;
-                //   return false;
             }
         } catch (Exception e) {
             logger.info("Alert Updation Failed with Error Message : " + e.getMessage());
             errMsg = errMsg + "[Alert Updation Failed with Error Message : " + e.getMessage() + " ]";
             return errMsg;
-            //  return false;
         }
     }
 
@@ -1160,7 +1200,6 @@ public class AlertingAPITest {
                 errMsg = errMsg + "[Alert Not Deleted with Response Code : " + alertingResponse.getStatusCode() + " ]";
                 errMsg = errMsg + "[Alert Not Deleted with Internal Status Code : " + JsonPath.from(alertingResponse.getBody().asString()).get("status") + " ]";
                 return errMsg;
-                //return false;
             }
         } catch (Exception e) {
             logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
@@ -1304,11 +1343,22 @@ public class AlertingAPITest {
                 JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
                 for (String alertID : alertId)
                     setFilterArray(JsonRespParserUtility.parseResponseData((JSONObject) json, alertID));
-                //return true;
                 return errMsg;
+            } else if(alertingResponse.getStatusCode() == 500){
+                logger.info("Server Error Occurred : " + alertingResponse.getStatusCode() + ". Try Retry count : " +
+                        retryCountITSM_GET_API);
+                Thread.sleep(5000);
+                if(retryCountITSM_GET_API < 3){
+                    triggerCreateAPI(getTestName());
+                    retryCountITSM_GET_API ++ ;
+                    return triggerUpdateAPI();
+                }else{
+                    logger.info("Server Error Occurred : " + alertingResponse.getStatusCode());
+                    errMsg = errMsg + "Server Error Occurred : " + alertingResponse.getStatusCode() + " ]";
+                    return errMsg;
+                }
             } else {
                 logger.info("Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode());
-                //return false;
                 errMsg = errMsg + "[Request to ITSM Failed with Response Code : " + alertingResponse.getStatusCode() + " ]";
                 return errMsg;
             }

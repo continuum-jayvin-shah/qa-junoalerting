@@ -310,7 +310,6 @@ public class JunoAlertingSteps {
     public void i_get_ITSM_Simulator_Response_for_Current_Alert() throws Throwable {
         // Write code here that turns the phrase above into concrete actions
         apiTest.clearFilterArray();
-        //assertTrue(apiTest.getITSMSimulatorResponse());
         String msg = apiTest.getITSMSimulatorResponse();
         assertTrue(msg, msg.length() < 2);
     }
