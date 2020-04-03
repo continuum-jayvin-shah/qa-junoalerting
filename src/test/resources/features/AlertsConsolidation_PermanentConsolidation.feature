@@ -51,8 +51,8 @@ Feature: Juno Alerting Consolidation Test - Permanent Consolidation
       | Child38      | Parent39     |Child40     |
 
 
-  @Functional @BVT
-  Scenario Outline: Permanent Consolidation with 3 Child Alert and delete 2 then 2 Child in Update
+  @Functional @BVT @ignore
+  Scenario Outline: Permanent Consolidation with 2 Child Alert and delete 1 then 2 Child in Update
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
     Then I verify API response from Alert MS
@@ -62,16 +62,16 @@ Feature: Juno Alerting Consolidation Test - Permanent Consolidation
     Then I verify API response from Alert MS
     Then I get ITSM Simulator Response for Current Alert
     Then I verify If alert not reached till ITSM Simulator
-    Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow3>"
-    Then I verify API response from Alert MS
-    Then I get ITSM Simulator Response for Current Alert
-    Then I verify If alert not reached till ITSM Simulator
+    #Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow3>"
+    #Then I verify API response from Alert MS
+    #Then I get ITSM Simulator Response for Current Alert
+    #Then I verify If alert not reached till ITSM Simulator
     Then I trigger CREATE Alert API request for Parent Alert on Alert MS for "<TestCaseRow4>"
     Then I verify API response of Parent from Alert MS
     Then I trigger GET Alert State API for current alert
     Then I verify "child list" in Alert State API response
     Then I trigger DELETE API request for Child Alert 1 on Alert MS
-    Then I trigger DELETE API request for Child Alert 2 on Alert MS
+    #Then I trigger DELETE API request for Child Alert 2 on Alert MS
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow5>"
     Then I verify API response from Alert MS
     Then I trigger UPDATE Alert API on Parent Alert "<TestCaseRow4>" 2 with Newly created Child Alert 3
