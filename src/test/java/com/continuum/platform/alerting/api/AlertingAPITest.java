@@ -587,13 +587,13 @@ public class AlertingAPITest {
         String errMsg = "";
         try {
                 this.setAlertDetailsResponse(JunoAlertingAPIUtil.deletePathParameters(alertingAPIUrl + "/" + alertId.get(i)));
-                alertId.remove(alertId.get(i));
                 if (alertingResponse.getStatusCode() != 204) {
                     logger.info("Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode());
                     errMsg = errMsg + "[Alert ID Deletion Failed for : " + alertId.get(i) + "with Response Code : " + alertingResponse.getStatusCode() + " ]";
                     return errMsg;
                 }
             logger.info("Alerts Deleted : " + alertId.get(i));
+            alertId.remove(alertId.get(i));
             return errMsg;
         } catch (Exception e) {
             logger.info("Alert Deletion Failed with Error Message : " + e.getMessage());
