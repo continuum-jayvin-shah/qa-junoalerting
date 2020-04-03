@@ -51,7 +51,7 @@ Feature: Juno Alerting Consolidation Test - Permanent Consolidation
       | Child38      | Parent39     |Child40     |
 
 
-  @Functional @BVT
+  @Functional @BVT @ignore
   Scenario Outline: Permanent Consolidation with 2 Child Alert and delete 1 then 2 Child in Update
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow1>"
