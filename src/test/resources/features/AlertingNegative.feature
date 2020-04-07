@@ -1,4 +1,4 @@
-@ignore
+@Functional
 Feature: Juno Alerting Error Code Scenario
 
   @Negative
@@ -8,7 +8,7 @@ Feature: Juno Alerting Error Code Scenario
     Then I verify API response from Alert MS
     Then Wait for "<duration>" Secs
     Then I trigger UPDATE Alert API request on Alert MS
-    Then Then I verify API response "<UpdateResponse>" from Alert MS for "UPDATE" Request
+    Then I verify API response "<UpdateResponse>" from Alert MS for "UPDATE" Request
     Then I get ITSM Simulator Response for Current Alert
     Then I verify status code "<StatusCode>" in ITSM Simulator Response
     Then I verify alert should present in Alert Failure table
@@ -42,7 +42,7 @@ Feature: Juno Alerting Error Code Scenario
       | 500_ServerError_Reprocession | 500        | 25       | 500_ServerError_Reprocession_1 |
 
 
-  @Negative
+  @Negative @ignore
   Scenario Outline: Alert goes as Create while 404 comes in PUT response
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
