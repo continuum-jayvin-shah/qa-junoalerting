@@ -195,7 +195,7 @@ public class AlertingAPITest {
         String errMsg = "";
         try {
             String url = alertingUrl + Utilities.getMavenProperties("ReprocessAlert");
-            String body = "[{\"alertId\" : \"" + alertId.get(0) + "\"}]";
+            String body = "[{\"alertid\" : \"" + alertId.get(0) + "\"}]";
             logger.info("Body : " + body);
             this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(body, url));
             return errMsg;
