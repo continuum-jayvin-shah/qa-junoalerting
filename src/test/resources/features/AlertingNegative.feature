@@ -42,7 +42,7 @@ Feature: Juno Alerting Error Code Scenario
       | 500_ServerError_Reprocession | 500        | 25       | 500_ServerError_Reprocession_1 |
 
 
-  @Negative @ignore
+  @Negative
   Scenario Outline: Alert goes as Create while 404 comes in PUT response
 
     Given I trigger CREATE Alert API request on Alert MS for "<TestCaseRow>"
