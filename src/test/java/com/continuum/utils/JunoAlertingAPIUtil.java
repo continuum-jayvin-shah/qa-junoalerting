@@ -1,7 +1,6 @@
 package com.continuum.utils;
 
 import com.google.gson.*;
-import continuum.cucumber.Utilities;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.ConnectionConfig;
 import io.restassured.config.EncoderConfig;
@@ -80,6 +79,25 @@ public class JunoAlertingAPIUtil {
 			   break;
 			}
 		}
+		return res;
+	}
+
+	public static Response putWithFormData(String baseUrl,
+										   String controlName, String fileName) {
+		Response res = null ;
+		File file = new File(fileName);
+		RequestSpecBuilder builder = new RequestSpecBuilder();
+		builder.setBaseUri(baseUrl)
+				.setContentType("multipart/form-data")
+				.addMultiPart(controlName, file);
+
+		res =  given(builder.build())
+				.when()
+				.put()
+				.then()
+				.extract()
+				.response();
+
 		return res;
 	}
 	
@@ -386,23 +404,6 @@ public class JunoAlertingAPIUtil {
 	  }
 
 
-	public static Response postWithFormData(String baseUrl,
-											String controlName, String fileName) {
 
-		final String zipFilePath = Utilities.getMavenProperties("ConditionFilePath").trim();
-		File file = new File(zipFilePath.concat(fileName.trim()));
-
-		RequestSpecBuilder builder = new RequestSpecBuilder();
-		builder.setBaseUri(baseUrl)
-				.setContentType("multipart/form-data")
-				.addMultiPart(controlName, file);
-
-		return given(builder.build())
-				.when()
-				.post()
-				.then()
-				.extract()
-				.response();
-	}
 
 }

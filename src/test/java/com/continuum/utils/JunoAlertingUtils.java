@@ -1,5 +1,6 @@
 package com.continuum.utils;
 
+import com.fasterxml.uuid.Generators;
 import continuum.cucumber.WebdriverWrapper;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedCondition;
@@ -9,11 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.sql.Timestamp;
 import java.util.TimeZone;
-import java.util.concurrent.TimeUnit;
 import java.util.UUID;
-import com.fasterxml.uuid.Generators;
+import java.util.concurrent.TimeUnit;
 
 public class JunoAlertingUtils {
 	/**
@@ -77,6 +76,11 @@ public class JunoAlertingUtils {
 		//return timeStamp;
 		UUID uuid1 = Generators.timeBasedGenerator().generate();
 		return uuid1.toString();
+	}
+
+	public static String timeStampMS(){
+		String timeStamp = new SimpleDateFormat("MMddHHmmss").format(new Date());
+		return timeStamp;
 	}
 	
 	/**

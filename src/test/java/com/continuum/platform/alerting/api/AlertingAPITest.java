@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class AlertingAPITest {
 
     private Logger logger = Logger.getLogger(AlertingAPITest.class);
-    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl = "";
+    private String alertDetails, itsmUrl, testName, alertFailure, alertState, currentAlert, alertingAPIUrl, itsmIncidentDetails, itsmIncidentID, itsmPublicID, appender, itsmAPIUrl, timeStamp = "";
     private static String alertingUrl, kafkaServer, itsmIntegrationUrl, jasUrl;
     private Response alertingResponse;
     private List<String> alertId = new ArrayList<String>();
@@ -190,6 +190,73 @@ public class AlertingAPITest {
         }
         return errMsg;
     }
+
+    public String triggerCreateAPIForNewConditionID(String conditionType) {
+        String errMsg = "";
+        try {
+            setTestName(conditionType);
+            preProcessing1(getTestName(),timeStamp);
+            setConditionId(timeStamp);
+            logger.info("Alert Details : " + alertDetails);
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.postWithFormParameters(alertDetails, alertingAPIUrl));
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Alert Creation Failed with Error Message : " + e.getMessage());
+            errMsg = errMsg + "[Exception Occurred in Alert Creation Failed " + e.getMessage() + " ]";
+        }
+        return errMsg;
+    }
+
+    public String verifyConditionImport(String conditionIDType)  {
+        String errMsg = "";
+        String conditionID = timeStamp ;
+        try {
+            String url = alertingUrl + Utilities.getMavenProperties("getConditionID").
+                    replace("{conditionIDparameter}",conditionID);
+            logger.info("Condition url : " + url);
+            this.setAlertDetailsResponse(JunoAlertingAPIUtil.getWithNoParameters(url));
+            if (alertingResponse.getStatusCode() != 200) {
+                errMsg = "[Error in PUT with status Code " + alertingResponse.getStatusCode() +"]";
+            }
+            JSON json = JSONSerializer.toJSON(alertingResponse.getBody().asString());
+            filterArray.clear();
+            setFilterArray(JsonRespParserUtility.parseResponseDataCondition((JSONObject) json, conditionID));
+            if(filterArray==null){
+                logger.info("No Data in Condition ID Filter array.");
+                errMsg = errMsg + "No Data in Condition ID Filter array.";
+                return errMsg;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Reprocess Alert Failed with Error Message : " + e.getMessage());
+            errMsg = errMsg + "[Reprocess Alert Failed with Error Message : " + e.getMessage() + " ]";
+        }
+        return errMsg;
+    }
+
+    public String createConditionID(String conditionType){
+        String errMsg = null;
+        String zipFilePath = null;
+        timeStamp = JunoAlertingUtils.timeStampMS();
+        String url = alertingUrl + Utilities.getMavenProperties("conditionImportPOST");
+        if(conditionType.equalsIgnoreCase("NormalCondition")){
+            errMsg = JsonRespParserUtility.CreateJSONNormal(timeStamp);
+            System.out.println("Condition ID Created : "+ timeStamp );
+            zipFilePath = System.getProperty("user.dir") + "\\src\\test\\resources\\ConditionFilePath\\" +
+                    "NormalCondition.zip" ;
+            if(errMsg.length()>3){
+                return errMsg;
+            }
+        }
+        this.setAlertDetailsResponse(JunoAlertingAPIUtil.putWithFormData(url,"condition-pack-file",
+                zipFilePath));
+        if (alertingResponse.getStatusCode() != 200) {
+            errMsg = "[Error in PUT with status Code " + alertingResponse.getStatusCode() +"]";
+        }
+        return errMsg;
+    }
+
+
 
     public String reprocessAlert(String count) {
         String errMsg = "";
@@ -720,6 +787,31 @@ public class AlertingAPITest {
 
         logger.info(alertingAPIUrl);
 
+    }
+
+    public void preProcessing1(String testName, String conditionID) throws Exception {
+        setCurrentRow(DataUtils.getTestRow("Test", testName));
+        logger.info("Test Data Captured.");
+        logger.info("Getting Host URL:" + alertingUrl);
+        alertingAPIUrl = alertingUrl + Utilities.getMavenProperties("AlertingUrlSchema")
+                .replace("{partners}", currentRow.get("partners"))
+                .replace("{clients}", currentRow.get("clients"))
+                .replace("{sites}", currentRow.get("sites"))
+                .replace("{endpoints}", currentRow.get("endpoints"));
+
+        if (currentRow.get("endpoints").isEmpty()) {
+            if (currentRow.get("sites").isEmpty()) {
+                if (currentRow.get("clients").isEmpty()) {
+                    alertingAPIUrl = alertingAPIUrl.replace("clients//sites//endpoints//", "");
+                } else {
+                    alertingAPIUrl = alertingAPIUrl.replace("sites//endpoints//", "");
+                }
+            } else {
+                alertingAPIUrl = alertingAPIUrl.replace("endpoints//", "");
+            }
+        }
+        setAlertDetails(currentRow.get("alertDetails").replace("{ConditionIDParameter}",conditionID));
+        logger.info(alertingAPIUrl);
     }
 
     public void preProcessingITSM(String testName) throws Exception {

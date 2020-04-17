@@ -56,6 +56,24 @@ public class JunoAlertingSteps {
         assertTrue(msg, msg.length() < 2);
     }
 
+    @Given("^I trigger CREATE Alert API request on Alert MS with new Condition ID for \"([^\"]*)\"$")
+    public void i_trigger_CREATE_Alert_API_request_on_Alert_MS_with_new_Condition(String testCaseRow) throws Throwable {
+        String msg = apiTest.triggerCreateAPIForNewConditionID(testCaseRow);
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Given("Create condition id {string} in Condition Metadatatable")
+    public void create_condition_id_in_Condition_Metadatatable(String conditionIDType) {
+        String msg = apiTest.createConditionID(conditionIDType);
+        assertTrue(msg, msg.length() < 2);
+    }
+
+    @Then("Validate condition id {string}")
+    public void validate_condition_id(String conditionIDType) {
+        String msg = apiTest.verifyConditionImport(conditionIDType);
+        assertTrue(msg, msg.length() < 2);
+    }
+
     @Then("^I verify API response from Alert MS$")
     public void i_verify_API_response_from_Alert_MS() throws Throwable {
         // Write code here that turns the phrase above into concrete actions

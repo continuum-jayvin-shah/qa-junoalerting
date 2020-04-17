@@ -50,3 +50,16 @@ Feature: Juno Alerting Condition ID send to downstream
       | TestCaseRow | TestCaseRow1 | TestCaseRow2 |TestCaseRow3|
       | Case5       | true         | 1.0          | 2.0        |
       | Case6       | true         | 2.0          | 1.0        |
+
+
+  @Functional @BVT @rajat
+  Scenario Outline: Create New Condition ID using API and create Alert
+
+    Given Create condition id "<CreateCondition>" in Condition Metadatatable
+     Then Validate condition id "<CreateCondition>"
+    Given I trigger CREATE Alert API request on Alert MS with new Condition ID for "<CreateCondition>"
+     Then I verify API response from Alert MS
+
+    Examples:
+      | CreateCondition |
+      | NormalCondition |
