@@ -1,4 +1,4 @@
-@E2E
+@E2E @Functional
 Feature: Verify end to end functionality from Alerting to Automation engine
 
 
@@ -8,7 +8,6 @@ Feature: Verify end to end functionality from Alerting to Automation engine
     And I get automation response for current alert
     Then Wait for "10" Secs
     And I verify API response from Alert MS for remediate
-
 
     Examples:
       | TestCaseRow |
